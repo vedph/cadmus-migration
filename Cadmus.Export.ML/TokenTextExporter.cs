@@ -128,7 +128,7 @@ namespace Cadmus.Export.ML
         /// <returns>Tuple with 1=text and 2=ranges.</returns>
         /// <exception cref="ArgumentNullException">textPart or layerParts
         /// </exception>
-        public Tuple<string, IList<MergedRange>> GetTextRanges(TokenTextPart textPart,
+        public Tuple<string, MergedRangeSet> GetTextRanges(TokenTextPart textPart,
             IList<IPart> layerParts)
         {
             if (textPart is null)
@@ -155,8 +155,7 @@ namespace Cadmus.Export.ML
                 layerIndex++;
             }
 
-            // merge ranges into a set
-            return Tuple.Create(text, ranges);
+            return Tuple.Create(text, new MergedRangeSet(ranges));
         }
     }
 }
