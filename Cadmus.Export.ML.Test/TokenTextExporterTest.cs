@@ -11,7 +11,7 @@ namespace Cadmus.Export.ML.Test
 {
     public sealed class TokenTextExporterTest
     {
-        private static TokenTextPart GetTextPart(IList<string> lines)
+        internal static TokenTextPart GetTextPart(IList<string> lines)
         {
             TokenTextPart part = new();
             int y = 1;
@@ -27,15 +27,15 @@ namespace Cadmus.Export.ML.Test
         }
 
         // 123 12345
-        // que bixit
+        // que vixit
         // 12345 12
         // annos XX
         //    0123456789-1234567
-        // => que bixit|annos XX
-        private static TokenTextPart GetSampleTextPart()
-            => GetTextPart(new[] { "que bixit", "annos XX" });
+        // => que vixit|annos XX
+        internal static TokenTextPart GetSampleTextPart()
+            => GetTextPart(new[] { "que vixit", "annos XX" });
 
-        private static IList<IPart> GetSampleLayerParts()
+        internal static IList<IPart> GetSampleLayerParts()
         {
             List<IPart> parts = new();
 
@@ -47,7 +47,7 @@ namespace Cadmus.Export.ML.Test
             });
             parts.Add(oLayer);
 
-            // qu[e b]ixit
+            // qu[e v]ixit
             TokenTextLayerPart<LigatureLayerFragment>? lLayer = new();
             lLayer.Fragments.Add(new LigatureLayerFragment
             {
@@ -55,7 +55,7 @@ namespace Cadmus.Export.ML.Test
             });
             parts.Add(lLayer);
 
-            // [bixit annos]
+            // [vixit annos]
             TokenTextLayerPart<CommentLayerFragment>? cLayer = new();
             cLayer.Fragments.Add(new CommentLayerFragment
             {
@@ -117,7 +117,7 @@ namespace Cadmus.Export.ML.Test
             var tr = exporter.GetTextRanges(textPart, layerParts);
 
             // text
-            Assert.Equal("que bixit\nannos XX", tr.Item1);
+            Assert.Equal("que vixit\nannos XX", tr.Item1);
 
             // ranges
             MergedRangeSet set = tr.Item2;
@@ -154,7 +154,7 @@ namespace Cadmus.Export.ML.Test
             string html = RenderTextWithRanges(tr.Item1, set);
             Assert.Equal("<p>" +
                 "<span>qu</span><span class=\"L0F0 L1F0\">e</span>" +
-                "<span class=\"L1F0\"> </span><span class=\"L1F0 L2F0\">b</span>" +
+                "<span class=\"L1F0\"> </span><span class=\"L1F0 L2F0\">v</span>" +
                 "<span class=\"L2F0\">ixit</p>\n" +
                 "<p>annos</span><span> </span><span class=\"L2F1\">XX</span></p>",
                 html);
