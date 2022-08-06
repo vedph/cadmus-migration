@@ -15,25 +15,25 @@ namespace Cadmus.Export.ML
     public class TextBlockBuilder
     {
         /// <summary>
-        /// Gets or sets the delimiter used to separate rows in the source text.
+        /// Gets or sets the separator used to separate rows in the source text.
         /// The default value is LF.
         /// </summary>
-        public string Delimiter { get; set; }
+        public string Separator { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextBlockBuilder"/> class.
         /// </summary>
         public TextBlockBuilder()
         {
-            Delimiter = "\n";
+            Separator = "\n";
         }
 
-        private bool HasDelimiterAt(string text, int index)
+        private bool HasSeparatorAt(string text, int index)
         {
-            if (Delimiter.Length + index > text.Length) return false;
-            for (int i = 0; i < Delimiter.Length; i++)
+            if (Separator.Length + index > text.Length) return false;
+            for (int i = 0; i < Separator.Length; i++)
             {
-                if (text[i + index] != Delimiter[i]) return false;
+                if (text[i + index] != Separator[i]) return false;
             }
             return true;
         }
@@ -59,7 +59,7 @@ namespace Cadmus.Export.ML
             {
                 // whenever we find a line delimiter, end the row of blocks
                 // and emit it, then continue with a new row
-                if (HasDelimiterAt(text, i))
+                if (HasSeparatorAt(text, i))
                 {
                     if (i > start)
                     {
@@ -70,7 +70,7 @@ namespace Cadmus.Export.ML
                     if (row.Count > 0) yield return row;
 
                     row = new List<TextBlock>();
-                    i += Delimiter.Length;
+                    i += Separator.Length;
                     start = i;
                     continue;
                 }

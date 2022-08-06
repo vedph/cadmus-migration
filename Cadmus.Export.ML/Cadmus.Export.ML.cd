@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Cadmus.Export.ML.TokenTextPartFlattener">
+    <Position X="0.5" Y="2.5" Width="2" />
+    <Members>
+      <Method Name="GetFragmentLocations" Hidden="true" />
+      <Method Name="GetIndexFromPoint" Hidden="true" />
+      <Method Name="GetRangeFromLoc" Hidden="true" />
+      <Method Name="LocateTokenEnd" Hidden="true" />
+      <Method Name="TokenTextPartFlattener" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAQAAABAAAAAgAAAAAAgAAAAAACQAAA=</HashCode>
+      <FileName>TokenTextPartFlattener.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Cadmus.Export.ML.TextBlockBuilder">
+    <Position X="3.75" Y="1" Width="1.5" />
+    <Members>
+      <Method Name="HasSeparatorAt" Hidden="true" />
+      <Method Name="TextBlockBuilder" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAABAAAAAgBAAAAAAAAAAAAA=</HashCode>
+      <FileName>TextBlockBuilder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cadmus.Export.ML.TextBlock">
+    <Position X="6" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AgACAAAAAAAAAAAEADAAAAAAAAAAAAAAAAAACCAAAAA=</HashCode>
+      <FileName>TextBlock.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Cadmus.Export.ML.ITextPartFlattener">
+    <Position X="0.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAA=</HashCode>
+      <FileName>ITextPartFlattener.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

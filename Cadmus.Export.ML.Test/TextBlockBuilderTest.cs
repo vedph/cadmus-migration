@@ -17,9 +17,9 @@ namespace Cadmus.Export.ML.Test
             // ..BBB.............
             // ....CCCCCCCCCCC...
             // ................DD
-            TokenTextExporter exporter = new();
-            TokenTextPart textPart = TokenTextExporterTest.GetSampleTextPart();
-            IList<IPart> layerParts = TokenTextExporterTest.GetSampleLayerParts();
+            TokenTextPartFlattener exporter = new();
+            TokenTextPart textPart = TokenTextPartFlattenerTest.GetSampleTextPart();
+            IList<IPart> layerParts = TokenTextPartFlattenerTest.GetSampleLayerParts();
             var tr = exporter.GetTextRanges(textPart, layerParts);
             TextBlockBuilder builder = new();
 

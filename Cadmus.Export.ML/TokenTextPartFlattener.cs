@@ -1,6 +1,7 @@
 ﻿using Cadmus.Core;
 using Cadmus.Core.Layers;
 using Cadmus.General.Parts;
+using Fusi.Tools.Config;
 using Fusi.Tools.Text;
 using System;
 using System.Collections.Generic;
@@ -14,22 +15,33 @@ namespace Cadmus.Export.ML
     /// with any number of layer parts linked to it, and produces a string
     /// representing this text with a list of spans corresponding to each
     /// fragment in each of the received layers.
+    /// <para>Tag: <c>it.vedph.text-flattener.token</c>.</para>
     /// </summary>
-    public class TokenTextExporter
+    [Tag("it.vedph.text-flattener.token")]
+    public sealed class TokenTextPartFlattener : ITextPartFlattener,
+        IConfigurable<TokenTextPartFlattenerOptions>
     {
-        /// <summary>
-        /// Gets or sets the line separator to be used in the string built
-        /// from the text being exported. The default value is LF.
-        /// </summary>
-        public string LineSeparator { get; set; }
+        private string _lineSeparator;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TokenTextExporter"/>
+        /// Initializes a new instance of the <see cref="TokenTextPartFlattener"/>
         /// class.
         /// </summary>
-        public TokenTextExporter()
+        public TokenTextPartFlattener()
         {
-            LineSeparator = "\n";
+            _lineSeparator = "\n";
+        }
+
+        /// <summary>
+        /// Configures the object with the specified options.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        /// <exception cref="ArgumentNullException">options</exception>
+        public void Configure(TokenTextPartFlattenerOptions options)
+        {
+            if (options is null) throw new ArgumentNullException(nameof(options));
+
+            _lineSeparator = options.LineSeparator;
         }
 
         private static int LocateTokenEnd(string text, int index)
@@ -42,7 +54,7 @@ namespace Cadmus.Export.ML
             bool end = false)
         {
             // base index for Y
-            int index = ((p.Y - 1) * LineSeparator.Length) +
+            int index = ((p.Y - 1) * _lineSeparator.Length) +
                 part.Lines.Select(l => l.Text.Length).Take(p.Y - 1).Sum();
 
             // locate X
@@ -120,24 +132,23 @@ namespace Cadmus.Export.ML
         /// representing the text with a list of layer ranges representing
         /// the extent of each layer's fragment on it.
         /// </summary>
-        /// <param name="textPart">The token based text part used as the base
-        /// text. This is the part identified by role ID
-        /// <see cref="PartBase.BASE_TEXT_ROLE_ID"/> in an item.</param>
+        /// <param name="textPart">The text part used as the base text. This is
+        /// the part identified by role ID <see cref="PartBase.BASE_TEXT_ROLE_ID"/>
+        /// in an item.</param>
         /// <param name="layerParts">The layer parts you want to export.</param>
-        /// <returns>Chunks of text.</returns>
         /// <returns>Tuple with 1=text and 2=ranges.</returns>
         /// <exception cref="ArgumentNullException">textPart or layerParts
         /// </exception>
-        public Tuple<string, MergedRangeSet> GetTextRanges(TokenTextPart textPart,
+        public Tuple<string, MergedRangeSet> GetTextRanges(IPart textPart,
             IList<IPart> layerParts)
         {
-            if (textPart is null)
-                throw new ArgumentNullException(nameof(textPart));
+            TokenTextPart? txt = textPart as TokenTextPart;
+            if (txt == null) throw new ArgumentNullException(nameof(textPart));
             if (layerParts is null)
                 throw new ArgumentNullException(nameof(layerParts));
 
-            string text = string.Join(LineSeparator,
-                textPart.Lines.Select(l => l.Text));
+            string text = string.Join(_lineSeparator,
+                txt.Lines.Select(l => l.Text));
 
             // convert all the fragment locations into ranges
             IList<MergedRange> ranges = new List<MergedRange>();
@@ -147,7 +158,7 @@ namespace Cadmus.Export.ML
                 int fi = 0;
                 foreach (string loc in GetFragmentLocations(part))
                 {
-                    MergedRange r = GetRangeFromLoc(loc, text, textPart);
+                    MergedRange r = GetRangeFromLoc(loc, text, txt);
                     r.Id = $"L{layerIndex}F{fi++}";
                     r.GroupId = $"L{layerIndex}";
                     ranges.Add(r);
@@ -156,6 +167,27 @@ namespace Cadmus.Export.ML
             }
 
             return Tuple.Create(text, new MergedRangeSet(ranges));
+        }
+    }
+
+    /// <summary>
+    /// Options for <see cref="TokenTextPartFlattener"/>.
+    /// </summary>
+    public class TokenTextPartFlattenerOptions
+    {
+        /// <summary>
+        /// Gets or sets the line separator to be used in the string built
+        /// from the text being exported. The default value is LF.
+        /// </summary>
+        public string LineSeparator { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the
+        /// <see cref="TokenTextPartFlattenerOptions"/> class.
+        /// </summary>
+        public TokenTextPartFlattenerOptions()
+        {
+            LineSeparator = "\n";
         }
     }
 }

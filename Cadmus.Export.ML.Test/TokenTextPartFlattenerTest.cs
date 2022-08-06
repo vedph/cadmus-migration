@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Cadmus.Export.ML.Test
 {
-    public sealed class TokenTextExporterTest
+    public sealed class TokenTextPartFlattenerTest
     {
         internal static TokenTextPart GetTextPart(IList<string> lines)
         {
@@ -110,7 +110,7 @@ namespace Cadmus.Export.ML.Test
         [Fact]
         public void GetTextRanges_Ok()
         {
-            TokenTextExporter exporter = new();
+            TokenTextPartFlattener exporter = new();
             TokenTextPart textPart = GetSampleTextPart();
             IList<IPart> layerParts = GetSampleLayerParts();
 
