@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Cadmus.Export.ML
+namespace Cadmus.Export
 {
     /// <summary>
     /// A row of <see cref="TextBlock"/>'s.

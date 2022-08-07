@@ -5,12 +5,16 @@ VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cadmus.Export.ML", "Cadmus.Export.ML\Cadmus.Export.ML.csproj", "{90C7192A-0BF1-400F-90F9-2E12C067DDF6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cadmus.Export.ML.Test", "Cadmus.Export.ML.Test\Cadmus.Export.ML.Test.csproj", "{B416CE9D-4185-4DD6-A7E1-A4EC3F3677DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cadmus.Export.ML.Test", "Cadmus.Export.ML.Test\Cadmus.Export.ML.Test.csproj", "{B416CE9D-4185-4DD6-A7E1-A4EC3F3677DC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5202FC97-CA57-47FC-9ADD-7EFC2DFFEE43}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cadmus.Export", "Cadmus.Export\Cadmus.Export.csproj", "{1001D72A-C1F5-46FF-B1CA-F1342F2789F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cadmus.Export.Test", "Cadmus.Export.Test\Cadmus.Export.Test.csproj", "{E1E79988-EF2D-44C8-BFB2-0C97C83B186C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +30,14 @@ Global
 		{B416CE9D-4185-4DD6-A7E1-A4EC3F3677DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B416CE9D-4185-4DD6-A7E1-A4EC3F3677DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B416CE9D-4185-4DD6-A7E1-A4EC3F3677DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1001D72A-C1F5-46FF-B1CA-F1342F2789F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1001D72A-C1F5-46FF-B1CA-F1342F2789F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1001D72A-C1F5-46FF-B1CA-F1342F2789F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1001D72A-C1F5-46FF-B1CA-F1342F2789F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1E79988-EF2D-44C8-BFB2-0C97C83B186C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1E79988-EF2D-44C8-BFB2-0C97C83B186C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1E79988-EF2D-44C8-BFB2-0C97C83B186C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1E79988-EF2D-44C8-BFB2-0C97C83B186C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

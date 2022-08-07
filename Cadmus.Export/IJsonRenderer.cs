@@ -1,10 +1,10 @@
-﻿namespace Cadmus.Export.ML
+﻿namespace Cadmus.Export
 {
     /// <summary>
-    /// Cadmus part renderer. This takes as input the JSON representation of the
-    /// part, and renders it into some output format.
+    /// Renderer for any object represented by JSON (like a part or a fragment).
+    /// This takes as input the JSON code, and renders it into some output format.
     /// </summary>
-    public interface IPartRenderer
+    public interface IJsonRenderer
     {
         /// <summary>
         /// Renders the specified JSON code.

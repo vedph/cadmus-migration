@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace Cadmus.Export.ML.Test
+namespace Cadmus.Export.Test
 {
     public sealed class TextBlockBuilderTest
     {

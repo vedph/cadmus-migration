@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Cadmus.Export.ML
+namespace Cadmus.Export
 {
     /// <summary>
     /// Builder of <see cref="TextBlock"/>'s. This gets a text with its merged

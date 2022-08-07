@@ -6,16 +6,16 @@ using System;
 using System.Collections.Generic;
 using System.Xml;
 
-namespace Cadmus.Export.ML
+namespace Cadmus.Export
 {
     /// <summary>
-    /// XSLT based part renderer. This is one of the most customizable renderers,
+    /// XSLT based JSON renderer. This is one of the most customizable renderers,
     /// using an optional pipeline of JMESPath transforms to preprocess the
     /// JSON input, and an XSLT script to render it once converted to XML.
-    /// <para>Tag: <c>it.vedph.part-renderer.xslt</c>.</para>
+    /// <para>Tag: <c>it.vedph.json-renderer.xslt</c>.</para>
     /// </summary>
-    [Tag("it.vedph.part-renderer.xslt")]
-    public sealed class XsltPartRenderer : IPartRenderer,
+    [Tag("it.vedph.json-renderer.xslt")]
+    public sealed class XsltJsonRenderer : IJsonRenderer,
         IConfigurable<XsltPartRendererOptions>
     {
         // https://jmespath.org/tutorial.html
@@ -26,9 +26,9 @@ namespace Cadmus.Export.ML
         private XsltTransformer? _transformer;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="XsltPartRenderer"/> class.
+        /// Initializes a new instance of the <see cref="XsltJsonRenderer"/> class.
         /// </summary>
-        public XsltPartRenderer()
+        public XsltJsonRenderer()
         {
             _jsonExpressions = new();
         }
@@ -81,7 +81,7 @@ namespace Cadmus.Export.ML
     }
 
     /// <summary>
-    /// Options for <see cref="XsltPartRenderer"/>.
+    /// Options for <see cref="XsltJsonRenderer"/>.
     /// </summary>
     public class XsltPartRendererOptions
     {

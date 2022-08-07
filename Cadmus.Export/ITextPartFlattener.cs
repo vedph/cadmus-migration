@@ -2,11 +2,8 @@
 using Fusi.Tools.Text;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Cadmus.Export.ML
+namespace Cadmus.Export
 {
     /// <summary>
     /// Flattener for parts containing a text representing the base text of

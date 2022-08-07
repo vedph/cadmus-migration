@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Cadmus.Export.ML
+namespace Cadmus.Export
 {
     /// <summary>
     /// Renderer of <see cref="TextBlockRow"/>'s.

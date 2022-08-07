@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using Xunit;
 
-namespace Cadmus.Export.ML.Test
+namespace Cadmus.Export.Test
 {
     public sealed class TokenTextPartFlattenerTest
     {

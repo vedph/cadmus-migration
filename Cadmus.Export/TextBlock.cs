@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Cadmus.Export.ML
+namespace Cadmus.Export
 {
     /// <summary>
     /// A block of text linked to any number of layer IDs. This is the model
