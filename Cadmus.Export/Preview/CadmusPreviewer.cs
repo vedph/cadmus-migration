@@ -159,7 +159,9 @@ namespace Cadmus.Export.Preview
             // get the flattener for that type ID
             ITextPartFlattener? flattener;
             if (_flatteners.ContainsKey(typeId))
+            {
                 flattener = _flatteners[typeId];
+            }
             else
             {
                 flattener = _factory.GetTextPartFlattener(typeId);

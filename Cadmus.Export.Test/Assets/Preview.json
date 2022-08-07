@@ -12,5 +12,20 @@
       "Keys": "it.vedph.token-text-layer|fr.it.vedph.orthography",
       "Id": "it.vedph.json-renderer.null"
     }
+  ],
+  "TextPartFlatteners": [
+    {
+      "Keys": "it.vedph.token-text",
+      "Id": "it.vedph.text-flattener.token"
+    }
+  ],
+  "TextBlockRenderers": [
+    {
+      "Id": "it.vedph.text-block-renderer.simple-tei",
+      "Options": {
+        "RowElement": "div",
+        "BlockElement": "seg"
+      }
+    }
   ]
 }
