@@ -5,11 +5,11 @@
       "Id": "it.vedph.json-renderer.null"
     },
     {
-      "Keys": "it.vedph.tiled-text-layer|fr.it.vedph.comment",
+      "Keys": "it.vedph.token-text-layer|fr.it.vedph.comment",
       "Id": "it.vedph.json-renderer.null"
     },
     {
-      "Keys": "it.vedph.tiled-text-layer|fr.it.vedph.orthography",
+      "Keys": "it.vedph.token-text-layer|fr.it.vedph.orthography",
       "Id": "it.vedph.json-renderer.null"
     }
   ]

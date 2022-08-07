@@ -206,5 +206,39 @@ namespace Cadmus.Export.Test
             string json2 = repository.GetPartContent(TEXT_ID);
             Assert.Equal(json, json2);
         }
+
+        private static JsonElement? GetFragmentAt(JsonElement fragments, int index)
+        {
+            if (index >= fragments.GetArrayLength()) return null;
+
+            int i = 0;
+            foreach (JsonElement fr in fragments.EnumerateArray())
+            {
+                if (i == index) return fr;
+                i++;
+            }
+            return null;
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        public void RenderFragment_NullWithOrth_Ok(int index)
+        {
+            InitDatabase();
+            ICadmusRepository repository = GetRepository();
+            CadmusPreviewer previewer = GetPreviewer(repository);
+
+            string json2 = previewer.RenderFragment(ORTH_ID, index);
+
+            string json = repository.GetPartContent(ORTH_ID);
+            JsonDocument doc = JsonDocument.Parse(json);
+            JsonElement fragments = doc.RootElement
+                .GetProperty("fragments");
+            JsonElement fr = GetFragmentAt(fragments, index)!.Value;
+            json = fr.ToString();
+
+            Assert.Equal(json, json2);
+        }
     }
 }

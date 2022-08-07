@@ -80,6 +80,19 @@ namespace Cadmus.Export.Preview
             return renderer != null? renderer.Render(json) : "";
         }
 
+        private static JsonElement? GetFragmentAt(JsonElement fragments, int index)
+        {
+            if (index >= fragments.GetArrayLength()) return null;
+
+            int i = 0;
+            foreach (JsonElement fr in fragments.EnumerateArray())
+            {
+                if (i == index) return fr;
+                i++;
+            }
+            return null;
+        }
+
         /// <summary>
         /// Renders the fragment at index <paramref name="frIndex"/> in the part
         /// with ID <paramref name="id"/>, using the renderer targeting
@@ -111,22 +124,9 @@ namespace Cadmus.Export.Preview
             IJsonRenderer? renderer = GetRendererFromKey(key);
 
             // extract the targeted fragment
-            JsonElement frr = doc.RootElement
-                .GetProperty("content")
+            JsonElement fragments = doc.RootElement
                 .GetProperty("fragments");
-            if (frIndex >= frr.GetArrayLength()) return "";
-
-            JsonElement? fr = null;
-            int i = 0;
-            foreach (JsonElement entry in frr.EnumerateArray())
-            {
-                if (i == frIndex)
-                {
-                    fr = entry;
-                    break;
-                }
-                i++;
-            }
+            JsonElement? fr = GetFragmentAt(fragments, frIndex);
             if (fr == null) return "";
 
             // render
