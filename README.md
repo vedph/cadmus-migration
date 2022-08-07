@@ -17,12 +17,47 @@ The `CadmusPreviewer` is a high level class leveraging most of these components 
 ```json
 {
 	"JsonRenderers": [],
-	"TextBlockRenderers": [],
-	"TextPartFlatteners": []
+	"TextPartFlatteners": [],
+	"TextBlockRenderers": []
 }
 ```
 
-Each array contains any number of JSON objects having an `Id` property and an optional `Options` object to configure the component.
+Each array contains any number of JSON objects having an `Id` property and an optional `Options` object to configure the component. Also, here the `Keys` property is used to include the key of the object type being processed: this is equal to the type ID for parts, and to the part type ID + `|` + part role ID (=fragment type) for fragments. This defines a mapping between object types and the IDs of the components configured to process them.
+
+For instance, in this configuration:
+
+```json
+{
+  "JsonRenderers": [
+    {
+      "Keys": "it.vedph.token-text",
+      "Id": "it.vedph.json-renderer.null"
+    },
+    {
+      "Keys": "it.vedph.token-text-layer|fr.it.vedph.comment",
+      "Id": "it.vedph.json-renderer.null"
+    },
+    {
+      "Keys": "it.vedph.token-text-layer|fr.it.vedph.orthography",
+      "Id": "it.vedph.json-renderer.null"
+    }
+  ],
+  "TextPartFlatteners": [
+    {
+      "Keys": "it.vedph.token-text",
+      "Id": "it.vedph.text-flattener.token"
+    }
+  ]
+}
+```
+
+there is a JSON renderer ID for each object key:
+
+- part `it.vedph.token-text`: its JSON renderer and its text flattener.
+- layer part `it.vedph.token-text-layer` for fragment type `fr.it.vedph.comment`: its JSON renderer.
+- layer part `it.vedph.token-text-layer` for fragment type `fr.it.vedph.orthography`: its JSON renderer.
+
+The JSON renderer here is just a "null" renderer which passes back the received JSON, for diagnostic purposes; but any other renderer can be used and configured via its `Options` property.
 
 ## Cadmus.Export.ML
 

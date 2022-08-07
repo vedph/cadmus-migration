@@ -4,20 +4,12 @@
     <Position X="3.5" Y="0.5" Width="1.5" />
     <Members>
       <Method Name="CadmusPreviewer" Hidden="true" />
-      <Method Name="GetRendererFromTarget" Hidden="true" />
     </Members>
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
-    <NestedTypes>
-      <Class Name="Cadmus.Export.Preview.CadmusPreviewer.MappingEntry" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>Preview\CadmusPreviewer.cs</NewMemberFileName>
-        </TypeIdentifier>
-      </Class>
-    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAgIAAQAAABAAAgAAAAAAAAAAABAAAAAAAAKgABAAGA=</HashCode>
+      <HashCode>AAgAAAQAAABAAAAAAQAAAAAAAABAAAEAAAAKAABAAEA=</HashCode>
       <FileName>Preview\CadmusPreviewer.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -34,10 +26,9 @@
     <Position X="0.5" Y="0.5" Width="2" />
     <Members>
       <Method Name="CadmusPreviewFactory" Hidden="true" />
-      <Method Name="GetComponentById" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAgAAAAAAAAAAAEAAAQAAAAAAAAACAAAEAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAEAAAQAAAAAAAAACAAAEAA=</HashCode>
       <FileName>Preview\CadmusPreviewFactory.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -107,7 +98,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Cadmus.Export.XsltJsonRenderer">
-    <Position X="5.5" Y="3" Width="1.5" />
+    <Position X="5.5" Y="3" Width="1.75" />
     <Members>
       <Method Name="XsltJsonRenderer" Hidden="true" />
     </Members>
@@ -115,7 +106,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAgDAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAABAAAAgAAAAAAABgDAAAAAAAAA=</HashCode>
       <FileName>XsltJsonRenderer.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -129,19 +120,19 @@
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAgAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAgAAgAAAAAAAAAA=</HashCode>
       <FileName>XsltJsonRenderer.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Fusi.Xml.Extras.Render.XsltTransformer" Collapsed="true">
-    <Position X="5.5" Y="5" Width="1.5" />
+    <Position X="5.5" Y="5" Width="1.75" />
     <TypeIdentifier />
   </Class>
-  <Class Name="Cadmus.Export.IdentityJsonRenderer" Collapsed="true">
+  <Class Name="Cadmus.Export.NullJsonRenderer">
     <Position X="8" Y="3" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAA=</HashCode>
-      <FileName>IdentityJsonRenderer.cs</FileName>
+      <FileName>NullJsonRenderer.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>

@@ -4,6 +4,7 @@ using Fusi.Xml.Extras.Render;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Xml;
 
 namespace Cadmus.Export
@@ -21,6 +22,8 @@ namespace Cadmus.Export
         // https://jmespath.org/tutorial.html
         // https://github.com/jdevillard/JmesPath.Net
         private readonly List<string> _jsonExpressions;
+        private bool _quoteStripping;
+        private readonly XmlWriterSettings _xmlWriterSettings;
 
         // https://www.newtonsoft.com/json/help/html/ConvertingJSONandXML.htm
         private XsltTransformer? _transformer;
@@ -31,6 +34,13 @@ namespace Cadmus.Export
         public XsltJsonRenderer()
         {
             _jsonExpressions = new();
+            _xmlWriterSettings = new XmlWriterSettings()
+            {
+                ConformanceLevel = ConformanceLevel.Fragment,
+                Encoding = Encoding.UTF8,
+                NamespaceHandling = NamespaceHandling.OmitDuplicates,
+                Indent = false
+            };
         }
 
         /// <summary>
@@ -45,6 +55,7 @@ namespace Cadmus.Export
 
             _jsonExpressions.Clear();
             _jsonExpressions.AddRange(options.JsonExpressions);
+            _quoteStripping = options.QuoteStripping;
 
             if (!string.IsNullOrWhiteSpace(options.Xslt))
                 _transformer = new XsltTransformer(options.Xslt);
@@ -60,9 +71,8 @@ namespace Cadmus.Export
         /// <exception cref="ArgumentNullException">json</exception>
         public string Render(string json)
         {
-            if (json is null)
-                throw new ArgumentNullException(nameof(json));
-            if (_transformer == null) return "";
+            if (json is null) throw new ArgumentNullException(nameof(json));
+            if (_transformer == null && _jsonExpressions.Count == 0) return "";
 
             // wrap object properties in root
             json = "{\"root\":" + json + "}";
@@ -73,6 +83,11 @@ namespace Cadmus.Export
             {
                 json = jmes.Transform(json, e);
             }
+            if (_quoteStripping && json.Length > 1
+                && json[0] == '"' && json[^1] == '"')
+            {
+                json = json[1..^1];
+            }
 
             // if no XSLT, we're done
             if (_transformer == null) return json;
@@ -82,7 +97,7 @@ namespace Cadmus.Export
             if (doc is null) return "";
 
             // transform via XSLT
-            return _transformer.Transform(doc.OuterXml);
+            return _transformer.Transform(doc.OuterXml, _xmlWriterSettings);
         }
     }
 
@@ -95,6 +110,12 @@ namespace Cadmus.Export
         /// Gets or sets the JSON transform expressions using JMES Path.
         /// </summary>
         public IList<string> JsonExpressions { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether quotes wrapping a string
+        /// result should be removed once JSON transforms have completed.
+        /// </summary>
+        public bool QuoteStripping { get; set; }
 
         /// <summary>
         /// Gets or sets the XSLT script used to produce the final result.
