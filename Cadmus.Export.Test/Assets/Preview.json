@@ -1,0 +1,16 @@
+﻿{
+  "JsonRenderers": [
+    {
+      "Keys": "it.vedph.token-text-part",
+      "Id": "it.vedph.json-renderer.null"
+    },
+    {
+      "Keys": "it.vedph.tiled-text-layer|fr.it.vedph.comment",
+      "Id": "it.vedph.json-renderer.null"
+    },
+    {
+      "Keys": "it.vedph.tiled-text-layer|fr.it.vedph.orthography",
+      "Id": "it.vedph.json-renderer.null"
+    }
+  ]
+}

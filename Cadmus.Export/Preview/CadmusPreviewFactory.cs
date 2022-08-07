@@ -1,17 +1,16 @@
-﻿using Cadmus.General.Parts;
-using Fusi.Text.Unicode;
-using Fusi.Tools.Config;
+﻿using Fusi.Tools.Config;
 using Microsoft.Extensions.Configuration;
 using SimpleInjector;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cadmus.Export.Preview
 {
+    /// <summary>
+    /// Components factory for <see cref="CadmusPreviewer"/>.
+    /// </summary>
+    /// <seealso cref="ComponentFactoryBase" />
     public class CadmusPreviewFactory : ComponentFactoryBase
     {
         /// <summary>
@@ -47,8 +46,7 @@ namespace Cadmus.Export.Preview
             // https://simpleinjector.readthedocs.io/en/latest/advanced.html?highlight=batch#batch-registration
             Assembly[] assemblies = new[]
             {
-                // Cadmus.General.Parts
-                // typeof(NotePart).Assembly,
+                // Cadmus.Export
                 typeof(XsltJsonRenderer).Assembly
             };
             if (additionalAssemblies?.Length > 0)
@@ -61,48 +59,34 @@ namespace Cadmus.Export.Preview
             // container.RegisterInstance(new UniData())
         }
 
-        private T? GetComponentById<T>(string collectionPath, string id)
-            where T : class
-        {
-            IList<ComponentFactoryConfigEntry> entries =
-                ComponentFactoryConfigEntry.ReadComponentEntries(
-                Configuration, collectionPath);
-
-            ComponentFactoryConfigEntry? entry =
-                entries.FirstOrDefault(e => e.Id == id);
-            if (entry == null) return null;
-
-            return GetComponent<T>(entry.Id!, entry.OptionsPath!);
-        }
-
         /// <summary>
-        /// Gets the JSON renderer with the specified ID.
+        /// Gets the JSON renderer with the specified key.
         /// </summary>
-        /// <param name="id">The identifier of the requested renderer.</param>
+        /// <param name="key">The key of the requested renderer.</param>
         /// <returns>Renderer or null if not found.</returns>
-        public IJsonRenderer? GetJsonRenderer(string id)
+        public IJsonRenderer? GetJsonRenderer(string key)
         {
-            return GetComponentById<IJsonRenderer>("JsonRenderers", id);
+            return GetComponentByKey<IJsonRenderer>("JsonRenderers", key);
         }
 
         /// <summary>
-        /// Gets the text block renderer with the specified ID.
+        /// Gets the text block renderer with the specified key.
         /// </summary>
-        /// <param name="id">The identifier of the requested renderer.</param>
+        /// <param name="key">The key of the requested renderer.</param>
         /// <returns>Renderer or null if not found.</returns>
-        public ITextBlockRenderer? GetTextBlockRenderer(string id)
+        public ITextBlockRenderer? GetTextBlockRenderer(string key)
         {
-            return GetComponentById<ITextBlockRenderer>("TextBlockRenderers", id);
+            return GetComponentByKey<ITextBlockRenderer>("TextBlockRenderers", key);
         }
 
         /// <summary>
-        /// Gets the text part flattener with the specified ID.
+        /// Gets the text part flattener with the specified key.
         /// </summary>
-        /// <param name="id">The identifier of the requested flattener.</param>
+        /// <param name="key">The key of the requested flattener.</param>
         /// <returns>Flattener or null if not found.</returns>
-        public ITextPartFlattener? GetTextPartFlattener(string id)
+        public ITextPartFlattener? GetTextPartFlattener(string key)
         {
-            return GetComponentById<ITextPartFlattener>("TextPartFlatteners", id);
+            return GetComponentByKey<ITextPartFlattener>("TextPartFlatteners", key);
         }
     }
 }

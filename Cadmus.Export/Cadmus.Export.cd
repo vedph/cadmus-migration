@@ -42,7 +42,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Cadmus.Export.TextBlockBuilder">
-    <Position X="6.5" Y="5" Width="1.5" />
+    <Position X="1.5" Y="5.5" Width="1.5" />
     <Members>
       <Method Name="HasSeparatorAt" Hidden="true" />
       <Method Name="TextBlockBuilder" Hidden="true" />
@@ -53,7 +53,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Cadmus.Export.TextBlockRow">
-    <Position X="8.75" Y="5" Width="1.5" />
+    <Position X="2" Y="11.25" Width="1.5" />
     <Members>
       <Method Name="ToString" Hidden="true" />
     </Members>
@@ -69,7 +69,7 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Cadmus.Export.TextBlock">
-    <Position X="11.25" Y="5" Width="1.5" />
+    <Position X="4.5" Y="11.25" Width="1.5" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
@@ -79,7 +79,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Cadmus.Export.TokenTextPartFlattener">
-    <Position X="8.75" Y="3" Width="2" />
+    <Position X="2" Y="9.25" Width="2" />
     <Members>
       <Method Name="GetFragmentLocations" Hidden="true" />
       <Method Name="GetIndexFromPoint" Hidden="true" />
@@ -97,7 +97,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Cadmus.Export.TokenTextPartFlattenerOptions">
-    <Position X="11.25" Y="3.25" Width="2" />
+    <Position X="4.5" Y="9.5" Width="2" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
@@ -107,7 +107,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Cadmus.Export.XsltJsonRenderer">
-    <Position X="8.75" Y="0.5" Width="1.5" />
+    <Position X="5.5" Y="3" Width="1.5" />
     <Members>
       <Method Name="XsltJsonRenderer" Hidden="true" />
     </Members>
@@ -124,7 +124,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Cadmus.Export.XsltPartRendererOptions">
-    <Position X="13.25" Y="0.75" Width="1.75" />
+    <Position X="5.5" Y="6" Width="1.75" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
@@ -134,25 +134,33 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Fusi.Xml.Extras.Render.XsltTransformer" Collapsed="true">
-    <Position X="11.25" Y="1" Width="1.5" />
+    <Position X="5.5" Y="5" Width="1.5" />
     <TypeIdentifier />
   </Class>
+  <Class Name="Cadmus.Export.IdentityJsonRenderer" Collapsed="true">
+    <Position X="8" Y="3" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>IdentityJsonRenderer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
   <Interface Name="Cadmus.Export.IJsonRenderer">
-    <Position X="6.5" Y="0.5" Width="1.5" />
+    <Position X="6.75" Y="1" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAA=</HashCode>
       <FileName>IJsonRenderer.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Cadmus.Export.ITextBlockRenderer">
-    <Position X="6" Y="7" Width="2" />
+    <Position X="1" Y="7.25" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAA=</HashCode>
       <FileName>ITextBlockRenderer.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Cadmus.Export.ITextPartFlattener">
-    <Position X="6.5" Y="2.75" Width="1.5" />
+    <Position X="1.5" Y="4" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAA=</HashCode>
       <FileName>ITextPartFlattener.cs</FileName>
