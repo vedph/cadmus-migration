@@ -9,12 +9,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cadmus.Export.ML.Test", "Ca
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5202FC97-CA57-47FC-9ADD-7EFC2DFFEE43}"
 	ProjectSection(SolutionItems) = preProject
+		Pack.bat = Pack.bat
+		Push.bat = Push.bat
 		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cadmus.Export", "Cadmus.Export\Cadmus.Export.csproj", "{1001D72A-C1F5-46FF-B1CA-F1342F2789F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cadmus.Export.Test", "Cadmus.Export.Test\Cadmus.Export.Test.csproj", "{E1E79988-EF2D-44C8-BFB2-0C97C83B186C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cadmus.Export.Test", "Cadmus.Export.Test\Cadmus.Export.Test.csproj", "{E1E79988-EF2D-44C8-BFB2-0C97C83B186C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
