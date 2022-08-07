@@ -52,19 +52,8 @@ namespace Cadmus.Export.Test
             };
         }
 
-        private void SeedData(IMongoDatabase db)
+        internal static TokenTextPart GetSampleTextPart()
         {
-            // we need just parts for our tests
-            IMongoCollection<MongoPart> parts = db.GetCollection<MongoPart>
-                (MongoPart.COLLECTION);
-
-            // 0123456789-1234567
-            // que bixit|annos XX
-            // ..O............... 1.1@3
-            // ....O............. 1.2@1
-            // ....CCCCCCCCCCC... 1.2-2.1
-            // ................CC 2.2
-
             // text
             TokenTextPart text = new()
             {
@@ -84,6 +73,24 @@ namespace Cadmus.Export.Test
                 Y = 2,
                 Text = "annos XX"
             });
+            return text;
+        }
+
+        private void SeedData(IMongoDatabase db)
+        {
+            // we need just parts for our tests
+            IMongoCollection<MongoPart> parts = db.GetCollection<MongoPart>
+                (MongoPart.COLLECTION);
+
+            // 0123456789-1234567
+            // que bixit|annos XX
+            // ..O............... 1.1@3
+            // ....O............. 1.2@1
+            // ....CCCCCCCCCCC... 1.2-2.1
+            // ................CC 2.2
+
+            // text
+            TokenTextPart text = GetSampleTextPart();
             parts.InsertOne(CreateMongoPart(text));
 
             // orthography
@@ -175,14 +182,6 @@ namespace Cadmus.Export.Test
             return repository;
         }
 
-        private static string LoadResourceText(string name)
-        {
-            using StreamReader reader = new(Assembly.GetExecutingAssembly()
-                .GetManifestResourceStream($"Cadmus.Export.Test.Assets.{name}")!,
-                Encoding.UTF8);
-            return reader.ReadToEnd();
-        }
-
         private static CadmusPreviewFactory GetFactory()
         {
             Container container = new();
@@ -190,7 +189,7 @@ namespace Cadmus.Export.Test
 
             ConfigurationBuilder cb = new();
             IConfigurationRoot config = cb
-                .AddInMemoryJson(LoadResourceText("Preview.json"))
+                .AddInMemoryJson(TestHelper.LoadResourceText("Preview.json"))
                 .Build();
             return new CadmusPreviewFactory(container, config);
         }

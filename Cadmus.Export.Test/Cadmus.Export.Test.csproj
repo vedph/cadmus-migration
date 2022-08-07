@@ -9,10 +9,12 @@
 
 	<ItemGroup>
 	  <None Remove="Assets\Preview.json" />
+	  <None Remove="Assets\TokenTextPart.xslt" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <EmbeddedResource Include="Assets\Preview.json" />
+	  <EmbeddedResource Include="Assets\TokenTextPart.xslt" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -64,12 +64,18 @@ namespace Cadmus.Export
                 throw new ArgumentNullException(nameof(json));
             if (_transformer == null) return "";
 
-            // transform JSON
+            // wrap object properties in root
+            json = "{\"root\":" + json + "}";
+
+            // transform JSON if required
             JmesPath jmes = new();
             foreach (string e in _jsonExpressions)
             {
                 json = jmes.Transform(json, e);
             }
+
+            // if no XSLT, we're done
+            if (_transformer == null) return json;
 
             // convert to XML
             XmlDocument? doc = JsonConvert.DeserializeXmlNode(json);
@@ -93,7 +99,7 @@ namespace Cadmus.Export
         /// <summary>
         /// Gets or sets the XSLT script used to produce the final result.
         /// </summary>
-        public string Xslt { get; set; }
+        public string? Xslt { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XsltPartRendererOptions"/>
@@ -102,7 +108,6 @@ namespace Cadmus.Export
         public XsltPartRendererOptions()
         {
             JsonExpressions = new List<string>();
-            Xslt = "";
         }
     }
 }
