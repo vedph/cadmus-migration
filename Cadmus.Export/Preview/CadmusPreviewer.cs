@@ -29,13 +29,27 @@ namespace Cadmus.Export.Preview
         public CadmusPreviewer(ICadmusRepository repository,
             CadmusPreviewFactory factory)
         {
-            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-            _factory = factory ?? throw new ArgumentNullException(nameof(factory));
+            _repository = repository ??
+                throw new ArgumentNullException(nameof(repository));
+            _factory = factory ??
+                throw new ArgumentNullException(nameof(factory));
 
             // cached components
             _jsonRenderers = new Dictionary<string, IJsonRenderer>();
             _flatteners = new Dictionary<string, ITextPartFlattener>();
         }
+
+        /// <summary>
+        /// Gets all the keys registered for JSON renderers or text part
+        /// flatteners in the configuration of this previewer's factory.
+        /// This is used by client code to determine for which Cadmus objects
+        /// a preview is available.
+        /// </summary>
+        /// <param name="flatteners">True to get the flatteners keys, false
+        /// to get the renderers keys.</param>
+        /// <returns>List of unique keys.</returns>
+        public HashSet<string> GetKeys(bool flatteners)
+            => _factory.GetKeys(flatteners);
 
         private IJsonRenderer? GetRendererFromKey(string key)
         {
