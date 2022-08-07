@@ -46,14 +46,14 @@ namespace Cadmus.Export.ML
         /// <returns>Enumerable of list of text blocks, each representing a row
         /// (line) in the original text.</returns>
         /// <exception cref="ArgumentNullException">text or set</exception>
-        public IEnumerable<IList<TextBlock>> Build(string text,
+        public IEnumerable<TextBlockRow> Build(string text,
             MergedRangeSet set)
         {
             if (text == null) throw new ArgumentNullException(nameof(text));
             if (set is null) throw new ArgumentNullException(nameof(set));
 
             int i = 1, n = 0, start = 0;
-            List<TextBlock> row = new();
+            TextBlockRow row = new();
 
             while (i < text.Length)
             {
@@ -64,12 +64,12 @@ namespace Cadmus.Export.ML
                     if (i > start)
                     {
                         IList<MergedRange> ranges = set.GetRangesAt(start);
-                        row.Add(new TextBlock(
+                        row.Blocks.Add(new TextBlock(
                             $"{++n}", text[start..i], ranges.Select(r => r.Id!)));
                     }
-                    if (row.Count > 0) yield return row;
+                    if (row.Blocks.Count > 0) yield return row;
 
-                    row = new List<TextBlock>();
+                    row = new TextBlockRow();
                     i += Separator.Length;
                     start = i;
                     continue;
@@ -80,7 +80,7 @@ namespace Cadmus.Export.ML
                     if (i > start)
                     {
                         IList<MergedRange> ranges = set.GetRangesAt(start);
-                        row.Add(new TextBlock(
+                        row.Blocks.Add(new TextBlock(
                             $"{++n}", text[start..i], ranges.Select(r => r.Id!)));
                     }
                     start = i++;
@@ -91,10 +91,10 @@ namespace Cadmus.Export.ML
             if (i > start)
             {
                 IList<MergedRange> ranges = set.GetRangesAt(start);
-                row.Add(new TextBlock(
-                    $"{++n}", text[start..i], ranges.Select(r => r.Id!)));
+                row.Blocks.Add(new TextBlock(
+                    $"{n + 1}", text[start..i], ranges.Select(r => r.Id!)));
             }
-            if (row.Count > 0) yield return row;
+            if (row.Blocks.Count > 0) yield return row;
         }
     }
 }

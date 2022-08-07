@@ -23,42 +23,42 @@ namespace Cadmus.Export.ML.Test
             var tr = exporter.GetTextRanges(textPart, layerParts);
             TextBlockBuilder builder = new();
 
-            List<IList<TextBlock>> rows = builder.Build(tr.Item1, tr.Item2)
+            List<TextBlockRow> rows = builder.Build(tr.Item1, tr.Item2)
                 .ToList();
 
             Assert.Equal(2, rows.Count);
 
             // row 0
-            IList<TextBlock> row = rows[0];
-            Assert.Equal(5, row.Count);
+            TextBlockRow row = rows[0];
+            Assert.Equal(5, row.Blocks.Count);
             // qu: -
-            Assert.Equal("qu", row[0].Text);
-            Assert.Equal(0, row[0].LayerIds.Count);
+            Assert.Equal("qu", row.Blocks[0].Text);
+            Assert.Equal(0, row.Blocks[0].LayerIds.Count);
             // e: AB
-            Assert.Equal("e", row[1].Text);
-            Assert.Equal(2, row[1].LayerIds.Count);
+            Assert.Equal("e", row.Blocks[1].Text);
+            Assert.Equal(2, row.Blocks[1].LayerIds.Count);
             // _: B
-            Assert.Equal(" ", row[2].Text);
-            Assert.Equal(1, row[2].LayerIds.Count);
+            Assert.Equal(" ", row.Blocks[2].Text);
+            Assert.Equal(1, row.Blocks[2].LayerIds.Count);
             // v: BC
-            Assert.Equal("v", row[3].Text);
-            Assert.Equal(2, row[3].LayerIds.Count);
+            Assert.Equal("v", row.Blocks[3].Text);
+            Assert.Equal(2, row.Blocks[3].LayerIds.Count);
             // ixit: C
-            Assert.Equal("ixit", row[4].Text);
-            Assert.Equal(1, row[4].LayerIds.Count);
+            Assert.Equal("ixit", row.Blocks[4].Text);
+            Assert.Equal(1, row.Blocks[4].LayerIds.Count);
 
             // row 1
             row = rows[1];
-            Assert.Equal(3, row.Count);
+            Assert.Equal(3, row.Blocks.Count);
             // annos: C
-            Assert.Equal("annos", row[0].Text);
-            Assert.Equal(1, row[0].LayerIds.Count);
+            Assert.Equal("annos", row.Blocks[0].Text);
+            Assert.Equal(1, row.Blocks[0].LayerIds.Count);
             // _: -
-            Assert.Equal(" ", row[1].Text);
-            Assert.Equal(0, row[1].LayerIds.Count);
+            Assert.Equal(" ", row.Blocks[1].Text);
+            Assert.Equal(0, row.Blocks[1].LayerIds.Count);
             // XX: D
-            Assert.Equal("XX", row[2].Text);
-            Assert.Equal(1, row[2].LayerIds.Count);
+            Assert.Equal("XX", row.Blocks[2].Text);
+            Assert.Equal(1, row.Blocks[2].LayerIds.Count);
         }
     }
 }

@@ -30,7 +30,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Cadmus.Export.ML.TextBlock">
-    <Position X="6" Y="0.5" Width="1.5" />
+    <Position X="8.5" Y="0.75" Width="1.5" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
@@ -39,11 +39,92 @@
       <FileName>TextBlock.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="Cadmus.Export.ML.XsltPartRenderer">
+    <Position X="3" Y="6.75" Width="1.5" />
+    <Members>
+      <Method Name="XsltPartRenderer" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAgDAAAAAAAAA=</HashCode>
+      <FileName>XsltPartRenderer.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_transformer" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Cadmus.Export.ML.XsltPartRendererOptions">
+    <Position X="4.75" Y="6.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAgAAAAAAAAAA=</HashCode>
+      <FileName>XsltPartRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Fusi.Xml.Extras.Render.XsltTransformer" Collapsed="true">
+    <Position X="0.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Cadmus.Export.ML.TextBlockRow">
+    <Position X="6" Y="1.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TextBlockRow.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Blocks" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Cadmus.Export.ML.SimpleTeiTextBlockRenderer">
+    <Position X="7.75" Y="7" Width="2.25" />
+    <Members>
+      <Method Name="RenderRowText" Hidden="true" />
+      <Method Name="SimpleTeiTextBlockRenderer" Hidden="true" />
+      <Method Name="Xmlize" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAQAAAAAAAABAAAAQAAAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>SimpleTeiTextBlockRenderer.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_options" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Cadmus.Export.ML.SimpleTeiTextPartRendererOptions">
+    <Position X="11" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SimpleTeiTextBlockRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Interface Name="Cadmus.Export.ML.ITextPartFlattener">
     <Position X="0.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAA=</HashCode>
       <FileName>ITextPartFlattener.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Cadmus.Export.ML.IPartRenderer">
+    <Position X="4" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>IPartRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Cadmus.Export.ML.ITextBlockRenderer">
+    <Position X="9.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>ITextBlockRenderer.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Font Name="Segoe UI" Size="9" />

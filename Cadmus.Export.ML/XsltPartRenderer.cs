@@ -1,0 +1,108 @@
+﻿using DevLab.JmesPath;
+using Fusi.Tools.Config;
+using Fusi.Xml.Extras.Render;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Xml;
+
+namespace Cadmus.Export.ML
+{
+    /// <summary>
+    /// XSLT based part renderer. This is one of the most customizable renderers,
+    /// using an optional pipeline of JMESPath transforms to preprocess the
+    /// JSON input, and an XSLT script to render it once converted to XML.
+    /// <para>Tag: <c>it.vedph.part-renderer.xslt</c>.</para>
+    /// </summary>
+    [Tag("it.vedph.part-renderer.xslt")]
+    public sealed class XsltPartRenderer : IPartRenderer,
+        IConfigurable<XsltPartRendererOptions>
+    {
+        // https://jmespath.org/tutorial.html
+        // https://github.com/jdevillard/JmesPath.Net
+        private readonly List<string> _jsonExpressions;
+
+        // https://www.newtonsoft.com/json/help/html/ConvertingJSONandXML.htm
+        private XsltTransformer? _transformer;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="XsltPartRenderer"/> class.
+        /// </summary>
+        public XsltPartRenderer()
+        {
+            _jsonExpressions = new();
+        }
+
+        /// <summary>
+        /// Configures the object with the specified options.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        /// <exception cref="ArgumentNullException">options</exception>
+        public void Configure(XsltPartRendererOptions options)
+        {
+            if (options is null)
+                throw new ArgumentNullException(nameof(options));
+
+            _jsonExpressions.Clear();
+            _jsonExpressions.AddRange(options.JsonExpressions);
+
+            if (!string.IsNullOrWhiteSpace(options.Xslt))
+                _transformer = new XsltTransformer(options.Xslt);
+            else
+                _transformer = null;
+        }
+
+        /// <summary>
+        /// Renders the specified JSON code.
+        /// </summary>
+        /// <param name="json">The input JSON.</param>
+        /// <returns>Rendered output.</returns>
+        /// <exception cref="ArgumentNullException">json</exception>
+        public string Render(string json)
+        {
+            if (json is null)
+                throw new ArgumentNullException(nameof(json));
+            if (_transformer == null) return "";
+
+            // transform JSON
+            JmesPath jmes = new();
+            foreach (string e in _jsonExpressions)
+            {
+                json = jmes.Transform(json, e);
+            }
+
+            // convert to XML
+            XmlDocument? doc = JsonConvert.DeserializeXmlNode(json);
+            if (doc is null) return "";
+
+            // transform via XSLT
+            return _transformer.Transform(doc.OuterXml);
+        }
+    }
+
+    /// <summary>
+    /// Options for <see cref="XsltPartRenderer"/>.
+    /// </summary>
+    public class XsltPartRendererOptions
+    {
+        /// <summary>
+        /// Gets or sets the JSON transform expressions using JMES Path.
+        /// </summary>
+        public IList<string> JsonExpressions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the XSLT script used to produce the final result.
+        /// </summary>
+        public string Xslt { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="XsltPartRendererOptions"/>
+        /// class.
+        /// </summary>
+        public XsltPartRendererOptions()
+        {
+            JsonExpressions = new List<string>();
+            Xslt = "";
+        }
+    }
+}
