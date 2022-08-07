@@ -1,7 +1,7 @@
 ﻿{
   "JsonRenderers": [
     {
-      "Keys": "it.vedph.token-text-part",
+      "Keys": "it.vedph.token-text",
       "Id": "it.vedph.json-renderer.null"
     },
     {

@@ -2,7 +2,6 @@
 using Cadmus.Core.Storage;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text.Json;
 
@@ -12,29 +11,10 @@ namespace Cadmus.Export.Preview
     /// Cadmus object previewer. This is a high level class using rendition
     /// components to render a preview for Cadmus parts or fragments.
     /// </summary>
-    public class CadmusPreviewer
+    public sealed class CadmusPreviewer
     {
-        private sealed class MappingEntry
-        {
-            public string TypeId { get; set; }
-            public string? RoleId { get; set; }
-            public string TargetId { get; set; }
-
-            public MappingEntry()
-            {
-                TypeId = "";
-                TargetId = "";
-            }
-
-            public override string ToString()
-            {
-                return $"{TypeId} {RoleId}: {TargetId}";
-            }
-        }
-
         private readonly ICadmusRepository _repository;
         private readonly CadmusPreviewFactory _factory;
-        private readonly Dictionary<string, string> _mappings;
         private TextBlockBuilder? _blockBuilder;
         // cache
         private readonly Dictionary<string, IJsonRenderer> _jsonRenderers;
@@ -52,54 +32,24 @@ namespace Cadmus.Export.Preview
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _factory = factory ?? throw new ArgumentNullException(nameof(factory));
 
-            _mappings = new();
-
             // cached components
             _jsonRenderers = new Dictionary<string, IJsonRenderer>();
             _flatteners = new Dictionary<string, ITextPartFlattener>();
         }
 
-        public void SetMappings(IDictionary<string, string> mappings)
+        private IJsonRenderer? GetRendererFromKey(string key)
         {
-            if (mappings is null)
-                throw new ArgumentNullException(nameof(mappings));
-
-            _mappings.Clear();
-            foreach (string key in mappings.Keys) _mappings[key] = mappings[key];
-        }
-
-        public void LoadMappings(Stream stream)
-        {
-            if (stream is null) throw new ArgumentNullException(nameof(stream));
-
-            MappingEntry[]? entries = JsonSerializer.Deserialize<MappingEntry[]>(stream);
-            _mappings.Clear();
-            if (entries == null) return;
-
-            foreach (var entry in entries)
-            {
-                string key = entry.RoleId != null
-                    ? $"{entry.TypeId} {entry.RoleId}"
-                    : entry.TypeId;
-                _mappings[key] = entry.TargetId;
-            }
-        }
-
-        private IJsonRenderer? GetRendererFromTarget(string key)
-        {
-            // get the renderer targeting the part type ID
-            if (!_mappings.ContainsKey(key)) return null;
-
-            string id = _mappings[key];
             IJsonRenderer? renderer;
 
-            if (_jsonRenderers.ContainsKey(id))
-                renderer = _jsonRenderers[id];
+            if (_jsonRenderers.ContainsKey(key))
+            {
+                renderer = _jsonRenderers[key];
+            }
             else
             {
-                renderer = _factory.GetJsonRenderer(id);
+                renderer = _factory.GetJsonRenderer(key);
                 if (renderer == null) return null;
-                _jsonRenderers[id] = renderer;
+                _jsonRenderers[key] = renderer;
             }
             return renderer;
         }
@@ -124,7 +74,7 @@ namespace Cadmus.Export.Preview
             if (typeId == null) return "";
 
             // get the renderer targeting the part type ID
-            IJsonRenderer? renderer = GetRendererFromTarget(typeId);
+            IJsonRenderer? renderer = GetRendererFromKey(typeId);
 
             // render
             return renderer != null? renderer.Render(json) : "";
@@ -156,9 +106,9 @@ namespace Cadmus.Export.Preview
             if (roleId == null) return "";
 
             // the target ID is the combination of these two IDs
-            string targetId = $"{typeId} {roleId}";
+            string key = $"{typeId}|{roleId}";
 
-            IJsonRenderer? renderer = GetRendererFromTarget(targetId);
+            IJsonRenderer? renderer = GetRendererFromKey(key);
 
             // extract the targeted fragment
             JsonElement frr = doc.RootElement
@@ -207,17 +157,14 @@ namespace Cadmus.Export.Preview
             if (typeId == null) return Array.Empty<TextBlockRow>();
 
             // get the flattener for that type ID
-            if (!_mappings.ContainsKey(typeId)) return Array.Empty<TextBlockRow>();
-            string flattenerId = _mappings[typeId];
-
             ITextPartFlattener? flattener;
-            if (_flatteners.ContainsKey(flattenerId))
-                flattener = _flatteners[flattenerId];
+            if (_flatteners.ContainsKey(typeId))
+                flattener = _flatteners[typeId];
             else
             {
-                flattener = _factory.GetTextPartFlattener(flattenerId);
+                flattener = _factory.GetTextPartFlattener(typeId);
                 if (flattener == null) return Array.Empty<TextBlockRow>();
-                _flatteners[flattenerId] = flattener;
+                _flatteners[typeId] = flattener;
             }
 
             // load part and layers

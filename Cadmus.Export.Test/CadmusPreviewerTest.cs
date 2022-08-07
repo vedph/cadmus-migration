@@ -188,20 +188,23 @@ namespace Cadmus.Export.Test
             return new CadmusPreviewFactory(container, config);
         }
 
-        private static CadmusPreviewer GetPreviewer()
+        private static CadmusPreviewer GetPreviewer(ICadmusRepository repository)
         {
-            ICadmusRepository repository = GetRepository();
             CadmusPreviewFactory factory = GetFactory();
             return new(repository, factory);
         }
 
         [Fact]
-        public void RenderPart_Orthography_Ok()
+        public void RenderPart_NullWithText_Ok()
         {
             InitDatabase();
-            CadmusPreviewer previewer = GetPreviewer();
+            ICadmusRepository repository = GetRepository();
+            CadmusPreviewer previewer = GetPreviewer(repository);
 
-            // TODO
+            string json = previewer.RenderPart(TEXT_ID);
+
+            string json2 = repository.GetPartContent(TEXT_ID);
+            Assert.Equal(json, json2);
         }
     }
 }
