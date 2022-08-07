@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using SimpleInjector;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -57,6 +58,36 @@ namespace Cadmus.Export.Preview
             container.Collection.Register<ITextPartFlattener>(assemblies);
 
             // container.RegisterInstance(new UniData())
+        }
+
+        private void CollectKeys(string collectionPath, HashSet<string> keys)
+        {
+            foreach (var entry in
+                ComponentFactoryConfigEntry.ReadComponentEntries(
+                Configuration, collectionPath)
+                .Where(e => e.Keys?.Count > 0))
+            {
+                foreach (string id in entry.Keys!) keys.Add(id);
+            }
+        }
+
+        /// <summary>
+        /// Gets all the keys registered for JSON renderers or text part
+        /// flatteners in the configuration of this factory. This is used
+        /// by client code to determine for which Cadmus objects a preview
+        /// is available.
+        /// </summary>
+        /// <param name="flatteners">True to get the flatteners keys, false
+        /// to get the renderers keys.</param>
+        /// <returns>List of unique keys.</returns>
+        public HashSet<string> GetKeys(bool flatteners)
+        {
+            HashSet<string> keys = new();
+
+            if (flatteners) CollectKeys("TextPartFlatteners", keys);
+            else CollectKeys("JsonRenderers", keys);
+
+            return keys;
         }
 
         /// <summary>

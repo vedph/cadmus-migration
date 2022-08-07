@@ -182,21 +182,9 @@ namespace Cadmus.Export.Test
             return repository;
         }
 
-        private static CadmusPreviewFactory GetFactory()
-        {
-            Container container = new();
-            CadmusPreviewFactory.ConfigureServices(container);
-
-            ConfigurationBuilder cb = new();
-            IConfigurationRoot config = cb
-                .AddInMemoryJson(TestHelper.LoadResourceText("Preview.json"))
-                .Build();
-            return new CadmusPreviewFactory(container, config);
-        }
-
         private static CadmusPreviewer GetPreviewer(ICadmusRepository repository)
         {
-            CadmusPreviewFactory factory = GetFactory();
+            CadmusPreviewFactory factory = TestHelper.GetFactory();
             return new(repository, factory);
         }
 
