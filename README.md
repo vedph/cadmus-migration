@@ -68,13 +68,6 @@ The JSON renderer here is just a "null" renderer which passes back the received 
 
 ### JSON Rendering
 
-- [Cadmus Migration](#cadmus-migration)
-  - [Cadmus.Export](#cadmusexport)
-    - [JSON Rendering](#json-rendering)
-  - [Cadmus.Export.ML](#cadmusexportml)
-  - [History](#history)
-    - [0.0.5](#005)
-
 Any Cadmus object, either part or fragment, is ultimately archived as JSON. So, JSON is the starting point when rendering the output. Any component implementing `IJsonRenderer` can be registered in the previewer factory and used in the rendering configuration, with all its settings.
 
 In most cases, unless complex logic is required, you can use the `XsltJsonRenderer`, which was designed with some essential requirements in mind:
@@ -182,7 +175,7 @@ So, the final output is:
 
 ## Cadmus.Export.ML
 
-Components used to export Cadmus data into some markup language (typically XML).
+Components used to export Cadmus data into some markup language (typically XML). These rely on the general purpose export components, and add logic targeted to build a full-fledged output for third parties (e.g. TEI).
 
 ## History
 
