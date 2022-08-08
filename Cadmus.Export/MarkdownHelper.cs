@@ -38,7 +38,12 @@ namespace Cadmus.Export
                 // skip open tag and find close
                 i += open.Length;
                 int j = source.IndexOf(close, i);
-                if (j == -1) j = source.Length;
+                // if not found, find next open; if not found, go up to end
+                if (j == -1)
+                {
+                    j = source.IndexOf(open, i);
+                    if (j == -1) j = source.Length;
+                }
 
                 // convert region
                 string md = source[i..j];
@@ -46,6 +51,7 @@ namespace Cadmus.Export
 
                 // skip close tag and move to next open if any
                 start = j + close.Length;
+                if (start >= source.Length) break;
                 i = source.IndexOf(open, start);
             }
 

@@ -10,7 +10,7 @@ namespace Cadmus.Export.Test
         public void Render_XsltOnly_Ok()
         {
             XsltJsonRenderer renderer = new();
-            renderer.Configure(new XsltPartRendererOptions
+            renderer.Configure(new XsltJsonRendererOptions
             {
                 Xslt = TestHelper.LoadResourceText("TokenTextPart.xslt")
             });
@@ -30,7 +30,7 @@ namespace Cadmus.Export.Test
         public void Render_JmesPathOnly_Ok()
         {
             XsltJsonRenderer renderer = new();
-            renderer.Configure(new XsltPartRendererOptions
+            renderer.Configure(new XsltJsonRendererOptions
             {
                 JsonExpressions = new[] { "root.citation" },
                 QuoteStripping = true
@@ -45,6 +45,33 @@ namespace Cadmus.Export.Test
 
             Assert.NotNull(result);
             Assert.Equal("CIL 1,23", result);
+        }
+
+        [Fact]
+        public void Render_JmesPathOnlyMd_Ok()
+        {
+            XsltJsonRenderer renderer = new();
+            renderer.Configure(new XsltJsonRendererOptions
+            {
+                JsonExpressions = new[] { "root.text" },
+                QuoteStripping = true,
+                Markdown = "html"
+            });
+            NotePart note = new()
+            {
+                CreatorId = "zeus",
+                UserId = "zeus",
+                Text = "This is a *note* using MD"
+            };
+            string json = JsonSerializer.Serialize(note, new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
+
+            string result = renderer.Render(json);
+
+            Assert.NotNull(result);
+            Assert.Equal("<p>This is a <em>note</em> using MD</p>\n", result);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using DevLab.JmesPath;
 using Fusi.Tools.Config;
 using Fusi.Xml.Extras.Render;
+using Markdig;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,19 +14,21 @@ namespace Cadmus.Export
     /// XSLT based JSON renderer. This is one of the most customizable renderers,
     /// using an optional pipeline of JMESPath transforms to preprocess the
     /// JSON input, and an XSLT script to render it once converted to XML.
+    /// <para>Once transformations have been processed, you also have the option
+    /// of converting regions of Markdown code in the result (or the whole result)
+    /// into HTML or plain text.</para>
     /// <para>Tag: <c>it.vedph.json-renderer.xslt</c>.</para>
     /// </summary>
     [Tag("it.vedph.json-renderer.xslt")]
     public sealed class XsltJsonRenderer : IJsonRenderer,
-        IConfigurable<XsltPartRendererOptions>
+        IConfigurable<XsltJsonRendererOptions>
     {
         // https://jmespath.org/tutorial.html
         // https://github.com/jdevillard/JmesPath.Net
-        private readonly List<string> _jsonExpressions;
-        private bool _quoteStripping;
-        private readonly XmlWriterSettings _xmlWriterSettings;
-
         // https://www.newtonsoft.com/json/help/html/ConvertingJSONandXML.htm
+
+        private readonly XmlWriterSettings _xmlWriterSettings;
+        private XsltJsonRendererOptions? _options;
         private XsltTransformer? _transformer;
 
         /// <summary>
@@ -33,7 +36,6 @@ namespace Cadmus.Export
         /// </summary>
         public XsltJsonRenderer()
         {
-            _jsonExpressions = new();
             _xmlWriterSettings = new XmlWriterSettings()
             {
                 ConformanceLevel = ConformanceLevel.Fragment,
@@ -48,14 +50,12 @@ namespace Cadmus.Export
         /// </summary>
         /// <param name="options">The options.</param>
         /// <exception cref="ArgumentNullException">options</exception>
-        public void Configure(XsltPartRendererOptions options)
+        public void Configure(XsltJsonRendererOptions options)
         {
             if (options is null)
                 throw new ArgumentNullException(nameof(options));
 
-            _jsonExpressions.Clear();
-            _jsonExpressions.AddRange(options.JsonExpressions);
-            _quoteStripping = options.QuoteStripping;
+            _options = options;
 
             if (!string.IsNullOrWhiteSpace(options.Xslt))
                 _transformer = new XsltTransformer(options.Xslt);
@@ -71,40 +71,82 @@ namespace Cadmus.Export
         /// <exception cref="ArgumentNullException">json</exception>
         public string Render(string json)
         {
+            if (_options == null) return json;
+
             if (json is null) throw new ArgumentNullException(nameof(json));
-            if (_transformer == null && _jsonExpressions.Count == 0) return "";
+            if (_transformer == null && _options.JsonExpressions?.Count == 0)
+                return "";
 
             // wrap object properties in root
             json = "{\"root\":" + json + "}";
 
             // transform JSON if required
-            JmesPath jmes = new();
-            foreach (string e in _jsonExpressions)
+            if (_options.JsonExpressions?.Count > 0)
             {
-                json = jmes.Transform(json, e);
+                JmesPath jmes = new();
+                foreach (string e in _options.JsonExpressions)
+                {
+                    json = jmes.Transform(json, e);
+                }
+                if (_options.QuoteStripping && json.Length > 1
+                    && json[0] == '"' && json[^1] == '"')
+                {
+                    json = json[1..^1];
+                }
             }
-            if (_quoteStripping && json.Length > 1
-                && json[0] == '"' && json[^1] == '"')
+
+            // transform via XSLT if required
+            string result;
+            if (_transformer != null)
             {
-                json = json[1..^1];
+                // convert to XML
+                XmlDocument? doc = JsonConvert.DeserializeXmlNode(json);
+                if (doc is null) return "";
+
+                // transform via XSLT
+                result = _transformer.Transform(doc.OuterXml, _xmlWriterSettings);
             }
+            else result = json;
 
-            // if no XSLT, we're done
-            if (_transformer == null) return json;
-
-            // convert to XML
-            XmlDocument? doc = JsonConvert.DeserializeXmlNode(json);
-            if (doc is null) return "";
-
-            // transform via XSLT
-            return _transformer.Transform(doc.OuterXml, _xmlWriterSettings);
+            // handle Markdown if requested
+            switch (_options.Markdown?.ToLowerInvariant())
+            {
+                case "txt":
+                    if (_options.MarkdownOpen == null ||
+                        _options.MarkdownClose == null)
+                    {
+                        return Markdown.ToPlainText(result);
+                    }
+                    else
+                    {
+                        return MarkdownHelper.ConvertRegions(result,
+                            _options.MarkdownOpen,
+                            _options.MarkdownClose,
+                            true);
+                    }
+                case "html":
+                    if (_options.MarkdownOpen == null ||
+                        _options.MarkdownClose == null)
+                    {
+                        return Markdown.ToHtml(result);
+                    }
+                    else
+                    {
+                        return MarkdownHelper.ConvertRegions(result,
+                            _options.MarkdownOpen,
+                            _options.MarkdownClose,
+                            false);
+                    }
+                default:
+                    return result;
+            }
         }
     }
 
     /// <summary>
     /// Options for <see cref="XsltJsonRenderer"/>.
     /// </summary>
-    public class XsltPartRendererOptions
+    public class XsltJsonRendererOptions
     {
         /// <summary>
         /// Gets or sets the JSON transform expressions using JMES Path.
@@ -123,10 +165,32 @@ namespace Cadmus.Export
         public string? Xslt { get; set; }
 
         /// <summary>
+        /// Gets or sets the markdown region opening tag. When not set but
+        /// <see cref="Markdown"/> is set, it is assumed that the whole text
+        /// is Markdown.
+        /// </summary>
+        public string? MarkdownOpen { get; set; }
+
+        /// <summary>
+        /// Gets or sets the markdown region closing tag. When not set but
+        /// <see cref="Markdown"/> is set, it is assumed that the whole text
+        /// is Markdown.
+        /// </summary>
+        public string? MarkdownClose { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Markdown regions target format: if not specified,
+        /// nothing is done; if <c>txt</c>, any Markdown region is converted
+        /// into plain text; if <c>html</c>, any Markdown region is converted
+        /// into HTML.
+        /// </summary>
+        public string? Markdown { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="XsltPartRendererOptions"/>
         /// class.
         /// </summary>
-        public XsltPartRendererOptions()
+        public XsltJsonRendererOptions()
         {
             JsonExpressions = new List<string>();
         }
