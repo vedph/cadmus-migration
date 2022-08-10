@@ -55,8 +55,14 @@ namespace Cadmus.Export.Test
             {
                 JsonExpressions = new[] { "root.text" },
                 QuoteStripping = true,
-                Markdown = "html"
             });
+            MarkdownRendererFilter filter = new();
+            filter.Configure(new MarkdownRendererFilterOptions
+            {
+                Format = "html"
+            });
+            renderer.Filters.Add(filter);
+
             NotePart note = new()
             {
                 CreatorId = "zeus",

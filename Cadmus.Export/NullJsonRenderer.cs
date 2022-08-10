@@ -1,4 +1,5 @@
 ﻿using Fusi.Tools.Config;
+using System.Collections.Generic;
 
 namespace Cadmus.Export
 {
@@ -9,11 +10,25 @@ namespace Cadmus.Export
     /// </summary>
     /// <seealso cref="IJsonRenderer" />
     [Tag("it.vedph.json-renderer.null")]
-    public sealed class NullJsonRenderer : IJsonRenderer
+    public sealed class NullJsonRenderer : JsonRenderer, IJsonRenderer
     {
-        public string Render(string json)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NullJsonRenderer"/>
+        /// class.
+        /// </summary>
+        public NullJsonRenderer()
         {
-            return json ?? "(NULL)";
+            Filters = new List<IRendererFilter>();
+        }
+
+        /// <summary>
+        /// Renders the specified JSON code.
+        /// </summary>
+        /// <param name="json">The input JSON.</param>
+        /// <returns>Rendered output.</returns>
+        protected override string DoRender(string json)
+        {
+            return json ?? "";
         }
     }
 }

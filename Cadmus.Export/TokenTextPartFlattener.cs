@@ -137,10 +137,15 @@ namespace Cadmus.Export
         /// in an item.</param>
         /// <param name="layerParts">The layer parts you want to export.</param>
         /// <returns>Tuple with 1=text and 2=ranges.</returns>
+        /// <param name="layerIds">The optional IDs to assign to each layer
+        /// part's range. When specified, it must have the same size of
+        /// <paramref name="layerParts"/> so that the first entry in it
+        /// corresponds to the first entry in layer IDs, the second to the second,
+        /// and so forth.</param>
         /// <exception cref="ArgumentNullException">textPart or layerParts
         /// </exception>
         public Tuple<string, MergedRangeSet> GetTextRanges(IPart textPart,
-            IList<IPart> layerParts)
+            IList<IPart> layerParts, IList<string?>? layerIds = null)
         {
             TokenTextPart? txt = textPart as TokenTextPart;
             if (txt == null) throw new ArgumentNullException(nameof(textPart));
@@ -159,7 +164,9 @@ namespace Cadmus.Export
                 foreach (string loc in GetFragmentLocations(part))
                 {
                     MergedRange r = GetRangeFromLoc(loc, text, txt);
-                    r.Id = $"L{layerIndex}F{fi++}";
+                    string l = layerIds != null
+                        ? layerIds[layerIndex] ?? $"L{layerIndex}-" : $"L{layerIndex}-";
+                    r.Id = $"{l}{fi++}";
                     r.GroupId = $"L{layerIndex}";
                     ranges.Add(r);
                 }

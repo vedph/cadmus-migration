@@ -179,6 +179,8 @@ Components used to export Cadmus data into some markup language (typically XML).
 
 ## History
 
+- 2022-08-11: refactoring JSON renderers for configurable filters.
+
 ### 0.0.5
 
 - 2022-08-08: added Markdown support.

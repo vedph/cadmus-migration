@@ -127,36 +127,36 @@ namespace Cadmus.Export.Test
             MergedRange r = set.Ranges[0];
             Assert.Equal(2, r.Start);
             Assert.Equal(2, r.End);
-            Assert.Equal("L0F0", r.Id);
+            Assert.Equal("L0-0", r.Id);
             Assert.Equal("L0", r.GroupId);
 
             // qu[e b]ixit
             r = set.Ranges[1];
             Assert.Equal(2, r.Start);
             Assert.Equal(4, r.End);
-            Assert.Equal("L1F0", r.Id);
+            Assert.Equal("L1-0", r.Id);
             Assert.Equal("L1", r.GroupId);
 
             // [bixit annos]
             r = set.Ranges[2];
             Assert.Equal(4, r.Start);
             Assert.Equal(14, r.End);
-            Assert.Equal("L2F0", r.Id);
+            Assert.Equal("L2-0", r.Id);
             Assert.Equal("L2", r.GroupId);
 
             // XX
             r = set.Ranges[3];
             Assert.Equal(16, r.Start);
             Assert.Equal(17, r.End);
-            Assert.Equal("L2F1", r.Id);
+            Assert.Equal("L2-1", r.Id);
             Assert.Equal("L2", r.GroupId);
 
             string html = RenderTextWithRanges(tr.Item1, set);
             Assert.Equal("<p>" +
-                "<span>qu</span><span class=\"L0F0 L1F0\">e</span>" +
-                "<span class=\"L1F0\"> </span><span class=\"L1F0 L2F0\">v</span>" +
-                "<span class=\"L2F0\">ixit</p>\n" +
-                "<p>annos</span><span> </span><span class=\"L2F1\">XX</span></p>",
+                "<span>qu</span><span class=\"L0-0 L1-0\">e</span>" +
+                "<span class=\"L1-0\"> </span><span class=\"L1-0 L2-0\">v</span>" +
+                "<span class=\"L2-0\">ixit</p>\n" +
+                "<p>annos</span><span> </span><span class=\"L2-1\">XX</span></p>",
                 html);
         }
     }

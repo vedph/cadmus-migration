@@ -1,4 +1,6 @@
-﻿namespace Cadmus.Export
+﻿using System.Collections.Generic;
+
+namespace Cadmus.Export
 {
     /// <summary>
     /// Renderer for any object represented by JSON (like a part or a fragment).
@@ -6,6 +8,11 @@
     /// </summary>
     public interface IJsonRenderer
     {
+        /// <summary>
+        /// Gets the optional filters to apply after the renderer completes.
+        /// </summary>
+        public IList<IRendererFilter> Filters { get; }
+
         /// <summary>
         /// Renders the specified JSON code.
         /// </summary>

@@ -1,7 +1,6 @@
 ﻿using DevLab.JmesPath;
 using Fusi.Tools.Config;
 using Fusi.Xml.Extras.Render;
-using Markdig;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -20,7 +19,7 @@ namespace Cadmus.Export
     /// <para>Tag: <c>it.vedph.json-renderer.xslt</c>.</para>
     /// </summary>
     [Tag("it.vedph.json-renderer.xslt")]
-    public sealed class XsltJsonRenderer : IJsonRenderer,
+    public sealed class XsltJsonRenderer : JsonRenderer, IJsonRenderer,
         IConfigurable<XsltJsonRendererOptions>
     {
         // https://jmespath.org/tutorial.html
@@ -69,7 +68,7 @@ namespace Cadmus.Export
         /// <param name="json">The input JSON.</param>
         /// <returns>Rendered output.</returns>
         /// <exception cref="ArgumentNullException">json</exception>
-        public string Render(string json)
+        protected override string DoRender(string json)
         {
             if (_options == null) return json;
 
@@ -96,7 +95,6 @@ namespace Cadmus.Export
             }
 
             // transform via XSLT if required
-            string result;
             if (_transformer != null)
             {
                 // convert to XML
@@ -104,42 +102,10 @@ namespace Cadmus.Export
                 if (doc is null) return "";
 
                 // transform via XSLT
-                result = _transformer.Transform(doc.OuterXml, _xmlWriterSettings);
+                return _transformer.Transform(doc.OuterXml, _xmlWriterSettings);
             }
-            else result = json;
 
-            // handle Markdown if requested
-            switch (_options.Markdown?.ToLowerInvariant())
-            {
-                case "txt":
-                    if (_options.MarkdownOpen == null ||
-                        _options.MarkdownClose == null)
-                    {
-                        return Markdown.ToPlainText(result);
-                    }
-                    else
-                    {
-                        return MarkdownHelper.ConvertRegions(result,
-                            _options.MarkdownOpen,
-                            _options.MarkdownClose,
-                            true);
-                    }
-                case "html":
-                    if (_options.MarkdownOpen == null ||
-                        _options.MarkdownClose == null)
-                    {
-                        return Markdown.ToHtml(result);
-                    }
-                    else
-                    {
-                        return MarkdownHelper.ConvertRegions(result,
-                            _options.MarkdownOpen,
-                            _options.MarkdownClose,
-                            false);
-                    }
-                default:
-                    return result;
-            }
+            return json;
         }
     }
 
@@ -163,28 +129,6 @@ namespace Cadmus.Export
         /// Gets or sets the XSLT script used to produce the final result.
         /// </summary>
         public string? Xslt { get; set; }
-
-        /// <summary>
-        /// Gets or sets the markdown region opening tag. When not set but
-        /// <see cref="Markdown"/> is set, it is assumed that the whole text
-        /// is Markdown.
-        /// </summary>
-        public string? MarkdownOpen { get; set; }
-
-        /// <summary>
-        /// Gets or sets the markdown region closing tag. When not set but
-        /// <see cref="Markdown"/> is set, it is assumed that the whole text
-        /// is Markdown.
-        /// </summary>
-        public string? MarkdownClose { get; set; }
-
-        /// <summary>
-        /// Gets or sets the Markdown regions target format: if not specified,
-        /// nothing is done; if <c>txt</c>, any Markdown region is converted
-        /// into plain text; if <c>html</c>, any Markdown region is converted
-        /// into HTML.
-        /// </summary>
-        public string? Markdown { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XsltPartRendererOptions"/>

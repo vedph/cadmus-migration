@@ -20,8 +20,13 @@ namespace Cadmus.Export
         /// the part identified by role ID <see cref="PartBase.BASE_TEXT_ROLE_ID"/>
         /// in an item.</param>
         /// <param name="layerParts">The layer parts you want to export.</param>
+        /// <param name="layerIds">The optional IDs to assign to each layer
+        /// part's range. When specified, it must have the same size of
+        /// <paramref name="layerParts"/> so that the first entry in it
+        /// corresponds to the first entry in layer IDs, the second to the second,
+        /// and so forth.</param>
         /// <returns>Tuple with 1=text and 2=ranges.</returns>
         Tuple<string, MergedRangeSet> GetTextRanges(IPart textPart,
-            IList<IPart> layerParts);
+            IList<IPart> layerParts, IList<string?>? layerIds = null);
     }
 }
