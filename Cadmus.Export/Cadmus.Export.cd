@@ -149,6 +149,52 @@
       <Property Name="Filters" />
     </ShowAsCollectionAssociation>
   </Class>
+  <Class Name="Cadmus.Export.MarkdownRendererFilter">
+    <Position X="10.5" Y="3.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAARAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MarkdownRendererFilter.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_options" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Cadmus.Export.MarkdownRendererFilterOptions">
+    <Position X="10.5" Y="5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAEgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MarkdownRendererFilter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cadmus.Export.MongoThesRendererFilter">
+    <Position X="13.5" Y="3.25" Width="2" />
+    <Members>
+      <Method Name="GetRepository" Hidden="true" />
+      <Method Name="MongoThesRendererFilter" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAZBAAAAAAABAAAAAAEAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MongoThesRendererFilter.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_options" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Cadmus.Export.MongoThesRendererFilterOptions">
+    <Position X="13.5" Y="5.5" Width="2" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>MongoThesRendererFilter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Interface Name="Cadmus.Export.IJsonRenderer">
     <Position X="6.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
@@ -178,7 +224,7 @@
     <TypeIdentifier />
   </Interface>
   <Interface Name="Cadmus.Export.IRendererFilter">
-    <Position X="9.25" Y="0.5" Width="1.5" />
+    <Position X="11.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>IRendererFilter.cs</FileName>

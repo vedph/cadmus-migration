@@ -125,6 +125,7 @@ namespace Cadmus.Export.Preview
             container.Collection.Register<IJsonRenderer>(assemblies);
             container.Collection.Register<ITextBlockRenderer>(assemblies);
             container.Collection.Register<ITextPartFlattener>(assemblies);
+            container.Collection.Register<IRendererFilter>(assemblies);
 
             // container.RegisterInstance(new UniData())
         }
