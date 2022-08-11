@@ -7,9 +7,9 @@ namespace Cadmus.Export
     /// <summary>
     /// Markdown renderer filter. This renders any Markdown region or the whole
     /// text, as specified in its configuration.
-    /// <para>Tag: <c>renderer-filter.markdown</c>.</para>
+    /// <para>Tag: <c>it.vedph.renderer-filter.markdown</c>.</para>
     /// </summary>
-    [Tag("renderer-filter.markdown")]
+    [Tag("it.vedph.renderer-filter.markdown")]
     public sealed class MarkdownRendererFilter : IRendererFilter,
         IConfigurable<MarkdownRendererFilterOptions>
     {

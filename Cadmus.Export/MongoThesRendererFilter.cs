@@ -17,8 +17,9 @@ namespace Cadmus.Export
     /// it uses a regular expression pattern representing each thesaurus entry
     /// ID with its thesaurus ID, and replaces it with the corresponding value
     /// when found, otherwise with the raw entry ID.
+    /// <para>Tag: <c>it.vedph.renderer-filter.mongo-thesaurus</c>.</para>
     /// </summary>
-    [Tag("renderer-filter.mongo-thesaurus")]
+    [Tag("it.vedph.renderer-filter.mongo-thesaurus")]
     public sealed class MongoThesRendererFilter : IRendererFilter,
         IConfigurable<MongoThesRendererFilterOptions>
     {
