@@ -74,16 +74,14 @@ namespace Cadmus.Export
     public class MarkdownRendererFilterOptions
     {
         /// <summary>
-        /// Gets or sets the markdown region opening tag. When not set but
-        /// <see cref="Markdown"/> is set, it is assumed that the whole text
-        /// is Markdown.
+        /// Gets or sets the markdown region opening tag. When not set, it is
+        /// assumed that the whole text is Markdown.
         /// </summary>
         public string? MarkdownOpen { get; set; }
 
         /// <summary>
-        /// Gets or sets the markdown region closing tag. When not set but
-        /// <see cref="Markdown"/> is set, it is assumed that the whole text
-        /// is Markdown.
+        /// Gets or sets the markdown region closing tag. When not set, it is
+        /// assumed that the whole text is Markdown.
         /// </summary>
         public string? MarkdownClose { get; set; }
 
