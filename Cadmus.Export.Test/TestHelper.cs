@@ -10,6 +10,8 @@ namespace Cadmus.Export.Test
 {
     internal static class TestHelper
     {
+        public static string CS = "mongodb://localhost:27017/cadmus-test";
+
         public static string LoadResourceText(string name)
         {
             using StreamReader reader = new(Assembly.GetExecutingAssembly()
