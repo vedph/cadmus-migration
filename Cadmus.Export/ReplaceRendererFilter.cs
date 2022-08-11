@@ -15,6 +15,10 @@ namespace Cadmus.Export
     {
         private readonly TextReplacer _replacer;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ReplaceRendererFilter"/>
+        /// class.
+        /// </summary>
         public ReplaceRendererFilter()
         {
             _replacer = new(false);

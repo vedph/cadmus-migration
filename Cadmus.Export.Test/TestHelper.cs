@@ -27,7 +27,10 @@ namespace Cadmus.Export.Test
             IConfigurationRoot config = cb
                 .AddInMemoryJson(LoadResourceText("Preview.json"))
                 .Build();
-            return new CadmusPreviewFactory(container, config);
+            return new CadmusPreviewFactory(container, config)
+            {
+                ConnectionString = "mongodb://localhost:27017/cadmus-test"
+            };
         }
     }
 }

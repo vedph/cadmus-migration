@@ -29,5 +29,22 @@ namespace Cadmus.Export.Test
             Assert.Single(keys);
             Assert.Contains("it.vedph.token-text", keys);
         }
+
+        [Fact]
+        public void GetJsonRenderer_WithFilters_Ok()
+        {
+            CadmusPreviewFactory factory = TestHelper.GetFactory();
+
+            IJsonRenderer? renderer = factory.GetJsonRenderer("it.vedph.token-text");
+
+            Assert.NotNull(renderer);
+            Assert.Equal(3, renderer.Filters.Count);
+            Assert.Equal(typeof(MongoThesRendererFilter),
+                renderer.Filters[0].GetType());
+            Assert.Equal(typeof(ReplaceRendererFilter),
+                renderer.Filters[1].GetType());
+            Assert.Equal(typeof(MarkdownRendererFilter),
+                renderer.Filters[2].GetType());
+        }
     }
 }
