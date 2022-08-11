@@ -78,9 +78,11 @@ namespace Cadmus.Export.Preview
             // for it
             PropertyInfo? property;
             if (ConnectionString != null
-                && (property = optionType.GetProperty(CONNECTION_STRING_NAME)) != null)
+                && (property = optionType.GetProperty(CONNECTION_STRING_NAME))
+                != null)
             {
-                options = SupplyProperty(optionType, property, options, ConnectionString);
+                options = SupplyProperty(optionType, property, options,
+                    ConnectionString);
             } // conn
 
             // apply options if any
@@ -179,13 +181,12 @@ namespace Cadmus.Export.Preview
                 entry.Id!, entry.OptionsPath!);
             if (renderer == null) return null;
 
-            // add filters if specified in Options/FilterKeys
-            string filterKeys = Configuration.GetSection(entry.OptionsPath +
-                ":FilterKeys").Get<string>();
-            if (!string.IsNullOrWhiteSpace(filterKeys))
+            // add filters if specified in Options.FilterKeys
+            IConfigurationSection filterKeys = Configuration
+                .GetSection(entry.OptionsPath + ":FilterKeys");
+            if (filterKeys.Exists())
             {
-                string[] keys = filterKeys.Split(' ',
-                    StringSplitOptions.RemoveEmptyEntries);
+                string[] keys = filterKeys.Get<string[]>();
                 foreach (var filter in GetRendererFilters(keys))
                     renderer.Filters.Add(filter);
             }
@@ -219,7 +220,7 @@ namespace Cadmus.Export.Preview
         /// one or more keys.
         /// Then, these keys are used to include post-rendition filters by
         /// listing one or more of them in the <c>FilterKeys</c> option,
-        /// a space-delimited string.
+        /// an array of strings.
         /// </summary>
         /// <param name="keys">The desired keys.</param>
         /// <returns>Dictionary with keys and renderers.</returns>

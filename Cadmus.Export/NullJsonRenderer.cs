@@ -5,7 +5,8 @@ namespace Cadmus.Export
 {
     /// <summary>
     /// Null JSON renderer. This just returns the received JSON, and can be
-    /// used for diagnostic purposes.
+    /// used for diagnostic purposes, or to apply some filters to the received
+    /// text.
     /// <para>Tag: <c>it.vedph.json-renderer.null</c>.</para>
     /// </summary>
     /// <seealso cref="IJsonRenderer" />

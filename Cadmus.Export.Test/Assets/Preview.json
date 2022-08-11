@@ -1,8 +1,32 @@
 ﻿{
+  "RendererFilters": [
+    {
+      "Keys": "thes-filter",
+      "Id": "it.vedph.renderer-filter.mongo-thesaurus"
+    },
+    {
+      "Keys": "rep-filter",
+      "Id": "it.vedph.renderer-filter.replace",
+      "Options": {
+        "Replacements": [
+          {
+            "Source": "hello",
+            "Target": "HELLO"
+          }
+        ]
+      }
+    }
+  ],
   "JsonRenderers": [
     {
       "Keys": "it.vedph.token-text",
-      "Id": "it.vedph.json-renderer.null"
+      "Id": "it.vedph.json-renderer.null",
+      "Options": {
+        "FilterKeys": [
+          "thes-filter",
+          "rep-filter"
+        ]
+      }
     },
     {
       "Keys": "it.vedph.token-text-layer|fr.it.vedph.comment",
