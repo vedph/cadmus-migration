@@ -264,13 +264,13 @@ Components used to export Cadmus data into some markup language (typically XML).
 
 ## History
 
-- 2022-08-11:
-  - refactoring JSON renderers for configurable filters.
-  - added thesaurus renderer filters.
+- `BuildTextBlocks` added assigned layer IDs.
 
 ### 0.0.6
 
-- 2022-08-11: added filters.
+- 2022-08-11:
+  - refactoring JSON renderers for configurable filters.
+  - added thesaurus renderer filters.
 
 ### 0.0.5
 

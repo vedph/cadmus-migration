@@ -152,15 +152,20 @@ namespace Cadmus.Export.Preview
         /// Builds the text blocks from the specified text part.
         /// </summary>
         /// <param name="id">The part identifier.</param>
-        /// <param name="layerIds">The IDs of the layers to include in the
+        /// <param name="layerPartIds">The IDs of the layers to include in the
         /// rendition.</param>
+        /// <param name="layerIds">The optional IDs to assign to each layer
+        /// part's range. When specified, it must have the same size of
+        /// <paramref name="layerPartIds"/> so that the first entry in it
+        /// corresponds to the first entry in layer IDs, the second to the second,
+        /// and so forth.</param>
         /// <returns>Rendition.</returns>
         /// <exception cref="ArgumentNullException">id or layerIds</exception>
         public IList<TextBlockRow> BuildTextBlocks(string id,
-            IList<string> layerIds)
+            IList<string> layerPartIds, IList<string?>? layerIds = null)
         {
             if (id is null) throw new ArgumentNullException(nameof(id));
-            if (layerIds is null) throw new ArgumentNullException(nameof(layerIds));
+            if (layerPartIds is null) throw new ArgumentNullException(nameof(layerPartIds));
 
             string? json = _repository.GetPartContent(id);
             if (json == null) return Array.Empty<TextBlockRow>();
@@ -186,13 +191,13 @@ namespace Cadmus.Export.Preview
             // load part and layers
             IPart? part = _repository.GetPart<IPart>(id);
             if (part == null) return Array.Empty<TextBlockRow>();
-            List<IPart> layerParts = layerIds
+            List<IPart> layerParts = layerPartIds
                 .Select(lid => _repository.GetPart<IPart>(lid))
                 .Where(p => p != null)
                 .ToList();
 
             // flatten them
-            var tr = flattener.GetTextRanges(part, layerParts);
+            var tr = flattener.GetTextRanges(part, layerParts, layerIds);
 
             // build blocks rows
             if (_blockBuilder == null) _blockBuilder = new();
