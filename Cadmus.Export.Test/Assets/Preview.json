@@ -55,10 +55,40 @@
   ],
   "TextBlockRenderers": [
     {
-      "Id": "it.vedph.text-block-renderer.simple-tei",
+      "Keys": "text-standoff",
+      "Id": "it.vedph.text-block-renderer.standoff-tei",
       "Options": {
         "RowElement": "div",
         "BlockElement": "seg"
+      }
+    }
+  ],
+  "ItemComposers": [
+    {
+      "Keys": "text-item",
+      "Id": "it.vedph.item-composer.tei-standoff",
+      "Options": {
+        "TextPartFlattener": {
+          "Keys": "it.vedph.token-text",
+          "Id": "it.vedph.text-flattener.token"
+        },
+        "TextBlockRenderer": {
+          "Id": "it.vedph.text-block-renderer.tei-standoff",
+          "Options": {
+            "RowElement": "div",
+            "BlockElement": "seg"
+          }
+        },
+        "JsonRenderers": [
+          {
+            "Keys": "it.vedph.token-text-layer|fr.it.vedph.comment",
+            "Id": "it.vedph.json-renderer.null"
+          },
+          {
+            "Keys": "it.vedph.token-text-layer|fr.it.vedph.orthography",
+            "Id": "it.vedph.json-renderer.null"
+          }
+        ]
       }
     }
   ]

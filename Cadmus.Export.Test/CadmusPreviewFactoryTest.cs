@@ -7,11 +7,11 @@ namespace Cadmus.Export.Test
     public sealed class CadmusPreviewFactoryTest
     {
         [Fact]
-        public void GetKeys_Renderers_Ok()
+        public void GetRendererKeys_Ok()
         {
             CadmusPreviewFactory factory = TestHelper.GetFactory();
 
-            HashSet<string>? keys = factory.GetKeys(false);
+            HashSet<string>? keys = factory.GetJsonRendererKeys();
 
             Assert.Equal(3, keys.Count);
             Assert.Contains("it.vedph.token-text", keys);
@@ -20,11 +20,11 @@ namespace Cadmus.Export.Test
         }
 
         [Fact]
-        public void GetKeys_Flatteners_Ok()
+        public void GetFlattenerKeys_Ok()
         {
             CadmusPreviewFactory factory = TestHelper.GetFactory();
 
-            HashSet<string>? keys = factory.GetKeys(true);
+            HashSet<string>? keys = factory.GetFlattenerKeys();
 
             Assert.Single(keys);
             Assert.Contains("it.vedph.token-text", keys);
@@ -45,6 +45,19 @@ namespace Cadmus.Export.Test
                 renderer.Filters[1].GetType());
             Assert.Equal(typeof(MarkdownRendererFilter),
                 renderer.Filters[2].GetType());
+        }
+
+        [Fact]
+        public void GetItemComposer_Ok()
+        {
+            CadmusPreviewFactory factory = TestHelper.GetFactory();
+
+            IItemComposer? composer = factory.GetComposerByKey("text-item");
+
+            Assert.NotNull(composer);
+            Assert.NotNull(composer.TextPartFlattener);
+            Assert.NotNull(composer.TextBlockRenderer);
+            Assert.Equal(2, composer.JsonRenderers.Count);
         }
     }
 }

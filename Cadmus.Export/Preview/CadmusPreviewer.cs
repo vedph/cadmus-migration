@@ -40,16 +40,30 @@ namespace Cadmus.Export.Preview
         }
 
         /// <summary>
-        /// Gets all the keys registered for JSON renderers or text part
-        /// flatteners in the configuration of this previewer's factory.
-        /// This is used by client code to determine for which Cadmus objects
-        /// a preview is available.
+        /// Gets all the keys registered for JSON renderers in the
+        /// configuration of this factory. This is used by client code
+        /// to determine for which Cadmus objects a preview is available.
         /// </summary>
-        /// <param name="flatteners">True to get the flatteners keys, false
-        /// to get the renderers keys.</param>
         /// <returns>List of unique keys.</returns>
-        public HashSet<string> GetKeys(bool flatteners)
-            => _factory.GetKeys(flatteners);
+        public HashSet<string> GetJsonRendererKeys()
+            => _factory.GetJsonRendererKeys();
+
+        /// <summary>
+        /// Gets all the keys registered for JSON text part flatteners
+        /// in the configuration of this factory. This is used by client code
+        /// to determine for which Cadmus objects a preview is available.
+        /// </summary>
+        /// <returns>List of unique keys.</returns>
+        public HashSet<string> GetFlattenerKeys()
+            => _factory.GetFlattenerKeys();
+
+        /// <summary>
+        /// Gets all the keys registered for item composers in the configuration
+        /// of this factory.
+        /// </summary>
+        /// <returns>List of unique keys.</returns>
+        public HashSet<string> GetComposerKeys()
+            => _factory.GetComposerKeys();
 
         private IJsonRenderer? GetRendererFromKey(string key)
         {

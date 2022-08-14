@@ -264,7 +264,9 @@ Components used to export Cadmus data into some markup language (typically XML).
 
 ## History
 
-- `BuildTextBlocks` added assigned layer IDs.
+- 2022-08-14:
+  - adding `IItemComposer`.
+  - `BuildTextBlocks` added assigned layer IDs.
 
 ### 0.0.6
 

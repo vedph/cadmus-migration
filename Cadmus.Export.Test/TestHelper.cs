@@ -1,4 +1,5 @@
-﻿using Cadmus.Export.Preview;
+﻿using Cadmus.Export.ML;
+using Cadmus.Export.Preview;
 using Fusi.Microsoft.Extensions.Configuration.InMemoryJson;
 using Microsoft.Extensions.Configuration;
 using SimpleInjector;
@@ -23,7 +24,8 @@ namespace Cadmus.Export.Test
         public static CadmusPreviewFactory GetFactory()
         {
             Container container = new();
-            CadmusPreviewFactory.ConfigureServices(container);
+            CadmusPreviewFactory.ConfigureServices(container,
+                new[] {typeof(TeiStandoffTextBlockRenderer).Assembly });
 
             ConfigurationBuilder cb = new();
             IConfigurationRoot config = cb

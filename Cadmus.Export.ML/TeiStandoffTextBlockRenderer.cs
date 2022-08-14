@@ -6,20 +6,20 @@ using System.Text;
 namespace Cadmus.Export.ML
 {
     /// <summary>
-    /// Simple TEI text blocks renderer.
-    /// <para>Tag: <c>it.vedph.text-block-renderer.simple-tei</c>.</para>
+    /// Standoff TEI text blocks renderer.
+    /// <para>Tag: <c>it.vedph.text-block-renderer.tei-standoff</c>.</para>
     /// </summary>
-    [Tag("it.vedph.text-block-renderer.simple-tei")]
-    public class SimpleTeiTextBlockRenderer : ITextBlockRenderer,
+    [Tag("it.vedph.text-block-renderer.tei-standoff")]
+    public sealed class TeiStandoffTextBlockRenderer : ITextBlockRenderer,
         IConfigurable<SimpleTeiTextPartRendererOptions>
     {
         private SimpleTeiTextPartRendererOptions _options;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SimpleTeiTextBlockRenderer"/>
+        /// Initializes a new instance of the <see cref="TeiStandoffTextBlockRenderer"/>
         /// class.
         /// </summary>
-        public SimpleTeiTextBlockRenderer()
+        public TeiStandoffTextBlockRenderer()
         {
             _options = new SimpleTeiTextPartRendererOptions
             {
@@ -115,7 +115,7 @@ namespace Cadmus.Export.ML
     }
 
     /// <summary>
-    /// Options for <see cref="SimpleTeiTextBlockRenderer"/>.
+    /// Options for <see cref="TeiStandoffTextBlockRenderer"/>.
     /// </summary>
     public class SimpleTeiTextPartRendererOptions
     {

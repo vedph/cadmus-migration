@@ -128,12 +128,14 @@ namespace Cadmus.Export.Preview
             container.Collection.Register<ITextBlockRenderer>(assemblies);
             container.Collection.Register<ITextPartFlattener>(assemblies);
             container.Collection.Register<IRendererFilter>(assemblies);
+            container.Collection.Register<IItemComposer>(assemblies);
 
             // container.RegisterInstance(new UniData())
         }
 
-        private void CollectKeys(string collectionPath, HashSet<string> keys)
+        private HashSet<string> CollectKeys(string collectionPath)
         {
+            HashSet<string> keys = new();
             foreach (var entry in
                 ComponentFactoryConfigEntry.ReadComponentEntries(
                 Configuration, collectionPath)
@@ -141,26 +143,34 @@ namespace Cadmus.Export.Preview
             {
                 foreach (string id in entry.Keys!) keys.Add(id);
             }
+            return keys;
         }
 
         /// <summary>
-        /// Gets all the keys registered for JSON renderers or text part
-        /// flatteners in the configuration of this factory. This is used
-        /// by client code to determine for which Cadmus objects a preview
-        /// is available.
+        /// Gets all the keys registered for JSON renderers in the
+        /// configuration of this factory. This is used by client code
+        /// to determine for which Cadmus objects a preview is available.
         /// </summary>
-        /// <param name="flatteners">True to get the flatteners keys, false
-        /// to get the renderers keys.</param>
         /// <returns>List of unique keys.</returns>
-        public HashSet<string> GetKeys(bool flatteners)
-        {
-            HashSet<string> keys = new();
+        public HashSet<string> GetJsonRendererKeys()
+            => CollectKeys("JsonRenderers");
 
-            if (flatteners) CollectKeys("TextPartFlatteners", keys);
-            else CollectKeys("JsonRenderers", keys);
+        /// <summary>
+        /// Gets all the keys registered for JSON text part flatteners
+        /// in the configuration of this factory. This is used by client code
+        /// to determine for which Cadmus objects a preview is available.
+        /// </summary>
+        /// <returns>List of unique keys.</returns>
+        public HashSet<string> GetFlattenerKeys()
+            => CollectKeys("TextPartFlatteners");
 
-            return keys;
-        }
+        /// <summary>
+        /// Gets all the keys registered for item composers in the configuration
+        /// of this factory.
+        /// </summary>
+        /// <returns>List of unique keys.</returns>
+        public HashSet<string> GetComposerKeys()
+            => CollectKeys("ItemComposers");
 
         /// <summary>
         /// Gets the JSON renderer with the specified key.
@@ -243,6 +253,113 @@ namespace Cadmus.Export.Preview
                 }
             }
             return filters;
+        }
+
+        private IDictionary<string, IJsonRenderer> GetJsonRenderers(
+            HashSet<string> keys, string collectionPath)
+        {
+            IList<ComponentFactoryConfigEntry> entries =
+                ComponentFactoryConfigEntry.ReadComponentEntries(
+                Configuration, collectionPath);
+
+            Dictionary<string, IJsonRenderer> renderers = new();
+            foreach (ComponentFactoryConfigEntry entry in entries)
+            {
+                foreach (string key in entry.Keys!)
+                {
+                    IJsonRenderer? renderer = GetComponent<IJsonRenderer>(
+                        entry.Id!,
+                        entry.OptionsPath!);
+
+                    if (renderer != null && keys?.Contains(key) != false)
+                        renderers[key] = renderer;
+                }
+            }
+            return renderers;
+        }
+
+        // TODO: move
+        private static ComponentFactoryConfigEntry? ReadComponentEntry(
+            IConfiguration configuration, string path)
+        {
+            if (configuration == null)
+                throw new ArgumentNullException(nameof(configuration));
+            if (path == null)
+                throw new ArgumentNullException(nameof(path));
+
+            IConfigurationSection section = configuration.GetSection(path);
+            if (!section.Exists()) return null;
+
+            ComponentFactoryConfigEntry entry =
+                new(
+                    section["Id"],
+                    0,
+                    section.GetSection("Options").Exists() ?
+                    $"{path}:Options" : null);
+
+            // keys (separated by space)
+            IConfigurationSection keySection = section.GetSection("Keys");
+            if (keySection.Exists())
+            {
+                entry.Keys = keySection.Get<string>().Split();
+            }
+
+            return entry;
+        }
+
+        /// <summary>
+        /// Gets an item composer by key.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns>Composer or null.</returns>
+        /// <exception cref="ArgumentNullException">key</exception>
+        public IItemComposer? GetComposerByKey(string key)
+        {
+            if (key is null) throw new ArgumentNullException(nameof(key));
+
+            // ItemComposers: match by key
+            IList<ComponentFactoryConfigEntry> entries =
+                ComponentFactoryConfigEntry.ReadComponentEntries(
+                Configuration, "ItemComposers");
+
+            ComponentFactoryConfigEntry? entry =
+                entries.FirstOrDefault(e => e.Keys?.Contains(key) == true);
+            if (entry == null) return null;
+
+            // instantiate composer
+            IItemComposer? composer = GetComponent<IItemComposer>(
+                entry.Id!, entry.OptionsPath!);
+            if (composer == null) return null;
+
+            // add text part flattener if specified in Options.TextPartFlattener
+            ComponentFactoryConfigEntry? e = ReadComponentEntry(Configuration,
+                entry.OptionsPath + ":TextPartFlattener");
+            if (e != null)
+            {
+                composer.TextPartFlattener = GetComponent<ITextPartFlattener>(
+                    e.Id!, e.OptionsPath!);
+            }
+
+            // add text block renderer if specified in Options.TextBlockRenderer
+            e = ReadComponentEntry(Configuration,
+                entry.OptionsPath + ":TextBlockRenderer");
+            if (e != null)
+            {
+                composer.TextBlockRenderer = GetComponent<ITextBlockRenderer>(
+                    e.Id!, e.OptionsPath!);
+            }
+
+            // add renderers if specified in Options.JsonRenderers
+            string jrPath = entry.OptionsPath + ":JsonRenderers";
+            IConfigurationSection jrSection = Configuration.GetSection(jrPath);
+            if (jrSection.Exists())
+            {
+                HashSet<string> keys = CollectKeys(jrPath);
+                foreach (var p in GetJsonRenderers(keys, jrPath))
+                    composer.JsonRenderers[p.Key] = p.Value;
+            }
+
+            return composer;
         }
     }
 }
