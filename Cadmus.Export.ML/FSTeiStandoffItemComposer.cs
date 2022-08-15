@@ -56,7 +56,7 @@ namespace Cadmus.Export.ML
         {
             foreach (var p in _writers)
             {
-                Metadata.Data[M_FLOW_KEY] = p.Key;
+                Context.Data[M_FLOW_KEY] = p.Key;
 
                 string? tail = p.Key == PartBase.BASE_TEXT_ROLE_ID
                     ? FillTemplate(_options?.TextTail)
@@ -81,7 +81,7 @@ namespace Cadmus.Export.ML
             {
                 if (!_writers.ContainsKey(key))
                 {
-                    Metadata.Data[M_FLOW_KEY] = key;
+                    Context.Data[M_FLOW_KEY] = key;
 
                     _writers[key] = new StreamWriter(
                         Path.Combine(_options!.OutputDirectory ?? "",

@@ -1,7 +1,6 @@
 ﻿using Cadmus.Core;
 using Cadmus.General.Parts;
 using Cadmus.Philology.Parts;
-using Fusi.Tools;
 using System.Collections.Generic;
 using Xunit;
 
@@ -85,19 +84,10 @@ namespace Cadmus.Export.ML.Test
 
         private static RamTeiStandoffItemComposer GetComposer()
         {
-            TeiStandoffTextBlockRenderer blockRenderer = new();
-            blockRenderer.Configure(new TeiStandoffTextBlockRendererOptions
-            {
-                RowOpen = "<div xml:id=\"{item-nr}_{y}\">",
-                RowClose = "</div>",
-                BlockOpen = "<seg xml:id=\"{item-nr}_{y}_{b}\">",
-                BlockClose = "</seg>"
-            });
-
             RamTeiStandoffItemComposer composer = new()
             {
                 TextPartFlattener = new TokenTextPartFlattener(),
-                TextBlockRenderer = blockRenderer
+                TextBlockRenderer = new TeiStandoffTextBlockRenderer()
             };
 
             composer.JsonRenderers["it.vedph.token-text"] = new NullJsonRenderer();

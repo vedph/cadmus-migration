@@ -1,5 +1,4 @@
 ﻿using Cadmus.Core;
-using Fusi.Tools;
 using Fusi.Tools.Text;
 using System;
 using System.Collections.Generic;
@@ -39,9 +38,9 @@ namespace Cadmus.Export.ML
         protected int ItemNumber { get; private set; }
 
         /// <summary>
-        /// Gets the metadata eventually set during processing.
+        /// Gets the context using during processing.
         /// </summary>
-        protected DataDictionary Metadata { get; }
+        protected TextBlockRendererContext Context { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TeiStandoffItemComposer"/>
@@ -54,15 +53,18 @@ namespace Cadmus.Export.ML
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             };
-            Metadata = new DataDictionary();
+            Context = new TextBlockRendererContext();
         }
 
         /// <summary>
-        /// Open the composer. This resets <see cref="ItemNumber"/>.
+        /// Open the composer. This resets <see cref="ItemNumber"/> and the
+        /// processing context.
         /// </summary>
         public override void Open()
         {
             ItemNumber = 0;
+            Context.Data.Clear();
+            Context.TargetIds.Clear();
         }
 
         private static string BuildLayerId(IPart part)
@@ -81,11 +83,11 @@ namespace Cadmus.Export.ML
         {
             Dictionary<string, string> flows = new();
 
-            Metadata.Data[M_ITEM_ID] = item.Id;
-            Metadata.Data[M_ITEM_TITLE] = item.Title;
-            Metadata.Data[M_ITEM_FACET] = item.FacetId;
-            Metadata.Data[M_ITEM_GROUP] = item.GroupId;
-            Metadata.Data[M_ITEM_FLAGS] = item.Flags;
+            Context.Data[M_ITEM_ID] = item.Id;
+            Context.Data[M_ITEM_TITLE] = item.Title;
+            Context.Data[M_ITEM_FACET] = item.FacetId;
+            Context.Data[M_ITEM_GROUP] = item.GroupId;
+            Context.Data[M_ITEM_FLAGS] = item.Flags;
 
             // text: there must be one
             IPart? textPart = item.Parts.Find(
@@ -111,7 +113,7 @@ namespace Cadmus.Export.ML
 
             // render blocks
             flows[PartBase.BASE_TEXT_ROLE_ID] =
-                TextBlockRenderer.Render(rows, Metadata);
+                TextBlockRenderer.Render(rows, Context);
 
             // render layers
             foreach (IPart layerPart in layerParts)
@@ -129,13 +131,13 @@ namespace Cadmus.Export.ML
         }
 
         /// <summary>
-        /// Fills the specified template using <see cref="Metadata"/>.
+        /// Fills the specified template using <see cref="Context"/>.
         /// </summary>
         /// <param name="template">The template.</param>
         /// <returns>The filled template.</returns>
         protected string FillTemplate(string? template)
             => template != null
-                ? TextTemplate.FillTemplate(template, Metadata.Data)
+                ? TextTemplate.FillTemplate(template, Context.Data)
                 : "";
 
         /// <summary>
@@ -155,9 +157,9 @@ namespace Cadmus.Export.ML
         {
             if (item is null) throw new ArgumentNullException(nameof(item));
 
-            Metadata.Data[M_ITEM_NR] = ++ItemNumber;
+            Context.Data[M_ITEM_NR] = ++ItemNumber;
             var result = DoCompose(item);
-            Metadata.Data.Clear();
+            Context.Data.Clear();
             return result;
         }
      }

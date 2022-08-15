@@ -12,9 +12,9 @@ namespace Cadmus.Export
         /// Renders the specified rows.
         /// </summary>
         /// <param name="rows">The rows.</param>
-        /// <param name="context">The optional context.</param>
+        /// <param name="context">The rendering context.</param>
         /// <returns>Rendition.</returns>
         string Render(IEnumerable<TextBlockRow> rows,
-            IHasDataDictionary? context = null);
+            ITextBlockRendererContext context);
     }
 }

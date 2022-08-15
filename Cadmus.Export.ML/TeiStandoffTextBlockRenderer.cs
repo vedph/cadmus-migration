@@ -16,6 +16,18 @@ namespace Cadmus.Export.ML
         IConfigurable<TeiStandoffTextBlockRendererOptions>
     {
         /// <summary>
+        /// The name of the metadata placeholder for the item's ordinal number
+        /// (1-N). This is set externally when repeatedly using this renderer
+        /// for multiple items.
+        /// </summary>
+        public const string M_ITEM_NR = "item-nr";
+        /// <summary>
+        /// The name of the metadata placeholder for each block's target ID.
+        /// This is defined by this renderer by concatenating item number,
+        /// row number, and block ID, all separated by underscore.
+        /// </summary>
+        public const string M_TARGET_ID = "target-id";
+        /// <summary>
         /// The name of the metadata placeholder for row's y number (1-N).
         /// </summary>
         public const string M_ROW_Y = "y";
@@ -66,8 +78,8 @@ namespace Cadmus.Export.ML
             return sb.ToString();
         }
 
-        private void RenderRowText(TextBlockRow row, StringBuilder text,
-            IHasDataDictionary? context = null)
+        private void RenderRowText(int y, TextBlockRow row, StringBuilder text,
+            ITextBlockRendererContext context)
         {
             // open row
             if (!string.IsNullOrEmpty(_options.RowOpen))
@@ -79,10 +91,16 @@ namespace Cadmus.Export.ML
             // for each block in row
             foreach (TextBlock block in row.Blocks)
             {
+                context.Data[M_BLOCK_ID] = block.Id;
+
+                string targetId = $"{context.Data[M_ITEM_NR]}_{y}_{block.Id}";
+                context.Data[M_TARGET_ID] = targetId;
+                foreach (string id in block.LayerIds)
+                    context.TargetIds[id] = targetId;
+
                 // open block
                 if (!string.IsNullOrEmpty(_options.BlockOpen))
                 {
-                    if (context != null) context.Data[M_BLOCK_ID] = block.Id;
                     text.Append(TextTemplate.FillTemplate(_options.BlockOpen,
                         context?.Data ?? _nullCtxData));
                 }
@@ -109,11 +127,11 @@ namespace Cadmus.Export.ML
         /// Renders the specified rows.
         /// </summary>
         /// <param name="rows">The rows.</param>
-        /// <param name="context">The optional context.</param>
+        /// <param name="context">The rendering context.</param>
         /// <returns>Rendition.</returns>
         /// <exception cref="ArgumentNullException">rows</exception>
         public string Render(IEnumerable<TextBlockRow> rows,
-            IHasDataDictionary? context = null)
+            ITextBlockRendererContext context)
         {
             if (rows is null) throw new ArgumentNullException(nameof(rows));
 
@@ -122,7 +140,7 @@ namespace Cadmus.Export.ML
             foreach (TextBlockRow row in rows)
             {
                 if (context != null) context.Data[M_ROW_Y] = ++y;
-                RenderRowText(row, text, context);
+                RenderRowText(y, row, text, context);
             }
 
             return text.ToString();
@@ -164,9 +182,12 @@ namespace Cadmus.Export.ML
         /// </summary>
         public TeiStandoffTextBlockRendererOptions()
         {
-            RowOpen = "<div>";
+            RowOpen = "<div xml:id=\"{" +
+                TeiStandoffTextBlockRenderer.M_ITEM_NR + "}_{" +
+                TeiStandoffTextBlockRenderer.M_ROW_Y + "}\">";
             RowClose = "</div>";
-            BlockOpen = "<seg>";
+            BlockOpen = "<seg xml:id=\"{" +
+                TeiStandoffTextBlockRenderer.M_TARGET_ID + "}\">";
             BlockClose = "</seg>";
         }
     }
