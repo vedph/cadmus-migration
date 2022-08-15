@@ -78,7 +78,7 @@ namespace Cadmus.Export.ML
         }
 
         private void RenderRowText(int y, TextBlockRow row, StringBuilder text,
-            ITextBlockRendererContext context)
+            IRendererContext context)
         {
             // open row
             if (!string.IsNullOrEmpty(_options.RowOpen))
@@ -130,7 +130,7 @@ namespace Cadmus.Export.ML
         /// <returns>Rendition.</returns>
         /// <exception cref="ArgumentNullException">rows</exception>
         public string Render(IEnumerable<TextBlockRow> rows,
-            ITextBlockRendererContext context)
+            IRendererContext context)
         {
             if (rows is null) throw new ArgumentNullException(nameof(rows));
 

@@ -4,10 +4,11 @@ using System.Collections.Generic;
 namespace Cadmus.Export
 {
     /// <summary>
-    /// Context for <see cref="ITextBlockRenderer"/>'s.
+    /// Renderer context. This includes a generic metadata dictionary and
+    /// a layer IDs map.
     /// </summary>
     /// <seealso cref="IHasDataDictionary" />
-    public interface ITextBlockRendererContext : IHasDataDictionary
+    public interface IRendererContext : IHasDataDictionary
     {
         /// <summary>
         /// Gets the target IDs dictionary, where keys are block layer IDs,

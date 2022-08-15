@@ -40,7 +40,7 @@ namespace Cadmus.Export.ML
         /// <summary>
         /// Gets the context using during processing.
         /// </summary>
-        protected TextBlockRendererContext Context { get; }
+        protected RendererContext Context { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TeiStandoffItemComposer"/>
@@ -53,7 +53,7 @@ namespace Cadmus.Export.ML
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             };
-            Context = new TextBlockRendererContext();
+            Context = new RendererContext();
         }
 
         /// <summary>

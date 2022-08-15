@@ -27,7 +27,7 @@ namespace Cadmus.Export
         /// <param name="context">The optional renderer context.</param>
         /// <returns>Rendered output.</returns>
         protected abstract string DoRender(string json,
-            TextBlockRendererContext? context = null);
+            IRendererContext? context = null);
 
         /// <summary>
         /// Renders the specified JSON code.
@@ -35,7 +35,7 @@ namespace Cadmus.Export
         /// <param name="json">The input JSON.</param>
         /// <param name="context">The optional renderer context.</param>
         /// <returns>Rendered output.</returns>
-        public string Render(string json, TextBlockRendererContext? context = null)
+        public string Render(string json, IRendererContext? context = null)
         {
             if (string.IsNullOrEmpty(json)) return json;
 
@@ -44,7 +44,7 @@ namespace Cadmus.Export
             if (Filters.Count > 0)
             {
                 foreach (IRendererFilter filter in Filters)
-                    result = filter.Apply(result);
+                    result = filter.Apply(result, context);
             }
 
             return result;

@@ -29,7 +29,7 @@ namespace Cadmus.Export
         /// <param name="context">The optional renderer context.</param>
         /// <returns>Rendered output.</returns>
         protected override string DoRender(string json,
-            TextBlockRendererContext? context = null)
+            IRendererContext? context = null)
         {
             return json ?? "";
         }

@@ -70,18 +70,26 @@ namespace Cadmus.Export
         /// <returns>Rendered output.</returns>
         /// <exception cref="ArgumentNullException">json</exception>
         protected override string DoRender(string json,
-            TextBlockRendererContext? context = null)
+            IRendererContext? context = null)
         {
             if (_options == null) return json;
 
             if (json is null) throw new ArgumentNullException(nameof(json));
-            if (_transformer == null && _options.JsonExpressions?.Count == 0)
+            if (!_options.FrDecoration &&
+                _transformer == null &&
+                _options.JsonExpressions?.Count == 0)
+            {
                 return "";
+            }
 
             // wrap object properties in root
             json = "{\"root\":" + json + "}";
 
-            // transform JSON if required
+            // decorate if requested
+            if (_options.FrDecoration)
+                json = JsonDecorator.DecorateLayerPartFrr(json);
+
+            // transform JSON if requested
             if (_options.JsonExpressions?.Count > 0)
             {
                 JmesPath jmes = new();
@@ -116,6 +124,16 @@ namespace Cadmus.Export
     /// </summary>
     public class XsltJsonRendererOptions
     {
+        /// <summary>
+        /// Gets or sets a value indicating whether fragment decoration
+        /// is enabled. When true, the JSON corresponding to a layer part
+        /// gets an additional <c>_key</c> property in each of its <c>fragments</c>
+        /// array items. This key is built from the layer type ID eventually
+        /// followed by <c>|</c> plus the role ID, followed by the fragment's
+        /// index.
+        /// </summary>
+        public bool FrDecoration { get; set; }
+
         /// <summary>
         /// Gets or sets the JSON transform expressions using JMES Path.
         /// </summary>

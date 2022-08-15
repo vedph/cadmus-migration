@@ -10,7 +10,8 @@
         /// Applies this filter to the specified text.
         /// </summary>
         /// <param name="text">The text.</param>
+        /// <param name="context">The optional rendering context.</param>
         /// <returns>The filtered text.</returns>
-        string Apply(string text);
+        string Apply(string text, IRendererContext? context = null);
     }
 }

@@ -50,8 +50,9 @@ namespace Cadmus.Export
         /// Applies this filter to the specified text.
         /// </summary>
         /// <param name="text">The text.</param>
+        /// <param name="context">The optional renderer context.</param>
         /// <returns>The filtered text.</returns>
-        public string Apply(string text)
+        public string Apply(string text, IRendererContext? context = null)
         {
             if (string.IsNullOrEmpty(text)) return text;
             return _replacer.Replace(text)!;

@@ -19,6 +19,6 @@ namespace Cadmus.Export
         /// <param name="json">The input JSON.</param>
         /// <param name="context">The optional renderer context.</param>
         /// <returns>Rendered output.</returns>
-        string Render(string json, TextBlockRendererContext? context = null);
+        string Render(string json, IRendererContext? context = null);
     }
 }

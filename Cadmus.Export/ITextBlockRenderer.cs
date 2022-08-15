@@ -14,6 +14,6 @@ namespace Cadmus.Export
         /// <param name="context">The rendering context.</param>
         /// <returns>Rendition.</returns>
         string Render(IEnumerable<TextBlockRow> rows,
-            ITextBlockRendererContext context);
+            IRendererContext context);
     }
 }
