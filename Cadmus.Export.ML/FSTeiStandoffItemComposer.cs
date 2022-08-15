@@ -8,7 +8,8 @@ using System.Text;
 namespace Cadmus.Export.ML
 {
     /// <summary>
-    /// File-based TEI standoff item composer.
+    /// File-based TEI standoff item composer. This just saves the text flows
+    /// produced by a text item with its layers into a set of XML documents.
     /// <para>Tag: <c>it.vedph.item-composer.tei-standoff.fs</c>.</para>
     /// </summary>
     /// <seealso cref="ItemComposer" />
@@ -52,10 +53,17 @@ namespace Cadmus.Export.ML
         /// </summary>
         public override void Close()
         {
-            foreach (TextWriter writer in _writers.Values)
+            foreach (var p in _writers)
             {
-                writer.Flush();
-                writer.Close();
+                Metadata.Data[M_FLOW_KEY] = p.Key;
+
+                string? tail = p.Key == PartBase.BASE_TEXT_ROLE_ID
+                    ? FillTemplate(_options?.TextTail)
+                    : FillTemplate(_options?.LayerTail);
+                if (!string.IsNullOrEmpty(tail)) p.Value.WriteLine(tail);
+
+                p.Value.Flush();
+                p.Value.Close();
             }
             _writers.Clear();
         }
@@ -66,19 +74,24 @@ namespace Cadmus.Export.ML
         /// <param name="item">The item.</param>
         /// <param name="context">The context.</param>
         /// <returns>Composition result or null.</returns>
-        /// <exception cref="ArgumentNullException">item</exception>
-        public object? Compose(IItem item, object? context = null)
+        protected override object? DoCompose(IItem item, object? context = null)
         {
-            if (item is null) throw new ArgumentNullException(nameof(item));
-
             Dictionary<string, string> flows = RenderFlows(item);
             foreach (string key in flows.Keys)
             {
                 if (!_writers.ContainsKey(key))
                 {
+                    Metadata.Data[M_FLOW_KEY] = key;
+
                     _writers[key] = new StreamWriter(
                         Path.Combine(_options!.OutputDirectory ?? "",
                                      key + ".xml"), false, Encoding.UTF8);
+
+                    string? head = key == PartBase.BASE_TEXT_ROLE_ID
+                        ? FillTemplate(_options.TextHead)
+                        : FillTemplate(_options.LayerHead);
+                    if (!string.IsNullOrEmpty(head))
+                        _writers[key].WriteLine(head);
                 }
                 _writers[key].WriteLine(flows[key]);
             }
@@ -89,11 +102,20 @@ namespace Cadmus.Export.ML
     /// <summary>
     /// Options for <see cref="FSTeiStandoffItemComposer"/>.
     /// </summary>
-    public class FSTeiStandoffItemComposerOptions
+    public class FSTeiStandoffItemComposerOptions : TeiStandoffItemComposerOptions
     {
         /// <summary>
         /// Gets or sets the output directory.
         /// </summary>
-        public string? OutputDirectory { get; set; }
+        public string OutputDirectory { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FSTeiStandoffItemComposerOptions"/>
+        /// class.
+        /// </summary>
+        public FSTeiStandoffItemComposerOptions()
+        {
+            OutputDirectory = "";
+        }
     }
 }
