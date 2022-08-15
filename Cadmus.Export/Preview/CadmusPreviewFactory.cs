@@ -83,7 +83,7 @@ namespace Cadmus.Export.Preview
             {
                 options = SupplyProperty(optionType, property, options,
                     ConnectionString);
-            } // conn
+            }
 
             // apply options if any
             if (options != null)
@@ -278,35 +278,6 @@ namespace Cadmus.Export.Preview
             return renderers;
         }
 
-        // TODO: move
-        private static ComponentFactoryConfigEntry? ReadComponentEntry(
-            IConfiguration configuration, string path)
-        {
-            if (configuration == null)
-                throw new ArgumentNullException(nameof(configuration));
-            if (path == null)
-                throw new ArgumentNullException(nameof(path));
-
-            IConfigurationSection section = configuration.GetSection(path);
-            if (!section.Exists()) return null;
-
-            ComponentFactoryConfigEntry entry =
-                new(
-                    section["Id"],
-                    0,
-                    section.GetSection("Options").Exists() ?
-                    $"{path}:Options" : null);
-
-            // keys (separated by space)
-            IConfigurationSection keySection = section.GetSection("Keys");
-            if (keySection.Exists())
-            {
-                entry.Keys = keySection.Get<string>().Split();
-            }
-
-            return entry;
-        }
-
         /// <summary>
         /// Gets an item composer by key.
         /// </summary>
@@ -332,7 +303,8 @@ namespace Cadmus.Export.Preview
             if (composer == null) return null;
 
             // add text part flattener if specified in Options.TextPartFlattener
-            ComponentFactoryConfigEntry? e = ReadComponentEntry(Configuration,
+            ComponentFactoryConfigEntry? e = ComponentFactoryConfigEntry.
+                ReadComponentEntry(Configuration,
                 entry.OptionsPath + ":TextPartFlattener");
             if (e != null)
             {
@@ -341,7 +313,7 @@ namespace Cadmus.Export.Preview
             }
 
             // add text block renderer if specified in Options.TextBlockRenderer
-            e = ReadComponentEntry(Configuration,
+            e = ComponentFactoryConfigEntry.ReadComponentEntry(Configuration,
                 entry.OptionsPath + ":TextBlockRenderer");
             if (e != null)
             {
