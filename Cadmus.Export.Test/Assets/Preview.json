@@ -58,8 +58,10 @@
       "Keys": "text-standoff",
       "Id": "it.vedph.text-block-renderer.standoff-tei",
       "Options": {
-        "RowElement": "div",
-        "BlockElement": "seg"
+        "RowOpen": "<div xml:id=\"r{y}\">",
+        "RowClose": "</div>",
+        "BlockOpen": "<seg xml:id=\"{b}\">",
+        "BlockClose": "</seg>"
       }
     }
   ],

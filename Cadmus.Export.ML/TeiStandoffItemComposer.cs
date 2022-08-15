@@ -81,7 +81,6 @@ namespace Cadmus.Export.ML
         {
             Dictionary<string, string> flows = new();
 
-            Metadata.Data.Clear();
             Metadata.Data[M_ITEM_ID] = item.Id;
             Metadata.Data[M_ITEM_TITLE] = item.Title;
             Metadata.Data[M_ITEM_FACET] = item.FacetId;
@@ -111,7 +110,8 @@ namespace Cadmus.Export.ML
                 _blockBuilder.Build(tr.Item1, tr.Item2).ToList();
 
             // render blocks
-            flows[PartBase.BASE_TEXT_ROLE_ID] = TextBlockRenderer.Render(rows);
+            flows[PartBase.BASE_TEXT_ROLE_ID] =
+                TextBlockRenderer.Render(rows, Metadata);
 
             // render layers
             foreach (IPart layerPart in layerParts)
@@ -119,7 +119,8 @@ namespace Cadmus.Export.ML
                 string id = BuildLayerId(layerPart);
                 if (JsonRenderers.ContainsKey(id))
                 {
-                    string json = JsonSerializer.Serialize(layerPart, _jsonOptions);
+                    string json = JsonSerializer.Serialize<object>(layerPart,
+                        _jsonOptions);
                     flows[id] = JsonRenderers[id].Render(json);
                 }
             }
@@ -141,23 +142,23 @@ namespace Cadmus.Export.ML
         /// Does the composition.
         /// </summary>
         /// <param name="item">The item.</param>
-        /// <param name="context">The context.</param>
         /// <returns>Optional output.</returns>
-        protected abstract object? DoCompose(IItem item, object? context = null);
+        protected abstract object? DoCompose(IItem item);
 
         /// <summary>
         /// Composes the output from the specified item.
         /// </summary>
         /// <param name="item">The item.</param>
-        /// <param name="context">The context.</param>
         /// <returns>Composition result or null.</returns>
         /// <exception cref="ArgumentNullException">item</exception>
-        public object? Compose(IItem item, object? context = null)
+        public object? Compose(IItem item)
         {
             if (item is null) throw new ArgumentNullException(nameof(item));
 
             Metadata.Data[M_ITEM_NR] = ++ItemNumber;
-            return DoCompose(item, context);
+            var result = DoCompose(item);
+            Metadata.Data.Clear();
+            return result;
         }
      }
 
@@ -206,7 +207,8 @@ namespace Cadmus.Export.ML
         {
             TextHead = "<body>";
             TextTail = "</body>";
-            LayerHead = "<standOff>";
+            LayerHead = "<standOff type=\"{" +
+                TeiStandoffItemComposer.M_ITEM_NR + "}\">";
             LayerTail = "</standOff>";
         }
     }

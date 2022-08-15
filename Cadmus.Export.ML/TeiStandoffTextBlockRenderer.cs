@@ -1,4 +1,6 @@
-﻿using Fusi.Tools.Config;
+﻿using Fusi.Tools;
+using Fusi.Tools.Config;
+using Fusi.Tools.Text;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,9 +13,19 @@ namespace Cadmus.Export.ML
     /// </summary>
     [Tag("it.vedph.text-block-renderer.tei-standoff")]
     public sealed class TeiStandoffTextBlockRenderer : ITextBlockRenderer,
-        IConfigurable<SimpleTeiTextPartRendererOptions>
+        IConfigurable<TeiStandoffTextBlockRendererOptions>
     {
-        private SimpleTeiTextPartRendererOptions _options;
+        /// <summary>
+        /// The name of the metadata placeholder for row's y number (1-N).
+        /// </summary>
+        public const string M_ROW_Y = "y";
+        /// <summary>
+        /// The name of the metadata placeholder for block's ID.
+        /// </summary>
+        public const string M_BLOCK_ID = "b";
+
+        private readonly Dictionary<string, object> _nullCtxData;
+        private TeiStandoffTextBlockRendererOptions _options;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TeiStandoffTextBlockRenderer"/>
@@ -21,11 +33,8 @@ namespace Cadmus.Export.ML
         /// </summary>
         public TeiStandoffTextBlockRenderer()
         {
-            _options = new SimpleTeiTextPartRendererOptions
-            {
-                RowElement = "div",
-                BlockElement = "seg"
-            };
+            _nullCtxData = new Dictionary<string, object>();
+            _options = new TeiStandoffTextBlockRendererOptions();
         }
 
         /// <summary>
@@ -33,7 +42,7 @@ namespace Cadmus.Export.ML
         /// </summary>
         /// <param name="options">The options.</param>
         /// <exception cref="ArgumentNullException">options</exception>
-        public void Configure(SimpleTeiTextPartRendererOptions options)
+        public void Configure(TeiStandoffTextBlockRendererOptions options)
         {
             if (options is null)
                 throw new ArgumentNullException(nameof(options));
@@ -57,38 +66,42 @@ namespace Cadmus.Export.ML
             return sb.ToString();
         }
 
-        private void RenderRowText(int y, TextBlockRow row, StringBuilder text)
+        private void RenderRowText(TextBlockRow row, StringBuilder text,
+            IHasDataDictionary? context = null)
         {
             // open row
-            if (!string.IsNullOrEmpty(_options.RowElement))
+            if (!string.IsNullOrEmpty(_options.RowOpen))
             {
-                text.Append('<').Append(_options.RowElement)
-                   .Append(" xml:id=\"r").Append(y).Append("\">");
+                text.Append(TextTemplate.FillTemplate(_options.RowOpen,
+                    context?.Data ?? _nullCtxData));
             }
 
             // for each block in row
             foreach (TextBlock block in row.Blocks)
             {
                 // open block
-                if (!string.IsNullOrEmpty(_options.BlockElement))
+                if (!string.IsNullOrEmpty(_options.BlockOpen))
                 {
-                    text.Append('<').Append(_options.BlockElement)
-                       .Append(" xml:id=\"").Append(block.Id).Append("\">");
+                    if (context != null) context.Data[M_BLOCK_ID] = block.Id;
+                    text.Append(TextTemplate.FillTemplate(_options.BlockOpen,
+                        context?.Data ?? _nullCtxData));
                 }
 
                 text.Append(Xmlize(block.Text));
 
                 // close block
-                if (!string.IsNullOrEmpty(_options.BlockElement))
+                if (!string.IsNullOrEmpty(_options.BlockClose))
                 {
-                    text.Append("</").Append(_options.BlockElement).Append('>');
+                    text.Append(TextTemplate.FillTemplate(_options.BlockClose,
+                        context?.Data ?? _nullCtxData));
                 }
             }
 
             // close row
-            if (!string.IsNullOrEmpty(_options.RowElement))
+            if (!string.IsNullOrEmpty(_options.RowClose))
             {
-                text.Append("</").Append(_options.RowElement).AppendLine(">");
+                text.Append(TextTemplate.FillTemplate(_options.RowClose,
+                    context?.Data ?? _nullCtxData));
             }
         }
 
@@ -96,9 +109,11 @@ namespace Cadmus.Export.ML
         /// Renders the specified rows.
         /// </summary>
         /// <param name="rows">The rows.</param>
-        /// <returns>XML code.</returns>
+        /// <param name="context">The optional context.</param>
+        /// <returns>Rendition.</returns>
         /// <exception cref="ArgumentNullException">rows</exception>
-        public string Render(IEnumerable<TextBlockRow> rows)
+        public string Render(IEnumerable<TextBlockRow> rows,
+            IHasDataDictionary? context = null)
         {
             if (rows is null) throw new ArgumentNullException(nameof(rows));
 
@@ -106,8 +121,8 @@ namespace Cadmus.Export.ML
             int y = 0;
             foreach (TextBlockRow row in rows)
             {
-                y++;
-                RenderRowText(y, row, text);
+                if (context != null) context.Data[M_ROW_Y] = ++y;
+                RenderRowText(row, text, context);
             }
 
             return text.ToString();
@@ -117,18 +132,42 @@ namespace Cadmus.Export.ML
     /// <summary>
     /// Options for <see cref="TeiStandoffTextBlockRenderer"/>.
     /// </summary>
-    public class SimpleTeiTextPartRendererOptions
+    public class TeiStandoffTextBlockRendererOptions
     {
         /// <summary>
-        /// Gets or sets the name of the XML element corresponding to a row
-        /// of text blocks. If null, no element will be added.
+        /// Gets or sets the code to insert at each row start.
+        /// This can be a template, with placeholders delimited by curly braces.
         /// </summary>
-        public string? RowElement { get; set; }
+        public string? RowOpen { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the XML element corresponding to a text
-        /// block. If null, no element will be added.
+        /// Gets or sets the code to insert at each row end.
+        /// This can be a template, with placeholders delimited by curly braces.
         /// </summary>
-        public string? BlockElement { get; set; }
+        public string? RowClose { get; set; }
+
+        /// <summary>
+        /// Gets or sets the code to insert at each block start.
+        /// This can be a template, with placeholders delimited by curly braces.
+        /// </summary>
+        public string? BlockOpen { get; set; }
+
+        /// <summary>
+        /// Gets or sets the code to insert at each block end.
+        /// This can be a template, with placeholders delimited by curly braces.
+        /// </summary>
+        public string? BlockClose { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the
+        /// <see cref="TeiStandoffTextBlockRendererOptions"/> class.
+        /// </summary>
+        public TeiStandoffTextBlockRendererOptions()
+        {
+            RowOpen = "<div>";
+            RowClose = "</div>";
+            BlockOpen = "<seg>";
+            BlockClose = "</seg>";
+        }
     }
 }

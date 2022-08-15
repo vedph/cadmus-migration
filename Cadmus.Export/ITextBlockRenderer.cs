@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Fusi.Tools;
+using System.Collections.Generic;
 
 namespace Cadmus.Export
 {
@@ -11,7 +12,9 @@ namespace Cadmus.Export
         /// Renders the specified rows.
         /// </summary>
         /// <param name="rows">The rows.</param>
-        /// <returns>XML code.</returns>
-        string Render(IEnumerable<TextBlockRow> rows);
+        /// <param name="context">The optional context.</param>
+        /// <returns>Rendition.</returns>
+        string Render(IEnumerable<TextBlockRow> rows,
+            IHasDataDictionary? context = null);
     }
 }

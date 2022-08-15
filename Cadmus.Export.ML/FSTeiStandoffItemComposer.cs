@@ -1,4 +1,5 @@
 ﻿using Cadmus.Core;
+using Fusi.Tools;
 using Fusi.Tools.Config;
 using System;
 using System.Collections.Generic;
@@ -72,9 +73,8 @@ namespace Cadmus.Export.ML
         /// Composes the output from the specified item.
         /// </summary>
         /// <param name="item">The item.</param>
-        /// <param name="context">The context.</param>
         /// <returns>Composition result or null.</returns>
-        protected override object? DoCompose(IItem item, object? context = null)
+        protected override object? DoCompose(IItem item)
         {
             Dictionary<string, string> flows = RenderFlows(item);
             foreach (string key in flows.Keys)

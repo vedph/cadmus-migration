@@ -1,4 +1,5 @@
 ﻿using Cadmus.Core;
+using Fusi.Tools;
 using Fusi.Tools.Config;
 
 namespace Cadmus.Export.ML.Test
@@ -14,7 +15,7 @@ namespace Cadmus.Export.ML.Test
                 ?? throw new System.ArgumentNullException(nameof(options));
         }
 
-        protected override object? DoCompose(IItem item, object? context = null)
+        protected override object? DoCompose(IItem item)
         {
             return RenderFlows(item);
         }

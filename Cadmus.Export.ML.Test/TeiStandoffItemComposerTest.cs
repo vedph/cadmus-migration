@@ -1,6 +1,7 @@
 ﻿using Cadmus.Core;
 using Cadmus.General.Parts;
 using Cadmus.Philology.Parts;
+using Fusi.Tools;
 using System.Collections.Generic;
 using Xunit;
 
@@ -82,14 +83,23 @@ namespace Cadmus.Export.ML.Test
             return item;
         }
 
-        [Fact]
-        public void Compose_Ok()
+        private static RamTeiStandoffItemComposer GetComposer()
         {
+            TeiStandoffTextBlockRenderer blockRenderer = new();
+            blockRenderer.Configure(new TeiStandoffTextBlockRendererOptions
+            {
+                RowOpen = "<div xml:id=\"{item-nr}_{y}\">",
+                RowClose = "</div>",
+                BlockOpen = "<seg xml:id=\"{item-nr}_{y}_{b}\">",
+                BlockClose = "</seg>"
+            });
+
             RamTeiStandoffItemComposer composer = new()
             {
                 TextPartFlattener = new TokenTextPartFlattener(),
-                TextBlockRenderer = new TeiStandoffTextBlockRenderer(),
+                TextBlockRenderer = blockRenderer
             };
+
             composer.JsonRenderers["it.vedph.token-text"] = new NullJsonRenderer();
             composer.JsonRenderers["it.vedph.token-text-layer|fr.it.vedph.apparatus"]
                 = new NullJsonRenderer();
@@ -97,6 +107,14 @@ namespace Cadmus.Export.ML.Test
                 = new NullJsonRenderer();
 
             composer.Configure(new TeiStandoffItemComposerOptions());
+
+            return composer;
+        }
+
+        [Fact]
+        public void Compose_Ok()
+        {
+            RamTeiStandoffItemComposer composer = GetComposer();
 
             Dictionary<string, string> flows = (Dictionary<string, string>)
                 composer.Compose(GetItem())!;

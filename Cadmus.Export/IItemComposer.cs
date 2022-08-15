@@ -1,4 +1,5 @@
 ﻿using Cadmus.Core;
+using Fusi.Tools;
 using System.Collections.Generic;
 
 namespace Cadmus.Export
@@ -45,9 +46,8 @@ namespace Cadmus.Export
         /// Composes the output from the specified item.
         /// </summary>
         /// <param name="item">The item.</param>
-        /// <param name="context">The context.</param>
         /// <returns>Composition result or null.</returns>
-        object? Compose(IItem item, object? context = null);
+        object? Compose(IItem item);
 
         /// <summary>
         /// Closes the composer output.
