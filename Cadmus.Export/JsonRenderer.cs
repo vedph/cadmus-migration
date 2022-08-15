@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Text;
 
 namespace Cadmus.Export
 {
@@ -25,19 +24,22 @@ namespace Cadmus.Export
         /// Renders the specified JSON code.
         /// </summary>
         /// <param name="json">The input JSON.</param>
+        /// <param name="context">The optional renderer context.</param>
         /// <returns>Rendered output.</returns>
-        protected abstract string DoRender(string json);
+        protected abstract string DoRender(string json,
+            TextBlockRendererContext? context = null);
 
         /// <summary>
         /// Renders the specified JSON code.
         /// </summary>
         /// <param name="json">The input JSON.</param>
+        /// <param name="context">The optional renderer context.</param>
         /// <returns>Rendered output.</returns>
-        public string Render(string json)
+        public string Render(string json, TextBlockRendererContext? context = null)
         {
             if (string.IsNullOrEmpty(json)) return json;
 
-            string result = DoRender(json);
+            string result = DoRender(json, context);
 
             if (Filters.Count > 0)
             {

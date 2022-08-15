@@ -1,5 +1,4 @@
-﻿using Fusi.Tools;
-using Fusi.Tools.Config;
+﻿using Fusi.Tools.Config;
 using Fusi.Tools.Text;
 using System;
 using System.Collections.Generic;

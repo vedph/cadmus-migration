@@ -123,7 +123,7 @@ namespace Cadmus.Export.ML
                 {
                     string json = JsonSerializer.Serialize<object>(layerPart,
                         _jsonOptions);
-                    flows[id] = JsonRenderers[id].Render(json);
+                    flows[id] = JsonRenderers[id].Render(json, Context);
                 }
             }
 

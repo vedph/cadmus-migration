@@ -66,9 +66,11 @@ namespace Cadmus.Export
         /// Renders the specified JSON code.
         /// </summary>
         /// <param name="json">The input JSON.</param>
+        /// <param name="context">The optional renderer context.</param>
         /// <returns>Rendered output.</returns>
         /// <exception cref="ArgumentNullException">json</exception>
-        protected override string DoRender(string json)
+        protected override string DoRender(string json,
+            TextBlockRendererContext? context = null)
         {
             if (_options == null) return json;
 
