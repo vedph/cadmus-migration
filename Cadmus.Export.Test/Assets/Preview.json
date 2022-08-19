@@ -31,11 +31,7 @@
       "Keys": "it.vedph.token-text",
       "Id": "it.vedph.json-renderer.null",
       "Options": {
-        "FilterKeys": [
-          "thes-filter",
-          "rep-filter",
-          "md-filter"
-        ]
+        "FilterKeys": [ "thes-filter", "rep-filter", "md-filter" ]
       }
     },
     {

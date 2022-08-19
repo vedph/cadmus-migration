@@ -35,7 +35,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>EAAACAAAAAAAgAAAAAAAAAUAAAYAAAAEACCACCAAEAE=</HashCode>
+      <HashCode>EAAACAAAAAAAgAAAAAAAAAUAAAYAAAAEACCACCAAMAE=</HashCode>
       <FileName>Preview\CadmusPreviewFactory.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -256,8 +256,32 @@
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAABAAEAAAgBEAAAAAEAAgAAAAAAAAAACAAAAAAAAA=</HashCode>
+      <HashCode>AACABAAEAAAgBEAAAAAEAAgAAAAAAAAAACAAEAAAAAA=</HashCode>
       <FileName>MongoItemIdCollector.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cadmus.Export.PlainTextBlockRenderer">
+    <Position X="5.25" Y="10" Width="2" />
+    <Members>
+      <Method Name="PlainTextBlockRenderer" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAABAAAAAAAAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>PlainTextBlockRenderer.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_options" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Cadmus.Export.PlainTextBlockRendererOptions">
+    <Position X="8.25" Y="9.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAIA=</HashCode>
+      <FileName>PlainTextBlockRenderer.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Interface Name="Cadmus.Export.IJsonRenderer">

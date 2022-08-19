@@ -90,7 +90,7 @@ namespace Cadmus.Export.ML
             // for each block in row
             foreach (TextBlock block in row.Blocks)
             {
-                context.Data[M_BLOCK_ID] = block.Id;
+                context!.Data[M_BLOCK_ID] = block.Id;
 
                 string targetId = $"{context.Data[M_ITEM_NR]}_{y}_{block.Id}";
                 context.Data[M_TARGET_ID] = targetId;
@@ -139,7 +139,7 @@ namespace Cadmus.Export.ML
             foreach (TextBlockRow row in rows)
             {
                 if (context != null) context.Data[M_ROW_Y] = ++y;
-                RenderRowText(y, row, text, context);
+                RenderRowText(y, row, text, context!);
             }
 
             return text.ToString();

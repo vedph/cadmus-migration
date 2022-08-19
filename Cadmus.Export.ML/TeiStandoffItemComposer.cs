@@ -22,13 +22,20 @@ namespace Cadmus.Export.ML
         private readonly TextBlockBuilder _blockBuilder;
         private readonly JsonSerializerOptions _jsonOptions;
 
-        // metadata constants
+        // metadata constant        
+        /// <summary>The item ID metadata key (<c>item-id</c>).</summary>
         public const string M_ITEM_ID = "item-id";
+        /// <summary>The item title metadata key (<c>item-title</c>).</summary>
         public const string M_ITEM_TITLE = "item-title";
+        /// <summary>The item facet metadata key (<c>item-facet</c>).</summary>
         public const string M_ITEM_FACET = "item-facet";
+        /// <summary>The item group metadata key (<c>item-group</c>).</summary>
         public const string M_ITEM_GROUP = "item-group";
+        /// <summary>The item flags metadata key (<c>item-flags</c>).</summary>
         public const string M_ITEM_FLAGS = "item-flags";
+        /// <summary>The item number metadata key (<c>item-nr</c>).</summary>
         public const string M_ITEM_NR = "item-nr";
+        /// <summary>The text flow metadata key (<c>flow-key</c>).</summary>
         public const string M_FLOW_KEY = "flow-key";
 
         /// <summary>

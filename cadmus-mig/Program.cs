@@ -1,4 +1,5 @@
-﻿using Cadmus.Migration.Cli.Services;
+﻿using Cadmus.Migration.Cli.Commands;
+using Cadmus.Migration.Cli.Services;
 using Fusi.Cli.Commands;
 using Microsoft.Extensions.CommandLineUtils;
 using Serilog;
@@ -19,7 +20,7 @@ namespace Cadmus.Migration.Cli
         private static void DeleteLogs()
         {
             foreach (var path in Directory.EnumerateFiles(
-                AppDomain.CurrentDomain.BaseDirectory, "__PRJ__-log*.txt"))
+                AppDomain.CurrentDomain.BaseDirectory, "cadmus-mig-log*.txt"))
             {
                 try
                 {
@@ -43,9 +44,7 @@ namespace Cadmus.Migration.Cli
                 .SetCommands(new Dictionary<string,
                     Action<CommandLineApplication, ICliAppContext>>
                 {
-                    // TODO: setup commands, e.g.:
-                    // ["create-db"] = CreateDatabaseCommand.Configure,
-                    // ["import-doc"] = ImportDocumentsCommand.Configure,
+                    ["render-items"] = RenderItemsCommand.Configure,
                 })
             .Build();
         }
