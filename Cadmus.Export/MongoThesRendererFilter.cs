@@ -119,7 +119,7 @@ namespace Cadmus.Export
 
         /// <summary>
         /// Initializes a new instance of the
-        /// <see cref="ThesaurusRendererFilterOptions"/> class.
+        /// <see cref="MongoThesRendererFilterOptions"/> class.
         /// </summary>
         public MongoThesRendererFilterOptions()
         {

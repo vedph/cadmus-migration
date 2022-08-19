@@ -128,6 +128,8 @@ namespace Cadmus.Export.Preview
         /// </summary>
         /// <param name="id">The part's identifier.</param>
         /// <returns>Rendition.</returns>
+        /// <param name="frIndex">The fragment's index in the layer part's
+        /// fragments array.</param>
         /// <exception cref="ArgumentNullException">id</exception>
         /// <exception cref="ArgumentOutOfRangeException">frIndex less than 0
         /// </exception>

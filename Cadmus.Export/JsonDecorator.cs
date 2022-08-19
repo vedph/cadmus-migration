@@ -47,7 +47,7 @@ namespace Cadmus.Export
             if (frr == null) return json;
 
             int i = 0;
-            foreach (JsonNode fr in frr)
+            foreach (JsonNode? fr in frr)
             {
                 fr![keyPropName] = key + i;
                 i++;

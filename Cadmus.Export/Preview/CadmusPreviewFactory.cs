@@ -29,7 +29,8 @@ namespace Cadmus.Export.Preview
         public string? ConnectionString { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PythiaFactory" /> class.
+        /// Initializes a new instance of the <see cref="CadmusPreviewFactory" />
+        /// class.
         /// </summary>
         /// <param name="container">The container.</param>
         /// <param name="configuration">The configuration.</param>

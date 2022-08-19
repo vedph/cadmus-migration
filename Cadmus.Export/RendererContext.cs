@@ -8,6 +8,10 @@ namespace Cadmus.Export
     /// </summary>
     public class RendererContext : DataDictionary, IRendererContext
     {
+        /// <summary>
+        /// Gets the target IDs dictionary, where keys are block layer IDs,
+        /// and values are the corresponding block IDs.
+        /// </summary>
         public IDictionary<string, string> TargetIds { get; }
 
         /// <summary>

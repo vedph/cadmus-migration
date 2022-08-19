@@ -1,7 +1,6 @@
 ﻿using Cadmus.Core;
 using Fusi.Tools.Config;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -18,17 +17,7 @@ namespace Cadmus.Export.ML
     public sealed class FSTeiStandoffItemComposer : TeiStandoffItemComposer,
         IItemComposer, IConfigurable<FSTeiStandoffItemComposerOptions>
     {
-        private readonly Dictionary<string, TextWriter> _writers;
         private FSTeiStandoffItemComposerOptions? _options;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FSTeiStandoffItemComposer"/>
-        /// class.
-        /// </summary>
-        public FSTeiStandoffItemComposer()
-        {
-            _writers = new Dictionary<string, TextWriter>();
-        }
 
         /// <summary>
         /// Configures the object with the specified options.
@@ -41,9 +30,35 @@ namespace Cadmus.Export.ML
         }
 
         /// <summary>
+        /// Ensures the writer with the specified key exists in
+        /// <see cref="P:Cadmus.Export.ItemComposer.Output" />,
+        /// creating it if required.
+        /// </summary>
+        /// <param name="key">The writer's key.</param>
+        /// <exception cref="ArgumentNullException">key</exception>
+        protected override void EnsureWriter(string key)
+        {
+            if (key is null) throw new ArgumentNullException(nameof(key));
+
+            if (Output?.Writers.ContainsKey(key) != false) return;
+            Output.Writers[key] = new StreamWriter(
+                Path.Combine(_options!.OutputDirectory ?? "", key + ".xml"),
+                false,
+                Encoding.UTF8);
+
+            string? head = key == PartBase.BASE_TEXT_ROLE_ID
+                ? FillTemplate(_options.TextHead)
+                : FillTemplate(_options.LayerHead);
+            if (!string.IsNullOrEmpty(head))
+                Output.Writers[key].WriteLine(head);
+        }
+
+        /// <summary>
         /// Open the composer.
         /// </summary>
-        public override void Open()
+        /// <param name="output">The output object to use, or null to create
+        /// a new one.</param>
+        public override void Open(ItemComposition? output = null)
         {
             Close();
         }
@@ -53,7 +68,9 @@ namespace Cadmus.Export.ML
         /// </summary>
         public override void Close()
         {
-            foreach (var p in _writers)
+            if (Output == null) return;
+
+            foreach (var p in Output.Writers)
             {
                 Context.Data[M_FLOW_KEY] = p.Key;
 
@@ -65,7 +82,7 @@ namespace Cadmus.Export.ML
                 p.Value.Flush();
                 p.Value.Close();
             }
-            _writers.Clear();
+            Output.Writers.Clear();
         }
 
         /// <summary>
@@ -73,28 +90,11 @@ namespace Cadmus.Export.ML
         /// </summary>
         /// <param name="item">The item.</param>
         /// <returns>Composition result or null.</returns>
-        protected override object? DoCompose(IItem item)
+        protected override void DoCompose(IItem item)
         {
-            Dictionary<string, string> flows = RenderFlows(item);
-            foreach (string key in flows.Keys)
-            {
-                if (!_writers.ContainsKey(key))
-                {
-                    Context.Data[M_FLOW_KEY] = key;
+            if (Output == null) return;
 
-                    _writers[key] = new StreamWriter(
-                        Path.Combine(_options!.OutputDirectory ?? "",
-                                     key + ".xml"), false, Encoding.UTF8);
-
-                    string? head = key == PartBase.BASE_TEXT_ROLE_ID
-                        ? FillTemplate(_options.TextHead)
-                        : FillTemplate(_options.LayerHead);
-                    if (!string.IsNullOrEmpty(head))
-                        _writers[key].WriteLine(head);
-                }
-                _writers[key].WriteLine(flows[key]);
-            }
-            return flows;
+            RenderFlows(item);
         }
     }
 
@@ -109,8 +109,8 @@ namespace Cadmus.Export.ML
         public string OutputDirectory { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FSTeiStandoffItemComposerOptions"/>
-        /// class.
+        /// Initializes a new instance of the
+        /// <see cref="FSTeiStandoffItemComposerOptions"/> class.
         /// </summary>
         public FSTeiStandoffItemComposerOptions()
         {

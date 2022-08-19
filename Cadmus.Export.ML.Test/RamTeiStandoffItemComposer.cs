@@ -1,23 +1,38 @@
 ﻿using Cadmus.Core;
-using Fusi.Tools;
-using Fusi.Tools.Config;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
 
 namespace Cadmus.Export.ML.Test
 {
     internal sealed class RamTeiStandoffItemComposer : TeiStandoffItemComposer,
-        IItemComposer, IConfigurable<TeiStandoffItemComposerOptions>
+        IItemComposer
     {
-        private TeiStandoffItemComposerOptions? _options;
-
-        public void Configure(TeiStandoffItemComposerOptions options)
+        protected override void EnsureWriter(string key)
         {
-            _options = options
-                ?? throw new System.ArgumentNullException(nameof(options));
+            if (Output?.Writers.ContainsKey(key) != false) return;
+            Output.Writers[key] =
+                new StreamWriter(new MemoryStream(), Encoding.UTF8);
         }
 
-        protected override object? DoCompose(IItem item)
+        protected override void DoCompose(IItem item)
         {
-            return RenderFlows(item);
+            RenderFlows(item);
+        }
+
+        public IDictionary<string, string> GetFlows()
+        {
+            Dictionary<string, string> flows = new();
+            if (Output != null)
+            {
+                foreach (var p in Output.Writers)
+                {
+                    p.Value.Flush();
+                    MemoryStream ms = (MemoryStream)((StreamWriter)p.Value).BaseStream;
+                    flows[p.Key] = Encoding.UTF8.GetString(ms.GetBuffer());
+                }
+            }
+            return flows;
         }
     }
 }

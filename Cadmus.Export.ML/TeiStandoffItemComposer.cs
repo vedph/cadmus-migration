@@ -67,8 +67,12 @@ namespace Cadmus.Export.ML
         /// Open the composer. This resets <see cref="ItemNumber"/> and the
         /// processing context.
         /// </summary>
-        public override void Open()
+        /// <param name="output">The output object to use, or null to create
+        /// a new one.</param>
+        public override void Open(ItemComposition? output = null)
         {
+            base.Open(output);
+
             ItemNumber = 0;
             Context.Data.Clear();
             Context.TargetIds.Clear();
@@ -86,9 +90,9 @@ namespace Cadmus.Export.ML
         /// </summary>
         /// <param name="item">The source item.</param>
         /// <returns>Dictionary with key=flow ID and value=XML code.</returns>
-        protected Dictionary<string, string> RenderFlows(IItem item)
+        protected void RenderFlows(IItem item)
         {
-            Dictionary<string, string> flows = new();
+            if (Output == null) return;
 
             Context.Data[M_ITEM_ID] = item.Id;
             Context.Data[M_ITEM_TITLE] = item.Title;
@@ -103,7 +107,7 @@ namespace Cadmus.Export.ML
             if (textPart == null || TextPartFlattener == null ||
                 TextBlockRenderer == null)
             {
-                return flows;
+                return;
             }
 
             // layers
@@ -119,8 +123,8 @@ namespace Cadmus.Export.ML
                 _blockBuilder.Build(tr.Item1, tr.Item2).ToList();
 
             // render blocks
-            flows[PartBase.BASE_TEXT_ROLE_ID] =
-                TextBlockRenderer.Render(rows, Context);
+            string result = TextBlockRenderer.Render(rows, Context);
+            WriteOutput(PartBase.BASE_TEXT_ROLE_ID, result);
 
             // render layers
             foreach (IPart layerPart in layerParts)
@@ -130,11 +134,10 @@ namespace Cadmus.Export.ML
                 {
                     string json = JsonSerializer.Serialize<object>(layerPart,
                         _jsonOptions);
-                    flows[id] = JsonRenderers[id].Render(json, Context);
+                    result = JsonRenderers[id].Render(json, Context);
+                    WriteOutput(id, result);
                 }
             }
-
-            return flows;
         }
 
         /// <summary>
@@ -151,8 +154,7 @@ namespace Cadmus.Export.ML
         /// Does the composition.
         /// </summary>
         /// <param name="item">The item.</param>
-        /// <returns>Optional output.</returns>
-        protected abstract object? DoCompose(IItem item);
+        protected abstract void DoCompose(IItem item);
 
         /// <summary>
         /// Composes the output from the specified item.
@@ -160,14 +162,13 @@ namespace Cadmus.Export.ML
         /// <param name="item">The item.</param>
         /// <returns>Composition result or null.</returns>
         /// <exception cref="ArgumentNullException">item</exception>
-        public object? Compose(IItem item)
+        public void Compose(IItem item)
         {
             if (item is null) throw new ArgumentNullException(nameof(item));
 
             Context.Data[M_ITEM_NR] = ++ItemNumber;
-            var result = DoCompose(item);
+            DoCompose(item);
             Context.Data.Clear();
-            return result;
         }
      }
 

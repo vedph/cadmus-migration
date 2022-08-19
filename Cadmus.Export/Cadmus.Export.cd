@@ -227,17 +227,17 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Cadmus.Export.ItemComposer">
-    <Position X="10.5" Y="9.5" Width="1.75" />
+    <Position X="10.5" Y="9.25" Width="1.75" />
     <Members>
       <Method Name="ItemComposer" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AAEAAIAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAABCAAAA=</HashCode>
+      <HashCode>AQEAAIAAAAAAIAAQAAAIAAAAAAAAAAAAAAAAABCAAAA=</HashCode>
       <FileName>ItemComposer.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Cadmus.Export.MongoItemIdCollector">
-    <Position X="13" Y="9.75" Width="2" />
+    <Position X="14.75" Y="9.5" Width="2" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
@@ -251,7 +251,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Cadmus.Export.MongoItemIdCollectorOptions">
-    <Position X="16" Y="9.75" Width="1.5" />
+    <Position X="17.75" Y="9.5" Width="1.5" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
@@ -275,7 +275,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Cadmus.Export.PlainTextBlockRendererOptions">
-    <Position X="8.25" Y="9.75" Width="1.5" />
+    <Position X="8.25" Y="10" Width="1.5" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
@@ -320,9 +320,9 @@
     </TypeIdentifier>
   </Interface>
   <Interface Name="Cadmus.Export.IItemComposer">
-    <Position X="10.5" Y="7.75" Width="1.75" />
+    <Position X="10.5" Y="6.75" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAEAAIAAEAAAIAAAAAAAAAAAAAAAAAAAAAAAABCAAAA=</HashCode>
+      <HashCode>AAEAAIAAEAAAIAAAAAAIAAAAAAAAAAAAAAAAABCAAAA=</HashCode>
       <FileName>IItemComposer.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -334,7 +334,7 @@
     </ShowAsCollectionAssociation>
   </Interface>
   <Interface Name="Cadmus.Export.IItemIdCollector">
-    <Position X="13" Y="7.75" Width="2" />
+    <Position X="14.75" Y="7.75" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAA=</HashCode>
       <FileName>IItemIdCollector.cs</FileName>

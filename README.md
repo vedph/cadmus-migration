@@ -16,7 +16,7 @@ Markup related components used to export Cadmus data into some markup language, 
 
 ## History
 
-- 2022-08-19: adding CLI infrastructure.
+- 2022-08-19: adding CLI infrastructure and refactored item composer API.
 - 2022-08-19: item ID collectors.
 - 2022-08-17: more conceptual documentation.
 

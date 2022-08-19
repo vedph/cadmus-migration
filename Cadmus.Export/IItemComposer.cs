@@ -1,5 +1,4 @@
 ﻿using Cadmus.Core;
-using Fusi.Tools;
 using System.Collections.Generic;
 
 namespace Cadmus.Export
@@ -38,16 +37,22 @@ namespace Cadmus.Export
         IDictionary<string, IJsonRenderer> JsonRenderers { get; }
 
         /// <summary>
+        /// Gets the output handled by this composer, or null if not opened.
+        /// </summary>
+        public ItemComposition? Output { get; }
+
+        /// <summary>
         /// Opens the composer output.
         /// </summary>
-        void Open();
+        /// <param name="output">The output object to use, or null to create
+        /// a new one.</param>
+        void Open(ItemComposition? output = null);
 
         /// <summary>
         /// Composes the output from the specified item.
         /// </summary>
         /// <param name="item">The item.</param>
-        /// <returns>Composition result or null.</returns>
-        object? Compose(IItem item);
+        void Compose(IItem item);
 
         /// <summary>
         /// Closes the composer output.

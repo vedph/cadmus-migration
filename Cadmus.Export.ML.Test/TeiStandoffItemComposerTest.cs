@@ -96,8 +96,6 @@ namespace Cadmus.Export.ML.Test
             composer.JsonRenderers["it.vedph.token-text-layer|fr.it.vedph.comment"]
                 = new NullJsonRenderer();
 
-            composer.Configure(new TeiStandoffItemComposerOptions());
-
             return composer;
         }
 
@@ -106,9 +104,10 @@ namespace Cadmus.Export.ML.Test
         {
             RamTeiStandoffItemComposer composer = GetComposer();
 
-            Dictionary<string, string> flows = (Dictionary<string, string>)
-                composer.Compose(GetItem())!;
+            composer.Open();
+            composer.Compose(GetItem());
 
+            IDictionary<string, string> flows = composer.GetFlows();
             Assert.Equal(3, flows.Count);
 
             // TODO

@@ -151,7 +151,7 @@ namespace Cadmus.Export
         public string? Xslt { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="XsltPartRendererOptions"/>
+        /// Initializes a new instance of the <see cref="XsltJsonRendererOptions"/>
         /// class.
         /// </summary>
         public XsltJsonRendererOptions()
