@@ -93,5 +93,11 @@
         ]
       }
     }
-  ]
+  ],
+  "ItemIdCollector": {
+    "Id": "it.vedph.item-id-collector.mongo",
+    "Options": {
+      "FacetId": "text"
+    }
+  }
 }

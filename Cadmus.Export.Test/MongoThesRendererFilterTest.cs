@@ -12,7 +12,7 @@ namespace Cadmus.Export.Test
 
         public MongoThesRendererFilterTest()
         {
-            _client = new MongoClient();
+            _client = new MongoClient(TestHelper.CS);
         }
 
         private void InitDatabase()

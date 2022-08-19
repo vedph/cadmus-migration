@@ -129,6 +129,7 @@ namespace Cadmus.Export.Preview
             container.Collection.Register<ITextPartFlattener>(assemblies);
             container.Collection.Register<IRendererFilter>(assemblies);
             container.Collection.Register<IItemComposer>(assemblies);
+            container.Collection.Register<IItemIdCollector>(assemblies);
 
             // container.RegisterInstance(new UniData())
         }
@@ -332,6 +333,21 @@ namespace Cadmus.Export.Preview
             }
 
             return composer;
+        }
+
+        /// <summary>
+        /// Gets the item identifiers collector if any.
+        /// </summary>
+        /// <returns>The collector defined in this factory configuration,
+        /// or null.</returns>
+        public IItemIdCollector? GetItemIdCollector()
+        {
+            ComponentFactoryConfigEntry? entry =
+                ComponentFactoryConfigEntry.ReadComponentEntry(Configuration,
+                "ItemIdCollector");
+            if (entry == null) return null;
+
+            return GetComponent<IItemIdCollector>(entry.Id!, entry.OptionsPath!);
         }
     }
 }
