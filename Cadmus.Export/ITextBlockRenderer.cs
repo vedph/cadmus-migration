@@ -5,7 +5,7 @@ namespace Cadmus.Export
     /// <summary>
     /// Renderer of <see cref="TextBlockRow"/>'s.
     /// </summary>
-    public interface ITextBlockRenderer
+    public interface ITextBlockRenderer : IHasRendererFilters
     {
         /// <summary>
         /// Renders the specified rows.

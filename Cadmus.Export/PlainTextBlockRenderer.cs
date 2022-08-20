@@ -11,7 +11,8 @@ namespace Cadmus.Export
     /// <para>Tag: <c>it.vedph.text-block-renderer.txt</c>.</para>
     /// </summary>
     [Tag("it.vedph.text-block-renderer.txt")]
-    public sealed class PlainTextBlockRenderer : ITextBlockRenderer,
+    public sealed class PlainTextBlockRenderer : TextBlockRenderer,
+        ITextBlockRenderer,
         IConfigurable<PlainTextBlockRendererOptions>
     {
         private PlainTextBlockRendererOptions _options;
@@ -41,12 +42,9 @@ namespace Cadmus.Export
         /// <param name="rows">The rows.</param>
         /// <param name="context">The rendering context.</param>
         /// <returns>Rendition.</returns>
-        /// <exception cref="ArgumentNullException">rows</exception>
-        public string Render(IEnumerable<TextBlockRow> rows,
-            IRendererContext context)
+        protected override string DoRender(IEnumerable<TextBlockRow> rows,
+            IRendererContext? context = null)
         {
-            if (rows is null) throw new ArgumentNullException(nameof(rows));
-
             StringBuilder text = new();
             foreach (TextBlockRow row in rows)
             {

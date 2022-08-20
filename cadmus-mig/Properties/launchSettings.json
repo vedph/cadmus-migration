@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "cadmus-mig": {
+      "commandName": "Project",
+      "commandLineArgs": "render-items cadmus-sidon c:\\users\\dfusi\\desktop\\Preview-txt.json c:\\users\\dfusi\\Desktop\\out\\"
+    }
+  }
+}

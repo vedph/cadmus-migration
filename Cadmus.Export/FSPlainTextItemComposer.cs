@@ -15,10 +15,10 @@ namespace Cadmus.Export
     /// </summary>
     [Tag("it.vedph.item-composer.txt")]
     public sealed class FSPlainTextItemComposer : ItemComposer, IItemComposer,
-        IConfigurable<PlainTextItemComposerOptions>
+        IConfigurable<FSPlainTextItemComposerOptions>
     {
         private readonly TextBlockBuilder _blockBuilder;
-        private PlainTextItemComposerOptions? _options;
+        private FSPlainTextItemComposerOptions? _options;
         private string? _fileName;
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace Cadmus.Export
         /// </summary>
         /// <param name="options">The options.</param>
         /// <exception cref="ArgumentNullException">options</exception>
-        public void Configure(PlainTextItemComposerOptions options)
+        public void Configure(FSPlainTextItemComposerOptions options)
         {
             _options = options ?? throw new ArgumentNullException(nameof(options));
         }
@@ -87,10 +87,10 @@ namespace Cadmus.Export
             // first time we must build the filename
             if (_fileName == null)
             {
-                _fileName =
+                _fileName = SanitizeFileName(
                     _options!.ItemGrouping && !string.IsNullOrEmpty(item.GroupId)
                     ? item.GroupId
-                    : item.Title;
+                    : item.Title);
             }
 
             // item head if any
@@ -138,7 +138,7 @@ namespace Cadmus.Export
     /// <summary>
     /// Options for <see cref="FSPlainTextItemComposer"/>.
     /// </summary>
-    public class PlainTextItemComposerOptions
+    public class FSPlainTextItemComposerOptions
     {
         /// <summary>
         /// Gets or sets the optional text to write before each item. Its value
@@ -184,10 +184,10 @@ namespace Cadmus.Export
         public string OutputDirectory { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PlainTextItemComposerOptions"/>
+        /// Initializes a new instance of the <see cref="FSPlainTextItemComposerOptions"/>
         /// class.
         /// </summary>
-        public PlainTextItemComposerOptions()
+        public FSPlainTextItemComposerOptions()
         {
             OutputDirectory = Environment.GetFolderPath(
                 Environment.SpecialFolder.DesktopDirectory);

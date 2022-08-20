@@ -4,6 +4,8 @@ using MongoDB.Driver.Linq;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 
 namespace Cadmus.Export
 {
@@ -89,6 +91,40 @@ namespace Cadmus.Export
 
             EnsureWriter(key);
             Output?.Writers[key].Write(content);
+        }
+
+        /// <summary>
+        /// Sanitizes the specified file name (not path, just the name).
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="replacement">The replacement text for each invalid
+        /// character.</param>
+        /// <returns>Sanitized name.</returns>
+        protected static string SanitizeFileName(string name,
+            string? replacement = null)
+        {
+            if (string.IsNullOrEmpty(name)) return name;
+
+            HashSet<char> invalid = new(Path.GetInvalidFileNameChars());
+            StringBuilder sb = new();
+            foreach (char c in name)
+            {
+                if (invalid.Contains(c))
+                {
+                    if (replacement != null) sb.Append(replacement);
+                }
+                else
+                {
+                    sb.Append(c);
+                }
+            }
+
+            // ensure that we do not end with .
+            int i = sb.Length - 1;
+            while (i > 0 && sb[i] == '.') i--;
+            if (i < sb.Length - 1) sb.Remove(i + 1, sb.Length - (i + 1));
+
+            return sb.ToString();
         }
 
         /// <summary>

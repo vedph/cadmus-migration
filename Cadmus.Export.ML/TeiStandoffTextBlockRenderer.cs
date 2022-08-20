@@ -11,7 +11,8 @@ namespace Cadmus.Export.ML
     /// <para>Tag: <c>it.vedph.text-block-renderer.tei-standoff</c>.</para>
     /// </summary>
     [Tag("it.vedph.text-block-renderer.tei-standoff")]
-    public sealed class TeiStandoffTextBlockRenderer : ITextBlockRenderer,
+    public sealed class TeiStandoffTextBlockRenderer : TextBlockRenderer,
+        ITextBlockRenderer,
         IConfigurable<TeiStandoffTextBlockRendererOptions>
     {
         /// <summary>
@@ -129,8 +130,8 @@ namespace Cadmus.Export.ML
         /// <param name="context">The rendering context.</param>
         /// <returns>Rendition.</returns>
         /// <exception cref="ArgumentNullException">rows</exception>
-        public string Render(IEnumerable<TextBlockRow> rows,
-            IRendererContext context)
+        protected override string DoRender(IEnumerable<TextBlockRow> rows,
+            IRendererContext? context = null)
         {
             if (rows is null) throw new ArgumentNullException(nameof(rows));
 

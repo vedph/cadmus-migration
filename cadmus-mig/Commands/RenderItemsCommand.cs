@@ -7,6 +7,7 @@ using Cadmus.Migration.Cli.Services;
 using Fusi.Cli;
 using Fusi.Cli.Commands;
 using Microsoft.Extensions.CommandLineUtils;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -73,6 +74,10 @@ namespace Cadmus.Migration.Cli.Commands
             Console.WriteLine($"Factory provider tag: {_options.FactoryProviderTag ?? "---"}");
             Console.WriteLine($"Composer: {_options.ComposerKey ?? "---"}\n");
 
+            string cs = string.Format(
+                _options.Configuration.GetConnectionString("Default"),
+                _options.DatabaseName);
+
             // load config
             ColorConsole.WriteInfo("Loading config...");
             string config = CommandHelper.LoadFileContent(_options.ConfigPath!);
@@ -87,13 +92,17 @@ namespace Cadmus.Migration.Cli.Commands
                 return Task.CompletedTask;
             }
             CadmusPreviewFactory factory = provider.GetFactory(config);
+            factory.ConnectionString = cs;
 
             ColorConsole.WriteInfo("Building repository factory...");
             ICliCadmusRepositoryProvider repositoryProvider =
                 _options.RepositoryProviderTag != null
                 ? PluginFactoryProvider.GetFromTag<ICliCadmusRepositoryProvider>
                     (_options.RepositoryProviderTag)
-                : new StandardCliCadmusRepositoryProvider(_options.Configuration!);
+                : new StandardCliCadmusRepositoryProvider(_options.Configuration!)
+                {
+                    ConnectionString = cs
+                };
             if (repositoryProvider == null)
             {
                 throw new FileNotFoundException(
@@ -131,12 +140,14 @@ namespace Cadmus.Migration.Cli.Commands
             ICadmusRepository repository = repositoryProvider.CreateRepository(
                 _options.DatabaseName);
 
+            composer.Open();
             foreach (string id in collector.GetIds())
             {
                 ColorConsole.WriteInfo(" - " + id);
                 IItem item = repository.GetItem(id, true);
                 composer.Compose(item);
             }
+            composer.Close();
 
             return Task.CompletedTask;
         }

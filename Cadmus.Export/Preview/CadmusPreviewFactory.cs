@@ -1,5 +1,6 @@
 ﻿using Fusi.Tools.Config;
 using Microsoft.Extensions.Configuration;
+using SharpCompress.Common;
 using SimpleInjector;
 using System;
 using System.Collections.Generic;
@@ -213,7 +214,29 @@ namespace Cadmus.Export.Preview
         /// <returns>Renderer or null if not found.</returns>
         public ITextBlockRenderer? GetTextBlockRenderer(string key)
         {
-            return GetComponentByKey<ITextBlockRenderer>("TextBlockRenderers", key);
+            IList<ComponentFactoryConfigEntry> entries =
+                ComponentFactoryConfigEntry.ReadComponentEntries(
+                Configuration, "TextBlockRenderers");
+
+            ComponentFactoryConfigEntry? entry =
+                entries.FirstOrDefault(e => e.Keys?.Contains(key) == true);
+            if (entry == null) return null;
+
+            ITextBlockRenderer? renderer =
+                GetComponent<ITextBlockRenderer>(entry.Id!, entry.OptionsPath!);
+            if (renderer == null) return null;
+
+            // add filters if specified in Options.FilterKeys
+            IConfigurationSection filterKeys = Configuration
+                .GetSection(entry.OptionsPath + ":FilterKeys");
+            if (filterKeys.Exists())
+            {
+                string[] keys = filterKeys.Get<string[]>();
+                foreach (var filter in GetRendererFilters(keys))
+                    renderer.Filters.Add(filter);
+            }
+
+            return renderer;
         }
 
         /// <summary>
