@@ -10,7 +10,6 @@ using Microsoft.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace Cadmus.Migration.Cli.Commands
@@ -111,7 +110,7 @@ namespace Cadmus.Migration.Cli.Commands
 
             // create composer
             ColorConsole.WriteInfo("Creating item composer...");
-            IItemComposer? composer = factory.GetComposerByKey(
+            IItemComposer? composer = factory.GetComposer(
                 _options.ComposerKey ?? "default");
             if (composer == null)
             {

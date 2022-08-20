@@ -51,8 +51,8 @@
   ],
   "TextBlockRenderers": [
     {
-      "Keys": "text-standoff",
-      "Id": "it.vedph.text-block-renderer.standoff-tei",
+      "Keys": "tei-standoff",
+      "Id": "it.vedph.text-block-renderer.tei-standoff",
       "Options": {
         "RowOpen": "<div xml:id=\"r{y}\">",
         "RowClose": "</div>",
@@ -66,26 +66,11 @@
       "Keys": "text-item",
       "Id": "it.vedph.item-composer.tei-standoff.fs",
       "Options": {
-        "TextPartFlattener": {
-          "Keys": "it.vedph.token-text",
-          "Id": "it.vedph.text-flattener.token"
-        },
-        "TextBlockRenderer": {
-          "Id": "it.vedph.text-block-renderer.tei-standoff",
-          "Options": {
-            "RowElement": "div",
-            "BlockElement": "seg"
-          }
-        },
-        "JsonRenderers": [
-          {
-            "Keys": "it.vedph.token-text-layer|fr.it.vedph.comment",
-            "Id": "it.vedph.json-renderer.null"
-          },
-          {
-            "Keys": "it.vedph.token-text-layer|fr.it.vedph.orthography",
-            "Id": "it.vedph.json-renderer.null"
-          }
+        "TextPartFlattenerKey": "it.vedph.token-text",
+        "TextBlockRendererKey": "tei-standoff",
+        "JsonRendererKeys": [
+          "it.vedph.token-text-layer|fr.it.vedph.comment",
+          "it.vedph.token-text-layer|fr.it.vedph.orthography"
         ]
       }
     }

@@ -12,6 +12,56 @@ namespace Cadmus.Export.Preview
     /// <summary>
     /// Components factory for <see cref="CadmusPreviewer"/>.
     /// </summary>
+    /// <remarks>The JSON configuration has the following sections:
+    /// <list type="bullet">
+    /// <item>
+    /// <term><c>RendererFilters</c></term>
+    /// <description>List of renderer filters, each named with a key, and having
+    /// its component ID and eventual options. The key is an arbitrary string,
+    /// used in the scope of the configuration to reference each filter from
+    /// other sections.</description>
+    /// </item>
+    /// <item>
+    /// <term><c>JsonRenderers</c></term>
+    /// <description>List of JSON renderers, each named with a key, and having
+    /// its component ID and eventual options. The key is an arbitrary string,
+    /// used in the scope of the configuration to reference each filter from
+    /// other sections. Under options, any renderer can have a <c>FilterKeys</c>
+    /// property which is an array of filter keys, representing the filters
+    /// used by that renderer, to be applied in the specified order.</description>
+    /// </item>
+    /// <item>
+    /// <term><c>TextPartFlatteners</c></term>
+    /// <description>List of text part flatteners, each named with a key, and
+    /// having its component ID and eventual options. The key is an arbitrary
+    /// string, used in the scope of the configuration to reference each filter
+    /// from other sections.</description>
+    /// </item>
+    /// <item>
+    /// <term><c>TextBlockRenderers</c></term>
+    /// <description>List of text block renderers, each named with a key, and
+    /// having its component ID and eventual options. The key is an arbitrary
+    /// string, used in the scope of the configuration to reference each filter
+    /// from other sections.</description>
+    /// </item>
+    /// <item>
+    /// <term><c>ItemComposers</c></term>
+    /// <description>List of item composers, each named with a key, and having
+    /// its component ID and eventual options. The key is an arbitrary string,
+    /// not used elsewhere in the context of the configuration. It is used as
+    /// an argument for UI which process data export. Each composer can have
+    /// among its options a <c>TextPartFlattenerKey</c> and a
+    /// <c>TextBlockRendererKey</c>, referencing the corresponding components
+    /// by their key, and a <c>JsonRendererKeys</c> array, referencing the
+    /// corresponding JSON renderers by their key.</description>
+    /// </item>
+    /// <item>
+    /// <term><c>ItemIdCollector</c></term>
+    /// <description>A single item ID collector to use when required. It has
+    /// the component ID, and eventual options.</description>
+    /// </item>
+    /// </list>
+    /// </remarks>
     /// <seealso cref="ComponentFactoryBase" />
     public class CadmusPreviewFactory : ComponentFactoryBase
     {
@@ -175,8 +225,20 @@ namespace Cadmus.Export.Preview
         public HashSet<string> GetComposerKeys()
             => CollectKeys("ItemComposers");
 
+        private IList<IRendererFilter> GetFilters(string path)
+        {
+            IConfigurationSection filterKeys = Configuration.GetSection(path);
+            if (filterKeys.Exists())
+            {
+                string[] keys = filterKeys.Get<string[]>();
+                return GetRendererFilters(keys).ToList();
+            }
+            return Array.Empty<IRendererFilter>();
+        }
+
         /// <summary>
-        /// Gets the JSON renderer with the specified key.
+        /// Gets the JSON renderer with the specified key. The renderer can
+        /// specify filters in its <c>Options:FilterKeys</c> array property.
         /// </summary>
         /// <param name="key">The key of the requested renderer.</param>
         /// <returns>Renderer or null if not found.</returns>
@@ -194,14 +256,11 @@ namespace Cadmus.Export.Preview
                 entry.Id!, entry.OptionsPath!);
             if (renderer == null) return null;
 
-            // add filters if specified in Options.FilterKeys
-            IConfigurationSection filterKeys = Configuration
-                .GetSection(entry.OptionsPath + ":FilterKeys");
-            if (filterKeys.Exists())
+            // add filters if specified in Options:FilterKeys
+            foreach (IRendererFilter filter in GetFilters(
+                entry.OptionsPath + ":FilterKeys"))
             {
-                string[] keys = filterKeys.Get<string[]>();
-                foreach (var filter in GetRendererFilters(keys))
-                    renderer.Filters.Add(filter);
+                renderer.Filters.Add(filter);
             }
 
             return renderer;
@@ -222,18 +281,15 @@ namespace Cadmus.Export.Preview
                 entries.FirstOrDefault(e => e.Keys?.Contains(key) == true);
             if (entry == null) return null;
 
-            ITextBlockRenderer? renderer =
-                GetComponent<ITextBlockRenderer>(entry.Id!, entry.OptionsPath!);
+            ITextBlockRenderer? renderer = GetComponent<ITextBlockRenderer>
+                (entry.Id!, entry.OptionsPath!);
             if (renderer == null) return null;
 
-            // add filters if specified in Options.FilterKeys
-            IConfigurationSection filterKeys = Configuration
-                .GetSection(entry.OptionsPath + ":FilterKeys");
-            if (filterKeys.Exists())
+            // add filters if specified in Options:FilterKeys
+            foreach (IRendererFilter filter in GetFilters(
+                entry.OptionsPath + ":FilterKeys"))
             {
-                string[] keys = filterKeys.Get<string[]>();
-                foreach (var filter in GetRendererFilters(keys))
-                    renderer.Filters.Add(filter);
+                renderer.Filters.Add(filter);
             }
 
             return renderer;
@@ -246,7 +302,8 @@ namespace Cadmus.Export.Preview
         /// <returns>Flattener or null if not found.</returns>
         public ITextPartFlattener? GetTextPartFlattener(string key)
         {
-            return GetComponentByKey<ITextPartFlattener>("TextPartFlatteners", key);
+            return GetComponentByKey<ITextPartFlattener>
+                ("TextPartFlatteners", key);
         }
 
         /// <summary>
@@ -309,7 +366,7 @@ namespace Cadmus.Export.Preview
         /// <param name="key">The key.</param>
         /// <returns>Composer or null.</returns>
         /// <exception cref="ArgumentNullException">key</exception>
-        public IItemComposer? GetComposerByKey(string key)
+        public IItemComposer? GetComposer(string key)
         {
             if (key is null) throw new ArgumentNullException(nameof(key));
 
@@ -327,33 +384,34 @@ namespace Cadmus.Export.Preview
                 entry.Id!, entry.OptionsPath!);
             if (composer == null) return null;
 
-            // add text part flattener if specified in Options.TextPartFlattener
-            ComponentFactoryConfigEntry? e = ComponentFactoryConfigEntry.
-                ReadComponentEntry(Configuration,
-                entry.OptionsPath + ":TextPartFlattener");
-            if (e != null)
+            // add text part flattener if specified in Options:TextPartFlattenerKey
+            IConfigurationSection section = Configuration.GetSection(
+                entry.OptionsPath + ":TextPartFlattenerKey");
+            if (section.Exists())
             {
-                composer.TextPartFlattener = GetComponent<ITextPartFlattener>(
-                    e.Id!, e.OptionsPath!);
+                string cKey = section.Get<string>();
+                composer.TextPartFlattener = GetTextPartFlattener(cKey);
             }
 
-            // add text block renderer if specified in Options.TextBlockRenderer
-            e = ComponentFactoryConfigEntry.ReadComponentEntry(Configuration,
-                entry.OptionsPath + ":TextBlockRenderer");
-            if (e != null)
+            // add text block renderer if specified in Options:TextBlockRendererKey
+            section = Configuration.GetSection(
+                entry.OptionsPath + ":TextBlockRendererKey");
+            if (section.Exists())
             {
-                composer.TextBlockRenderer = GetComponent<ITextBlockRenderer>(
-                    e.Id!, e.OptionsPath!);
+                string cKey = section.Get<string>();
+                composer.TextBlockRenderer = GetTextBlockRenderer(cKey);
             }
 
-            // add renderers if specified in Options.JsonRenderers
-            string jrPath = entry.OptionsPath + ":JsonRenderers";
-            IConfigurationSection jrSection = Configuration.GetSection(jrPath);
-            if (jrSection.Exists())
+            // add renderers if specified in Options.JsonRendererKeys
+            section = Configuration.GetSection(
+                entry.OptionsPath + ":JsonRendererKeys");
+            if (section.Exists())
             {
-                HashSet<string> keys = CollectKeys(jrPath);
-                foreach (var p in GetJsonRenderers(keys, jrPath))
-                    composer.JsonRenderers[p.Key] = p.Value;
+                foreach (string cKey in section.Get<string[]>())
+                {
+                    IJsonRenderer? renderer = GetJsonRenderer(cKey);
+                    if (renderer != null) composer.JsonRenderers[cKey] = renderer;
+                }
             }
 
             return composer;

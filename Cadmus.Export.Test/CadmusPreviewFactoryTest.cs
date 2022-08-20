@@ -52,7 +52,7 @@ namespace Cadmus.Export.Test
         {
             CadmusPreviewFactory factory = TestHelper.GetFactory();
 
-            IItemComposer? composer = factory.GetComposerByKey("text-item");
+            IItemComposer? composer = factory.GetComposer("text-item");
 
             Assert.NotNull(composer);
             Assert.NotNull(composer.TextPartFlattener);
