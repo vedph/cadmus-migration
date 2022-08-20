@@ -1,17 +1,24 @@
 ﻿using Cadmus.Core;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Cadmus.Export
 {
     /// <summary>
     /// Item composer interface. An item composer task is composing some or
     /// all the parts of an item together, building some specific output from it.
-    /// For instance, in building a TEI document from text items with layers
-    /// a composer can use an instance of <see cref="ITextBlockRenderer"/> to
-    /// render the text part, and a number of <see cref="IJsonRenderer"/>'s
-    /// to render the fragments from its layer parts. It then gets all their
-    /// outputs and composes them into a set of files, by appending text output
-    /// in a text file and each layer output in a separate file.
+    /// An item composer typically has an instance of <see cref="ITextBlockRenderer"/>
+    /// to render the item's text part (if any), and a number of
+    /// <see cref="IJsonRenderer"/>'s to render other parts, and the fragments
+    /// from text layer parts. Its output is saved in an <see cref="ItemComposition"/>
+    /// derived object, which in its base implementation is generic enough to fit
+    /// most cases: the output has a general name/value dictionary, and a set
+    /// of <see cref="TextWriter"/>'s, each identified by an arbitrary key.
+    /// <para>To use a composer, configure its components for the item's parts,
+    /// and call <see cref="Open(ItemComposition?)"/> when processing starts;
+    /// then call <see cref="Compose(IItem)"/> for each item to process as a unit,
+    /// and when done call <see cref="Close"/>. The output can either be passed
+    /// from outside the composer, or created internally.</para>
     /// </summary>
     public interface IItemComposer
     {
@@ -37,9 +44,20 @@ namespace Cadmus.Export
         IDictionary<string, IJsonRenderer> JsonRenderers { get; }
 
         /// <summary>
+        /// Gets the ordinal item number. This is set to 0 when opening the
+        /// composer, and increased whenever a new item is processed.
+        /// </summary>
+        int ItemNumber { get; }
+
+        /// <summary>
+        /// Gets the context using during processing.
+        /// </summary>
+        RendererContext Context { get; }
+
+        /// <summary>
         /// Gets the output handled by this composer, or null if not opened.
         /// </summary>
-        public ItemComposition? Output { get; }
+        ItemComposition? Output { get; }
 
         /// <summary>
         /// Opens the composer output.

@@ -15,11 +15,6 @@ namespace Cadmus.Export.ML.Test
                 new StreamWriter(new MemoryStream(), Encoding.UTF8);
         }
 
-        protected override void DoCompose(IItem item)
-        {
-            RenderFlows(item);
-        }
-
         public IDictionary<string, string> GetFlows()
         {
             Dictionary<string, string> flows = new();

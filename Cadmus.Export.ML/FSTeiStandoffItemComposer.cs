@@ -49,18 +49,7 @@ namespace Cadmus.Export.ML
             string? head = key == PartBase.BASE_TEXT_ROLE_ID
                 ? FillTemplate(_options.TextHead)
                 : FillTemplate(_options.LayerHead);
-            if (!string.IsNullOrEmpty(head))
-                Output.Writers[key].WriteLine(head);
-        }
-
-        /// <summary>
-        /// Open the composer.
-        /// </summary>
-        /// <param name="output">The output object to use, or null to create
-        /// a new one.</param>
-        public override void Open(ItemComposition? output = null)
-        {
-            Close();
+            WriteOutput(key, head);
         }
 
         /// <summary>
@@ -83,18 +72,8 @@ namespace Cadmus.Export.ML
                 p.Value.Close();
             }
             Output.Writers.Clear();
-        }
 
-        /// <summary>
-        /// Composes the output from the specified item.
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <returns>Composition result or null.</returns>
-        protected override void DoCompose(IItem item)
-        {
-            if (Output == null) return;
-
-            RenderFlows(item);
+            base.Close();
         }
     }
 

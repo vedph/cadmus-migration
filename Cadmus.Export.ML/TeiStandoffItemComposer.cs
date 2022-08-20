@@ -1,5 +1,4 @@
 ﻿using Cadmus.Core;
-using Fusi.Tools.Text;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,32 +21,8 @@ namespace Cadmus.Export.ML
         private readonly TextBlockBuilder _blockBuilder;
         private readonly JsonSerializerOptions _jsonOptions;
 
-        // metadata constant        
-        /// <summary>The item ID metadata key (<c>item-id</c>).</summary>
-        public const string M_ITEM_ID = "item-id";
-        /// <summary>The item title metadata key (<c>item-title</c>).</summary>
-        public const string M_ITEM_TITLE = "item-title";
-        /// <summary>The item facet metadata key (<c>item-facet</c>).</summary>
-        public const string M_ITEM_FACET = "item-facet";
-        /// <summary>The item group metadata key (<c>item-group</c>).</summary>
-        public const string M_ITEM_GROUP = "item-group";
-        /// <summary>The item flags metadata key (<c>item-flags</c>).</summary>
-        public const string M_ITEM_FLAGS = "item-flags";
-        /// <summary>The item number metadata key (<c>item-nr</c>).</summary>
-        public const string M_ITEM_NR = "item-nr";
         /// <summary>The text flow metadata key (<c>flow-key</c>).</summary>
         public const string M_FLOW_KEY = "flow-key";
-
-        /// <summary>
-        /// Gets the ordinal item number. This is set to 0 when opening the
-        /// composer, and increased whenever a new item is processed.
-        /// </summary>
-        protected int ItemNumber { get; private set; }
-
-        /// <summary>
-        /// Gets the context using during processing.
-        /// </summary>
-        protected RendererContext Context { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TeiStandoffItemComposer"/>
@@ -60,22 +35,6 @@ namespace Cadmus.Export.ML
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             };
-            Context = new RendererContext();
-        }
-
-        /// <summary>
-        /// Open the composer. This resets <see cref="ItemNumber"/> and the
-        /// processing context.
-        /// </summary>
-        /// <param name="output">The output object to use, or null to create
-        /// a new one.</param>
-        public override void Open(ItemComposition? output = null)
-        {
-            base.Open(output);
-
-            ItemNumber = 0;
-            Context.Data.Clear();
-            Context.TargetIds.Clear();
         }
 
         private static string BuildLayerId(IPart part)
@@ -93,12 +52,6 @@ namespace Cadmus.Export.ML
         protected void RenderFlows(IItem item)
         {
             if (Output == null) return;
-
-            Context.Data[M_ITEM_ID] = item.Id;
-            Context.Data[M_ITEM_TITLE] = item.Title;
-            Context.Data[M_ITEM_FACET] = item.FacetId;
-            Context.Data[M_ITEM_GROUP] = item.GroupId;
-            Context.Data[M_ITEM_FLAGS] = item.Flags;
 
             // text: there must be one
             IPart? textPart = item.Parts.Find(
@@ -141,34 +94,14 @@ namespace Cadmus.Export.ML
         }
 
         /// <summary>
-        /// Fills the specified template using <see cref="Context"/>.
-        /// </summary>
-        /// <param name="template">The template.</param>
-        /// <returns>The filled template.</returns>
-        protected string FillTemplate(string? template)
-            => template != null
-                ? TextTemplate.FillTemplate(template, Context.Data)
-                : "";
-
-        /// <summary>
-        /// Does the composition.
-        /// </summary>
-        /// <param name="item">The item.</param>
-        protected abstract void DoCompose(IItem item);
-
-        /// <summary>
         /// Composes the output from the specified item.
         /// </summary>
         /// <param name="item">The item.</param>
         /// <returns>Composition result or null.</returns>
         /// <exception cref="ArgumentNullException">item</exception>
-        public void Compose(IItem item)
+        protected override void DoCompose(IItem item)
         {
-            if (item is null) throw new ArgumentNullException(nameof(item));
-
-            Context.Data[M_ITEM_NR] = ++ItemNumber;
-            DoCompose(item);
-            Context.Data.Clear();
+            if (Output != null) RenderFlows(item);
         }
      }
 
@@ -181,7 +114,7 @@ namespace Cadmus.Export.ML
         /// Gets or sets the optional text head. This is written at the start
         /// of the text flow. Its value can include placeholders in curly
         /// braces, corresponding to any of the metadata keys defined in
-        /// <see cref="TeiStandoffItemComposer"/>.
+        /// the item composer's context.
         /// </summary>
         public string? TextHead { get; set; }
 
@@ -189,7 +122,7 @@ namespace Cadmus.Export.ML
         /// Gets or sets the optional text tail. This is written at the end
         /// of the text flow. Its value can include placeholders in curly
         /// braces, corresponding to any of the metadata keys defined in
-        /// <see cref="TeiStandoffItemComposer"/>.
+        /// the item composer's context.
         /// </summary>
         public string? TextTail { get; set; }
 
@@ -197,7 +130,7 @@ namespace Cadmus.Export.ML
         /// Gets or sets the optional layer head. This is written at the start
         /// of each layer flow. Its value can include placeholders in curly
         /// braces, corresponding to any of the metadata keys defined in
-        /// <see cref="TeiStandoffItemComposer"/>.
+        /// the item composer's context.
         /// </summary>
         public string? LayerHead { get; set; }
 
@@ -205,7 +138,7 @@ namespace Cadmus.Export.ML
         /// Gets or sets the optional layer tail. This is written at the end
         /// of each layer flow. Its value can include placeholders in curly
         /// braces, corresponding to any of the metadata keys defined in
-        /// <see cref="TeiStandoffItemComposer"/>.
+        /// the item composer's context.
         /// </summary>
         public string? LayerTail { get; set; }
 
@@ -218,7 +151,7 @@ namespace Cadmus.Export.ML
             TextHead = "<body>";
             TextTail = "</body>";
             LayerHead = "<standOff type=\"{" +
-                TeiStandoffItemComposer.M_ITEM_NR + "}\">";
+                ItemComposer.M_ITEM_NR + "}\">";
             LayerTail = "</standOff>";
         }
     }
