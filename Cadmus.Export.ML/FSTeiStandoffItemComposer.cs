@@ -41,6 +41,12 @@ namespace Cadmus.Export.ML
             if (key is null) throw new ArgumentNullException(nameof(key));
 
             if (Output?.Writers.ContainsKey(key) != false) return;
+
+            if (!string.IsNullOrEmpty(_options!.OutputDirectory) &&
+                !Directory.Exists(_options.OutputDirectory))
+            {
+                Directory.CreateDirectory(_options.OutputDirectory ?? "");
+            }
             Output.Writers[key] = new StreamWriter(
                 Path.Combine(_options!.OutputDirectory ?? "", key + ".xml"),
                 false,

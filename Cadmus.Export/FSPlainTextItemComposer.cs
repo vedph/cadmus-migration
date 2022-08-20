@@ -12,8 +12,9 @@ namespace Cadmus.Export
     /// File-based plain text item composer. This is essentially used to export
     /// plain text documents from a text item into a single file, or one file
     /// per items group.
+    /// <para>Tag: <c>it.vedph.item-composer.txt.fs</c>.</para>
     /// </summary>
-    [Tag("it.vedph.item-composer.txt")]
+    [Tag("it.vedph.item-composer.txt.fs")]
     public sealed class FSPlainTextItemComposer : ItemComposer, IItemComposer,
         IConfigurable<FSPlainTextItemComposerOptions>
     {
@@ -51,6 +52,12 @@ namespace Cadmus.Export
             if (key is null) throw new ArgumentNullException(nameof(key));
 
             if (Output?.Writers.ContainsKey(key) != false) return;
+
+            if (!string.IsNullOrEmpty(_options!.OutputDirectory) &&
+                !Directory.Exists(_options.OutputDirectory))
+            {
+                Directory.CreateDirectory(_options.OutputDirectory ?? "");
+            }
             Output.Writers[key] = new StreamWriter(
                 Path.Combine(_options!.OutputDirectory ?? "", key + ".txt"),
                 false,

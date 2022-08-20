@@ -10,6 +10,7 @@ using Microsoft.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace Cadmus.Migration.Cli.Commands
@@ -37,8 +38,6 @@ namespace Cadmus.Migration.Cli.Commands
                "The name of the source Cadmus database.");
             CommandArgument cfgPathArgument = app.Argument("[ConfigPath]",
                "The path to the rendering configuration file.");
-            CommandArgument outDirArgument = app.Argument("[OutputDir]",
-               "The output directory.");
             // when you use plugins, your plugin must import all the required
             // components, and export a tagged implementation of
             // ICadmusPreviewFactoryProvider. Its tag is specified here.
@@ -56,7 +55,6 @@ namespace Cadmus.Migration.Cli.Commands
                     {
                         DatabaseName = dbArgument.Value,
                         ConfigPath = cfgPathArgument.Value,
-                        OutputDir = outDirArgument.Value,
                         FactoryProviderTag = pluginTagOption.Value(),
                         ComposerKey = composerKeyOption.Value(),
                     });
@@ -70,9 +68,8 @@ namespace Cadmus.Migration.Cli.Commands
                 headerColor: ConsoleColor.Green);
             Console.WriteLine($"Database: {_options.DatabaseName}");
             Console.WriteLine($"Config path: {_options.ConfigPath}");
-            Console.WriteLine($"Output dir: {_options.OutputDir}");
             Console.WriteLine($"Factory provider tag: {_options.FactoryProviderTag ?? "---"}");
-            Console.WriteLine($"Composer: {_options.ComposerKey ?? "---"}\n");
+            Console.WriteLine($"Composer key: {_options.ComposerKey ?? "---"}\n");
 
             string cs = string.Format(
                 _options.Configuration.GetConnectionString("Default"),
@@ -134,8 +131,6 @@ namespace Cadmus.Migration.Cli.Commands
 
             // process items
             ColorConsole.WriteInfo("Processing items...");
-            if (!Directory.Exists(_options.OutputDir))
-                Directory.CreateDirectory(_options.OutputDir);
 
             ICadmusRepository repository = repositoryProvider.CreateRepository(
                 _options.DatabaseName);
@@ -145,6 +140,7 @@ namespace Cadmus.Migration.Cli.Commands
             {
                 ColorConsole.WriteInfo(" - " + id);
                 IItem item = repository.GetItem(id, true);
+                ColorConsole.WriteInfo("   " + item.Title);
                 composer.Compose(item);
             }
             composer.Close();
@@ -169,7 +165,6 @@ namespace Cadmus.Migration.Cli.Commands
         public string DatabaseName { get; set; }
         public string ConfigPath { get; set; }
         public string ComposerKey { get; set; }
-        public string OutputDir { get; set; }
 
         public RenderItemsCommandOptions(ICliAppContext options)
             : base((CadmusMigCliAppContext)options)
@@ -177,8 +172,6 @@ namespace Cadmus.Migration.Cli.Commands
             DatabaseName = "cadmus";
             ConfigPath = "render.config";
             ComposerKey = "default";
-            OutputDir = Environment.GetFolderPath(
-                Environment.SpecialFolder.DesktopDirectory);
         }
     }
 }
