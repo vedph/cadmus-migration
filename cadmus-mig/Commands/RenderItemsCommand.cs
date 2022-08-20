@@ -13,6 +13,10 @@ using System.Threading.Tasks;
 
 namespace Cadmus.Migration.Cli.Commands
 {
+    /// <summary>
+    /// Render items via item composers.
+    /// </summary>
+    /// <seealso cref="ICommand" />
     internal sealed class RenderItemsCommand : ICommand
     {
         private readonly RenderItemsCommandOptions _options;
