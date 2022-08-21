@@ -2,7 +2,7 @@
 using Markdig;
 using System;
 
-namespace Cadmus.Export
+namespace Cadmus.Export.Filters
 {
     /// <summary>
     /// Markdown renderer filter. This renders any Markdown region or the whole

@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+using Cadmus.Export.Filters;
 using Xunit;
 
-namespace Cadmus.Export.Test
+namespace Cadmus.Export.Test.Filters
 {
     public sealed class ReplaceRendererFilterTest
     {

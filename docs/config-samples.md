@@ -4,7 +4,7 @@ Here I collect some real-world samples of [configuration](overview.md#configurat
 
 ## Exporting Text Items in Plain Text
 
-This sample configuration exports a set of Cadmus text items without any layers into a set of plain text files, to allow third party tools further process the resulting text.
+This sample configuration exports a set of Cadmus text items (ignoring any layers) into a set of plain text files, to allow third party tools further process the resulting text.
 
 Here the sample tool is a Chiron-based linguistic analyzer for prose rhythm, having as input a set of plain text files with the text to be analyzed. This text is preceded by a metadata header, where each metadatum is in a single line starting with `.` and having a name followed by `=` and its value. For instance, this is a document from _Constitutiones Sirmondianae_:
 
@@ -50,6 +50,14 @@ As we are going to analyze prose rhythm, such salutations would introduce rumor 
           }
         ]
       }
+    },
+    {
+      "Keys": "split-filter",
+      "Id": "it.vedph.renderer-filter.sentence-split",
+      "Options": {
+        "EndMarkers": ".?!",
+        "Trimming": true
+      }
     }
   ],
   "TextPartFlatteners": [
@@ -63,7 +71,7 @@ As we are going to analyze prose rhythm, such salutations would introduce rumor 
       "Keys": "txt",
       "Id": "it.vedph.text-block-renderer.txt",
       "Options": {
-        "FilterKeys": ["rep-filter"]
+        "FilterKeys": ["rep-filter", "split-filter"]
       }
     }
   ],
@@ -101,7 +109,7 @@ The command used in the CLI is (assuming that this configuration file is named `
 ./cadmus-mig render-items cadmus-sidon C:\Users\dfusi\Desktop\Preview-txt.json
 ```
 
-The first file output by this configuration is:
+The first file output by this configuration, without the sentence splitting filter, would be:
 
 ```txt
 .author=Sidonius Apollinaris
@@ -115,3 +123,24 @@ porro autem super huiusmodi opusculo tutius conticueramus, contenti versuum feli
 ```
 
 Note that here the original letter had a final `vale.` which has been removed by the filter.
+
+By applying also sentence splitting, the result is:
+
+```txt
+.author=Sidonius Apollinaris
+.date=v AD
+.date-value=450
+.title=1_001_001 Sidonius Constantio suo salutem.
+Diu praecipis, domine maior, summa suadendi auctoritate, sicuti es in his quae deliberabuntur consiliosissimus, ut, si quae litterae paulo politiores varia occasione fluxerunt, prout eas causa persona tempus elicuit, omnes retractatis exemplaribus enucleatisque uno volumine includam, Quinti Symmachi rotunditatem, Gai Plinii disciplinam maturitatemque vestigiis praesumptiosis insecuturus.
+nam de Marco Tullio silere melius puto, quem in stilo epistulari nec Iulius Titianus sub nominibus illustrium feminarum digna similitudine expressit.
+propter quod illum ceteri quique Frontonianorum utpote consectaneum aemulati, cur veternosum dicendi genus imitaretur, oratorum simiam nuncupaverunt.
+quibus omnibus ego immane dictu est quantum semper iudicio meo cesserim quantumque servandam singulis pronuntiaverim temporum suorum meritorumque praerogativam.
+sed scilicet tibi parui tuaeque examinationi has <litterulas> non recensendas (hoc enim parum est) sed defaecandas, ut aiunt, limandasque commisi, sciens te immodicum esse fautorem non studiorum modo verum etiam studiosorum.
+quam ob rem nos nunc perquam haesitabundos in hoc deinceps famae pelagus impellis.
+porro autem super huiusmodi opusculo tutius conticueramus, contenti versuum felicius quam peritius editorum opinione, de qua mihi iampridem in portu iudicii publici post lividorum latratuum Scyllas enavigatas sufficientis gloriae ancora sedet.
+sed si et hisce deliramentis genuinum molarem invidia non fixerit, actutum tibi a nobis volumina numerosiora percopiosis scaturrientia sermocinationibus multiplicabuntur.
+```
+
+Now every line corresponds to a single sentence.
+
+So, in the end we have exported a set of plain text files prepared with some metadata and preprocessing so that they can be easily ingested by the target analysis system without further processing. This will ["macronize"](https://github.com/Myrmex/alatius-macronizer-api) the text, and then proceed further with its prosodical and rhythmic analysis.

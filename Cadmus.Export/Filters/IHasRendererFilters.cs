@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Cadmus.Export
+namespace Cadmus.Export.Filters
 {
     /// <summary>
     /// Interface implemented by components having renderer filters.

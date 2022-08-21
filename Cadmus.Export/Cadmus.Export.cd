@@ -35,12 +35,12 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>EAAACAAAAAAAgAAAAAAAAAUAAAYAAAAEACCACCAAMAE=</HashCode>
+      <HashCode>EAAACAAAAAACAAAAAAAAAAUAAAYAAAAEACCACCAANAE=</HashCode>
       <FileName>Preview\CadmusPreviewFactory.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Cadmus.Export.TextBlockBuilder">
-    <Position X="3.25" Y="5.5" Width="1.75" />
+    <Position X="3.5" Y="5.5" Width="1.75" />
     <Members>
       <Method Name="HasSeparatorAt" Hidden="true" />
       <Method Name="TextBlockBuilder" Hidden="true" />
@@ -145,86 +145,6 @@
       <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAAAgAAAABAAAAAAAAA=</HashCode>
       <FileName>JsonRenderer.cs</FileName>
     </TypeIdentifier>
-    <ShowAsCollectionAssociation>
-      <Property Name="Filters" />
-    </ShowAsCollectionAssociation>
-  </Class>
-  <Class Name="Cadmus.Export.MarkdownRendererFilter">
-    <Position X="11.75" Y="3.25" Width="2" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAARAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>MarkdownRendererFilter.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Field Name="_options" />
-    </ShowAsAssociation>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="Cadmus.Export.MarkdownRendererFilterOptions">
-    <Position X="11.75" Y="5" Width="2" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAEgAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>MarkdownRendererFilter.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Cadmus.Export.MongoThesRendererFilter">
-    <Position X="14.75" Y="3.25" Width="2" />
-    <Members>
-      <Method Name="GetRepository" Hidden="true" />
-      <Method Name="MongoThesRendererFilter" Hidden="true" />
-    </Members>
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>AAACAAAAAZBAAAAAAABAAAAAAEAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>MongoThesRendererFilter.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Field Name="_options" />
-    </ShowAsAssociation>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="Cadmus.Export.MongoThesRendererFilterOptions">
-    <Position X="14.75" Y="5.5" Width="2" />
-    <Compartments>
-      <Compartment Name="Methods" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAACAAAAAAAAA=</HashCode>
-      <FileName>MongoThesRendererFilter.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Cadmus.Export.ReplaceRendererFilter" BaseTypeListCollapsed="true">
-    <Position X="18" Y="3.25" Width="1.75" />
-    <Members>
-      <Method Name="ReplaceRendererFilter" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>AgAAAAAAABAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>ReplaceRendererFilter.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
-  </Class>
-  <Class Name="Cadmus.Export.ReplaceEntryOptions">
-    <Position X="18" Y="6.25" Width="1.75" />
-    <Compartments>
-      <Compartment Name="Methods" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAgAAAAAEAAAAACAAAAAAAQAAAAAEAAAAAAA=</HashCode>
-      <FileName>ReplaceRendererFilter.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Cadmus.Export.ReplaceRendererFilterOptions" Collapsed="true">
-    <Position X="18" Y="5.25" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
-      <FileName>ReplaceRendererFilter.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsCollectionAssociation>
-      <Property Name="Replacements" />
-    </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Cadmus.Export.MongoItemIdCollector">
     <Position X="13.5" Y="11.5" Width="2" />
@@ -330,6 +250,80 @@
       <FileName>FSPlainTextItemComposer.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="Cadmus.Export.Filters.MarkdownRendererFilter">
+    <Position X="11.75" Y="2.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAARAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Filters\MarkdownRendererFilter.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_options" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Cadmus.Export.Filters.MongoThesRendererFilter">
+    <Position X="14.75" Y="2.25" Width="2" />
+    <Members>
+      <Method Name="GetRepository" Hidden="true" />
+      <Method Name="MongoThesRendererFilter" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAZBAAAAAAABAAAAAAEAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Filters\MongoThesRendererFilter.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_options" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Cadmus.Export.Filters.ReplaceRendererFilter" BaseTypeListCollapsed="true">
+    <Position X="18" Y="2.25" Width="1.75" />
+    <Members>
+      <Method Name="ReplaceRendererFilter" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAABAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Filters\ReplaceRendererFilter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Cadmus.Export.Filters.MarkdownRendererFilterOptions">
+    <Position X="11.75" Y="4.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAEgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Filters\MarkdownRendererFilter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cadmus.Export.Filters.MongoThesRendererFilterOptions">
+    <Position X="14.75" Y="4.75" Width="2" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>Filters\MongoThesRendererFilter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cadmus.Export.Filters.ReplaceRendererFilterOptions" Collapsed="true">
+    <Position X="18" Y="4.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>Filters\ReplaceRendererFilter.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Replacements" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Cadmus.Export.Filters.ReplaceEntryOptions">
+    <Position X="18" Y="5.5" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAEAAAAACAAAAAAAQAAAAAEAAAAAAA=</HashCode>
+      <FileName>Filters\ReplaceRendererFilter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Interface Name="Cadmus.Export.IJsonRenderer">
     <Position X="8" Y="0.5" Width="1.5" />
     <TypeIdentifier>
@@ -345,7 +339,7 @@
     </TypeIdentifier>
   </Interface>
   <Interface Name="Cadmus.Export.ITextPartFlattener">
-    <Position X="1" Y="4.75" Width="1.5" />
+    <Position X="0.75" Y="5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAA=</HashCode>
       <FileName>ITextPartFlattener.cs</FileName>
@@ -354,13 +348,6 @@
   <Interface Name="Cadmus.Core.Storage.ICadmusRepository" Collapsed="true">
     <Position X="4.5" Y="3.25" Width="2" />
     <TypeIdentifier />
-  </Interface>
-  <Interface Name="Cadmus.Export.IRendererFilter">
-    <Position X="15" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>IRendererFilter.cs</FileName>
-    </TypeIdentifier>
   </Interface>
   <Interface Name="Cadmus.Export.IItemComposer">
     <Position X="10.5" Y="7" Width="1.75" />
@@ -383,6 +370,13 @@
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAA=</HashCode>
       <FileName>IItemIdCollector.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Cadmus.Export.Filters.IRendererFilter">
+    <Position X="15" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Filters\IRendererFilter.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Font Name="Segoe UI" Size="9" />

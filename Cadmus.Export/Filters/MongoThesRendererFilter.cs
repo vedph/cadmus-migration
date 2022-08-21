@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Cadmus.Export
+namespace Cadmus.Export.Filters
 {
     /// <summary>
     /// MongoDB based thesaurus renderer filter. This filter looks up
@@ -78,7 +78,7 @@ namespace Cadmus.Export
 
             if (_repository == null) _repository = GetRepository();
 
-            return _idRegex.Replace(text, (Match m) =>
+            return _idRegex.Replace(text, (m) =>
             {
                 string tId = m.Groups["t"].Value;
                 string eId = m.Groups["e"].Value;

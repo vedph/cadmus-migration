@@ -3,7 +3,7 @@ using Fusi.Tools.Text;
 using System;
 using System.Collections.Generic;
 
-namespace Cadmus.Export
+namespace Cadmus.Export.Filters
 {
     /// <summary>
     /// Generic text replacement renderer filter.

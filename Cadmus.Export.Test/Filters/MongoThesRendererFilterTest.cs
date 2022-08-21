@@ -1,9 +1,10 @@
 ﻿using Cadmus.Core.Config;
+using Cadmus.Export.Filters;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 using Xunit;
 
-namespace Cadmus.Export.Test
+namespace Cadmus.Export.Test.Filters
 {
     public sealed class MongoThesRendererFilterTest
     {

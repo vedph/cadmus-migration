@@ -1,4 +1,5 @@
-﻿using Cadmus.Export.Preview;
+﻿using Cadmus.Export.Filters;
+using Cadmus.Export.Preview;
 using System.Collections.Generic;
 using Xunit;
 

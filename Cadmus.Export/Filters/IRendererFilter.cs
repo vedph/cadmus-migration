@@ -1,4 +1,4 @@
-﻿namespace Cadmus.Export
+﻿namespace Cadmus.Export.Filters
 {
     /// <summary>
     /// Renderer filter. This represents any filter applied after the

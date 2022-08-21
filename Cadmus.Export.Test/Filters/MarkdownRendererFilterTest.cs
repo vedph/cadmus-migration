@@ -1,6 +1,7 @@
-﻿using Xunit;
+﻿using Cadmus.Export.Filters;
+using Xunit;
 
-namespace Cadmus.Export.Test
+namespace Cadmus.Export.Test.Filters
 {
     public sealed class MarkdownRendererFilterTest
     {

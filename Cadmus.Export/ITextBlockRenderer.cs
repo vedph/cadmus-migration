@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Cadmus.Export.Filters;
 
 namespace Cadmus.Export
 {

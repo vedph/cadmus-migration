@@ -1,4 +1,5 @@
-﻿using Cadmus.General.Parts;
+﻿using Cadmus.Export.Filters;
+using Cadmus.General.Parts;
 using System.Text.Json;
 using Xunit;
 

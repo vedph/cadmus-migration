@@ -1,4 +1,5 @@
-﻿using Fusi.Tools.Config;
+﻿using Cadmus.Export.Filters;
+using Fusi.Tools.Config;
 using Microsoft.Extensions.Configuration;
 using SimpleInjector;
 using System;
