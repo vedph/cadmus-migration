@@ -1,6 +1,5 @@
 ﻿using Fusi.Tools.Config;
 using Microsoft.Extensions.Configuration;
-using SharpCompress.Common;
 using SimpleInjector;
 using System;
 using System.Collections.Generic;
@@ -24,11 +23,14 @@ namespace Cadmus.Export.Preview
     /// <item>
     /// <term><c>JsonRenderers</c></term>
     /// <description>List of JSON renderers, each named with a key, and having
-    /// its component ID and eventual options. The key is an arbitrary string,
-    /// used in the scope of the configuration to reference each filter from
-    /// other sections. Under options, any renderer can have a <c>FilterKeys</c>
-    /// property which is an array of filter keys, representing the filters
-    /// used by that renderer, to be applied in the specified order.</description>
+    /// its component ID and eventual options. The key corresponds to the part
+    /// type ID, eventually followed by <c>|</c> and its role ID in the case
+    /// of a layer part. This allows mapping each part type to a specific
+    /// renderer ID. This key is used in the scope of the configuration to
+    /// reference each filter from other sections. Under options, any renderer
+    /// can have a <c>FilterKeys</c> property which is an array of filter keys,
+    /// representing the filters used by that renderer, to be applied in the
+    /// specified order.</description>
     /// </item>
     /// <item>
     /// <term><c>TextPartFlatteners</c></term>
