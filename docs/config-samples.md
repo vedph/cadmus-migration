@@ -26,7 +26,7 @@ We want to extract the raw text from each of these chunks, in their order, and c
 ... sed si et hisce deliramentis genuinum molarem invidia non fixerit, actutum tibi a nobis volumina numerosiora percopiosis scaturrientia sermocinationibus multiplicabuntur. vale.
 ```
 
-As we are going to analyze prose rhythm, such salutations would introduce rumor in our analysis data. So, we want to remove them during export. So, this is the configuration used:
+As we are going to analyze prose rhythm, such salutations would introduce rumor in our analysis data. So, we want to remove them during export. This is the configuration used:
 
 ```json
 {
@@ -98,10 +98,11 @@ As we are going to analyze prose rhythm, such salutations would introduce rumor 
 ```
 
 1. a replacer renderer filter is used to remove the final `vale` and eventual artifacts represented by paragraph numbers. To this end, we use a couple of regular expressions. This filter is defined with key `rep-filter`.
-2. a text part flattener is used to flatten the token-based text part of each text item. This part's model has a list of lines, each with its text. These lines will become rows of text blocks; in this case, given that we include no layer in the output, we will just have a single block for each row.
-3. a text block renderer is used to extract blocks as plain text. Also, once extracted the text gets filtered by the `rep-filter` defined above.
-4. an item composer puts all these pieces together: it is a plain text, file-based composer, using the text flattener and block renderer defined above; it applies grouping, i.e. it will change its output file whenever a new group is found; uses the specified output directory, and prepends to each file a "header" with the format explained above. This header includes metadata placeholders between curly braces. For instance, `{item-title}` will be replaced by the title of each item being processed. File names instead will be equal to group IDs.
-5. an item ID collector is used to collect all the text items (facet ID = `text`) from the MongoDB database containing Sidonius Apollinaris.
+2. a sentence splitting filter is used to rearrange newlines so that each line corresponds to a sentence. This facilitates the usage of the target tool.
+3. a text part flattener is used to flatten the token-based text part of each text item. This part's model has a list of lines, each with its text. These lines will become rows of text blocks; in this case, given that we include no layer in the output, we will just have a single block for each row.
+4. a text block renderer is used to extract blocks as plain text. Also, once extracted the text gets filtered by the `rep-filter` defined above.
+5. an item composer puts all these pieces together: it is a plain text, file-based composer, using the text flattener and block renderer defined above; it applies grouping, i.e. it will change its output file whenever a new group is found; uses the specified output directory, and prepends to each file a "header" with the format explained above. This header includes metadata placeholders between curly braces. For instance, `{item-title}` will be replaced by the title of each item being processed. File names instead will be equal to group IDs.
+6. an item ID collector is used to collect all the text items (facet ID = `text`) from the MongoDB database containing Sidonius Apollinaris.
 
 The command used in the CLI is (assuming that this configuration file is named `Preview-txt` under my desktop):
 
