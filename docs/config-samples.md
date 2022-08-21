@@ -107,6 +107,11 @@ The first file output by this configuration is:
 .author=Sidonius Apollinaris
 .date=v AD
 .date-value=450
-.title=1_001_004 Sidonius Constantio suo salutem.
+.title=1_001_001 Sidonius Constantio suo salutem.
+Diu praecipis, domine maior, summa suadendi auctoritate, sicuti es in his quae deliberabuntur consiliosissimus, ut, si quae litterae paulo politiores varia occasione fluxerunt, prout eas causa persona tempus elicuit, omnes retractatis exemplaribus enucleatisque uno volumine includam, Quinti Symmachi rotunditatem, Gai Plinii disciplinam maturitatemque vestigiis praesumptiosis insecuturus.
+nam de Marco Tullio silere melius puto, quem in stilo epistulari nec Iulius Titianus sub nominibus illustrium feminarum digna similitudine expressit. propter quod illum ceteri quique Frontonianorum utpote consectaneum aemulati, cur veternosum dicendi genus imitaretur, oratorum simiam nuncupaverunt. quibus omnibus ego immane dictu est quantum semper iudicio meo cesserim quantumque servandam singulis pronuntiaverim temporum suorum meritorumque praerogativam.
+sed scilicet tibi parui tuaeque examinationi has <litterulas> non recensendas (hoc enim parum est) sed defaecandas, ut aiunt, limandasque commisi, sciens te immodicum esse fautorem non studiorum modo verum etiam studiosorum. quam ob rem nos nunc perquam haesitabundos in hoc deinceps famae pelagus impellis.
 porro autem super huiusmodi opusculo tutius conticueramus, contenti versuum felicius quam peritius editorum opinione, de qua mihi iampridem in portu iudicii publici post lividorum latratuum Scyllas enavigatas sufficientis gloriae ancora sedet. sed si et hisce deliramentis genuinum molarem invidia non fixerit, actutum tibi a nobis volumina numerosiora percopiosis scaturrientia sermocinationibus multiplicabuntur.
 ```
+
+Note that here the original letter had a final `vale.` which has been removed by the filter.

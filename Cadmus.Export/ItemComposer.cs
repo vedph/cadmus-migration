@@ -218,7 +218,10 @@ namespace Cadmus.Export
             Context.Data[M_ITEM_FLAGS] = item.Flags;
 
             if (item.GroupId != _lastGroupId)
+            {
                 OnGroupChanged(item, _lastGroupId);
+                _lastGroupId = item.GroupId;
+            }
 
             DoCompose(item);
 
