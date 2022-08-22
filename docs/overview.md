@@ -2,11 +2,6 @@
 
 - [Overview](#overview)
   - [Generic Preview](#generic-preview)
-    - [Renderer Filters](#renderer-filters)
-      - [Thesaurus Lookup Filter](#thesaurus-lookup-filter)
-      - [Markdown Conversion Filter](#markdown-conversion-filter)
-      - [Text Replacements Filter](#text-replacements-filter)
-      - [Fragment Link Filter](#fragment-link-filter)
   - [Specialized Preview](#specialized-preview)
   - [Higher Level Components](#higher-level-components)
   - [JSON Rendering and Other Techs](#json-rendering-and-other-techs)
@@ -17,7 +12,7 @@ The main components of the Cadmus preview architecture are summarized in Figure 
 
 - _Figure 1: Cadmus preview architecture_
 
-It all starts from the Cadmus **database**, including items with their parts. Some of these parts may represent text (with a text part) or layered text (with a text part and any number of text layer parts). Many other parts may well represent non-textual data (e.g. the codicological description of a manuscript).
+It all starts from the Cadmus **database**, including items with their parts. Some of these parts may represent text (with a text part) or layered text (with a text part and any number of text layer parts). Many other parts may well represent non-textual data (e.g. the codicological description of a manuscript). Usually, items are processed from an **item ID collector**, which gets the IDs of all the matching items in their order (at present we just have a single [builtin collector](collectors.md)).
 
 As for preview, the main distinction is between a **generic preview**, which can be applied to any part; and a **specialized preview** specifically designed for layered texts.
 
@@ -29,51 +24,7 @@ In Figure 1, you can see that a JSON renderer picked from a set of available ren
 
 To this end, the JSON renderer or the text block renderer may also use a set of **renderer filters**. Such filters are executed in the order they are defined for each renderer, just after its rendition completes. Each filter has a specific task, often general enough to be reused in other renderers.
 
-For instance, some prebuilt filters allow you to lookup thesauri (resolving their IDs into values), convert Markdown text into HTML or plain text, perform text replacements (either based on literals, and on regular expressions), or resolve the mapping between layer IDs and target IDs in text.
-
-### Renderer Filters
-
-Cadmus provides some builtin filters, but as for any other component type you are free to add your own. The filters to be used are typically specified in a JSON-based configuration, where each filter type has its own ID. Here I list the builtin filters.
-
-#### Thesaurus Lookup Filter
-
-Lookup any thesaurus entry by its ID, replacing it with its value when found, or with the entry ID when not found.
-
-- ID: `it.vedph.renderer-filter.mongo-thesaurus`
-- options:
-  - `ConnectionString`: connection string to the Mongo DB. This is usually omitted and supplied by the client code from its own application settings.
-  - `Pattern`: the regular expression pattern representing a thesaurus ID to lookup: it is assumed that this expression has two named captures, `t` for the thesaurus ID, and `e` for its entry ID. The default pattern is a `$` followed by the thesaurus ID, `:`, and the entry ID.
-
-#### Markdown Conversion Filter
-
-Convert Markdown text into HTML or plain text.
-
-- ID: `it.vedph.renderer-filter.markdown`
-- options:
-  - `MarkdownOpen`: the markdown region opening tag. When not set, it is assumed that the whole text is Markdown.
-  - `MarkdownClose`: the markdown region closing tag. When not set, it is assumed that the whole text is Markdown.
-  - `Format`: the Markdown regions target format: if not specified, nothing is done; if `txt`, any Markdown region is converted into plain text; if `html`, any Markdown region is converted into HTML.
-
-#### Text Replacements Filter
-
-Perform any text replacements, either literals or based on regular expressions.
-
-- ID: `it.vedph.renderer-filter.replace`
-- options:
-  - `Replacements`: an array of objects with these properties:
-    - `Source`: the text or pattern to find.
-    - `Target`: the replacement.
-    - `Repetitions`: the max repetitions count, or 0 for no limit (=keep replacing until no more changes).
-    - `IsPattern`: `true` if `Source` is a regular expression pattern rather than a literal.
-
-#### Fragment Link Filter
-
-Map layer keys into target IDs, leveraging the metadata built by the text renderer run before this filter. This is used to link fragments renditions to their base text (see about [building TEI](markup.md) for more).
-
-- ID: `it.vedph.renderer-filter.fr-link`
-- options:
-  - `TagOpen`: the opening tag for fragment key.
-  - `TagClose`: the closing tag for fragment key.
+For instance, some [prebuilt filters](filters.md) allow you to lookup thesauri (resolving their IDs into values), convert Markdown text into HTML or plain text, perform text replacements (either based on literals, and on regular expressions), or resolve the mapping between layer IDs and target IDs in text.
 
 ## Specialized Preview
 

@@ -4,5 +4,7 @@ Tools for migrating (importing/exporting) Cadmus data. Export tools also include
 
 - [overview](overview.md)
 - [configuration](config.md)
+- [filters](filters.md)
+- [item ID collectors](collectors.md)
 - [markup export](markup.md)
 - [configuration samples](config-samples.md)

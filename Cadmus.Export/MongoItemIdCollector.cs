@@ -57,6 +57,7 @@ namespace Cadmus.Export
                 FacetId = _options.FacetId,
                 GroupId = _options.GroupId,
                 Flags = _options.Flags,
+                FlagMatching = _options.FlagMatching,
                 UserId = _options.UserId,
                 MinModified = _options.MinModified,
                 MaxModified = _options.MaxModified,
@@ -118,6 +119,12 @@ namespace Cadmus.Export
         /// Gets or sets the flags filter.
         /// </summary>
         public int? Flags { get; set; }
+
+        /// <summary>
+        /// Gets or sets the flag matching mode used when <see cref="Flags"/>
+        /// is not null.
+        /// </summary>
+        public FlagMatching FlagMatching { get; set; }
 
         /// <summary>
         /// Gets or sets the user identifier filter.
