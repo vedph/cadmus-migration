@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Cadmus.Export.Filters
 {
@@ -17,8 +18,13 @@ namespace Cadmus.Export.Filters
         IConfigurable<SentenceSplitRendererFilterOptions>
     {
         private readonly HashSet<char> _markers;
+        private readonly Regex _crLfRegex;
         private string _newLine;
         private bool _trimming;
+        private bool _crLfRemoval;
+        private char[] _blackOpeners;
+        private char[] _blackClosers;
+        private bool _inBlack;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SentenceSplitRendererFilter"/>
@@ -26,6 +32,7 @@ namespace Cadmus.Export.Filters
         /// </summary>
         public SentenceSplitRendererFilter()
         {
+            _crLfRegex = new(@"\r?\n", RegexOptions.Compiled);
             _markers = new()
             {
                 '.', '?', '!',
@@ -33,6 +40,8 @@ namespace Cadmus.Export.Filters
                 '\u2026'    // ellipsis
             };
             _newLine = Environment.NewLine;
+            _blackOpeners = new[] { '(' };
+            _blackClosers = new[] { ')' };
         }
 
         /// <summary>
@@ -50,8 +59,67 @@ namespace Cadmus.Export.Filters
                 _markers.Clear();
                 foreach (char c in options.EndMarkers) _markers.Add(c);
             }
+            if (!string.IsNullOrEmpty(options.BlackOpeners))
+                _blackOpeners = options.BlackOpeners.ToCharArray();
+
+            if (!string.IsNullOrEmpty(options.BlackClosers))
+                _blackClosers = options.BlackClosers.ToCharArray();
+
             _newLine = options.NewLine;
             _trimming = options.Trimming;
+            _crLfRemoval = options.CrLfRemoval;
+        }
+
+        private int LocateNextSeparator(string text, int start = 0)
+        {
+            // this method was borrowed from Chiron.Core
+            if (start >= text.Length) return -1;
+            int i = start;
+
+            do
+            {
+                // if we're in a black section, just look for its end
+                if (_inBlack)
+                {
+                    i = text.IndexOfAny(_blackClosers, i);
+                    if (i == -1) return -1;
+                    i++;    // skip section closer
+                }
+
+                // skip initial markers, which would produce an empty output
+                while (i < text.Length && _markers.Contains(text[i])) i++;
+                if (i == text.Length) return -1;
+
+                // locate next marker from here:
+                while (i < text.Length)
+                {
+                    // if it's a black section opener, enter the section and retry
+                    if (Array.IndexOf(_blackOpeners, text[i]) > -1)
+                    {
+                        _inBlack = true;
+                        i++;    // skip the opener
+                        break;
+                    }
+
+                    // if it's an end marker, return its location ensuring to
+                    // place sentence end at the last one of a sequence
+                    if (_markers.Contains(text[i]))
+                    {
+                        // go past other markers next to the one just found
+                        while (i + 1 < text.Length &&
+                               (_markers.Contains(text[i + 1]) ||
+                                char.IsWhiteSpace(text[i + 1])))
+                        {
+                            i++;
+                        }
+                        return i;
+                    }
+
+                    // else keep searching
+                    i++;
+                }
+            } while (_inBlack);
+            return -1;
         }
 
         private void TrimAroundNewLine(StringBuilder text, int index)
@@ -65,7 +133,7 @@ namespace Cadmus.Export.Filters
 
             // left
             a = b = index;
-            while (a > 0 && (text[a - 1] == ' ' || text[a - 1] == '\t')) a++;
+            while (a > 0 && (text[a - 1] == ' ' || text[a - 1] == '\t')) a--;
             if (a < b) text.Remove(a, b - a);
         }
 
@@ -79,60 +147,34 @@ namespace Cadmus.Export.Filters
         {
             if (string.IsNullOrEmpty(text)) return text;
 
+            if (_crLfRemoval) text = _crLfRegex.Replace(text, " ");
+
             StringBuilder sb = new();
-            int i = 0;
-            List<int>? nlIndexes = _trimming? new() : null;
+            List<int>? nlIndexes = _trimming ? new() : null;
+            int start = 0, index = LocateNextSeparator(text);
 
-            while (i < text.Length)
+            while (index > -1)
             {
-                // replace existing CR/LF with space
-                if (text[i] == '\r' || text[i] == '\n')
-                {
-                    sb.Append(' ');
-                    // skip LF after CR
-                    if (text[i] == '\r' && i + 1 < text.Length && text[i + 1] == '\n')
-                        i++;
-                    i++;
-                    continue;
-                }
-
-                // if it's a marker, go past it (and its siblings) and append
-                // a newline
-                if (_markers.Contains(text[i]))
-                {
-                    while (i < text.Length && _markers.Contains(text[i]))
-                    {
-                        if (text[i] != '\r' && text[i] != '\n')
-                            sb.Append(text[i]);
-                        i++;
-                    }
-                    nlIndexes?.Add(sb.Length);
-                    sb.Append(_newLine);
-                }
-                else sb.Append(text[i++]);
+                if (index > start) sb.Append(text, start, index + 1 - start);
+                nlIndexes?.Add(sb.Length);
+                sb.Append(_newLine);
+                start = ++index;
+                index = LocateNextSeparator(text, index);
             }
-            if (sb.Length == 0) return "";
+            if (start < text.Length)
+            {
+                sb.Append(text, start, text.Length - start);
+                nlIndexes?.Add(sb.Length);
+                sb.Append(_newLine);
+            }
 
-            // trim if required
             if (_trimming)
             {
                 for (int j = nlIndexes!.Count - 1; j > -1; j--)
                     TrimAroundNewLine(sb, nlIndexes[j]);
             }
 
-            // ensure that the text ends with a newline unless empty
-            string result = sb.ToString();
-            if (!result.EndsWith(_newLine)) result += _newLine;
-
-            if (_trimming)
-            {
-                // trim end
-                i = result.Length;
-                while (i > 0 && (result[i - 1] == ' ' || result[i - 1] == '\t')) i--;
-                if (i < result.Length) result = result[..i];
-            }
-
-            return result;
+            return sb.ToString();
         }
     }
 
@@ -151,6 +193,29 @@ namespace Cadmus.Export.Filters
         public string EndMarkers { get; set; }
 
         /// <summary>
+        /// Gets or sets the "black" section openers characters. Each character
+        /// in this string has a corresponding closing character in
+        /// <see cref="BlackClosers"/>, and marks the beginning of a section
+        /// which may contain end markers which will not count as sentence
+        /// separators. This is typically used for parentheses, e.g. "hoc tibi
+        /// dico (cui enim?) ut sapias", where we do not want the sentence to
+        /// stop after the question mark.
+        /// These sections cannot be nested, so you are free to use the same
+        /// character both as an opener and as a closer, e.g. an EM dash.
+        /// The default value is <c>(</c>. If no such sections must be detected,
+        /// just leave this null/empty.
+        /// </summary>
+        public string? BlackOpeners { get; set; }
+
+        /// <summary>
+        /// Gets or sets the "black" section closers. Each character in this
+        /// string has a corresponding opening character in
+        /// <see cref="BlackOpeners"/>. The default value is <c>)</c>.
+        /// If no such sections must be detected, just leave this null/empty.
+        /// </summary>
+        public string? BlackClosers { get; set; }
+
+        /// <summary>
         /// Gets or sets the newline marker to use. The default value is the
         /// newline sequence of the host OS.
         /// </summary>
@@ -163,6 +228,13 @@ namespace Cadmus.Export.Filters
         public bool Trimming { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether CR/LF should be removed
+        /// when filtering. When this is true, any CR or CR+LF or LF is replaced
+        /// with a space.
+        /// </summary>
+        public bool CrLfRemoval { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the
         /// <see cref="SentenceSplitRendererFilterOptions"/> class.
         /// </summary>
@@ -171,6 +243,8 @@ namespace Cadmus.Export.Filters
             // U+037E = Greek question mark
             // U+2026 = ellipsis
             EndMarkers = ".?!\u037e\u2026";
+            BlackOpeners = "(";
+            BlackClosers = ")";
             NewLine = Environment.NewLine;
         }
     }

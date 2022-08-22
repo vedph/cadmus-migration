@@ -58,5 +58,8 @@ Lookup any thesaurus entry by its ID, replacing it with its value when found, or
 - ID: `it.vedph.renderer-filter.sentence-split`
 - options:
   - `EndMarkers`: the end-of-sentence marker characters. Each character in this string is treated as a sentence end marker. Any sequence of such end marker characters is treated as a single end. Default characters are `.`, `?`, `!`, Greek question mark (U+037E), and ellipsis (U+2026).
+  - `BlackOpeners`: the "black" section openers characters. Each character in this string has a corresponding closing character in `BlackClosers`, and marks the beginning of a section which may contain end markers which will not count as sentence separators. This is typically used for parentheses, e.g. "hoc tibi dico (cui enim?) ut sapias", where we do not want the sentence to stop after the question mark. These sections cannot be nested, so you are free to use the same character both as an opener and as a closer, e.g. an EM dash. The default value is `(`. If no such sections must be detected, just leave this empty.
+  - `BlackClosers`: the "black" section closers. Each character in this string has a corresponding opening character in `BlackOpeners`. The default value is `)`. If no such sections must be detected, just leave this null.
   - `NewLine`: the newline marker to use. The default value is the/ newline sequence of the host OS.
   - `Trimming`: a value indicating whether trimming spaces/tabs at both sides of any inserted newline is enabled.
+  - `CrLfRemoval`: a value indicating whether CR/LF should be removed when filtering. When this is true, any CR or CR+LF or LF is replaced with a space.

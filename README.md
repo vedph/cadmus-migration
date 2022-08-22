@@ -14,6 +14,10 @@ Markup related components used to export Cadmus data into some markup language, 
 
 ## History
 
+### 0.0.11
+
+- 2022-08-22: refactored sentence splitter.
+
 ### 0.0.10
 
 - 2022-08-22: added flags matching.

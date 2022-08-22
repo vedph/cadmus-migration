@@ -12,7 +12,10 @@ namespace Cadmus.Export.Test.Filters
             {
                 EndMarkers = ".?!\u037e\u2026",
                 NewLine = "\n",
-                Trimming = trimming
+                Trimming = trimming,
+                CrLfRemoval = true,
+                BlackOpeners = "(",
+                BlackClosers = ")"
             });
             return filter;
         }
@@ -28,13 +31,43 @@ namespace Cadmus.Export.Test.Filters
         }
 
         [Fact]
+        public void Apply_InitialMarker_AppendedNL()
+        {
+            SentenceSplitRendererFilter filter = GetFilter();
+
+            string result = filter.Apply("!Hello, world");
+
+            Assert.Equal("!Hello, world\n", result);
+        }
+
+        [Fact]
+        public void Apply_MarkerSequence_AppendedNL()
+        {
+            SentenceSplitRendererFilter filter = GetFilter(true);
+
+            string result = filter.Apply("Hello... world?!");
+
+            Assert.Equal("Hello...\nworld?!\n", result);
+        }
+
+        [Fact]
         public void Apply_Markers_Split()
         {
             SentenceSplitRendererFilter filter = GetFilter();
 
             string result = filter.Apply("Hello! I am world.");
 
-            Assert.Equal("Hello!\n I am world.\n", result);
+            Assert.Equal("Hello! \nI am world.\n", result);
+        }
+
+        [Fact]
+        public void Apply_MarkersWithBlack_Split()
+        {
+            SentenceSplitRendererFilter filter = GetFilter(true);
+
+            string result = filter.Apply("Hello (can you believe?) world! End.");
+
+            Assert.Equal("Hello (can you believe?) world!\nEnd.\n", result);
         }
 
         [Fact]
@@ -54,7 +87,7 @@ namespace Cadmus.Export.Test.Filters
 
             string result = filter.Apply("Hello! I\r\nam world.");
 
-            Assert.Equal("Hello!\n I am world.\n", result);
+            Assert.Equal("Hello! \nI am world.\n", result);
         }
 
         [Fact]

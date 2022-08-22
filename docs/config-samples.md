@@ -92,7 +92,10 @@ We can easily accomplish all these preprocessing requirements using a replacemen
       "Id": "it.vedph.renderer-filter.sentence-split",
       "Options": {
         "EndMarkers": ".?!",
-        "Trimming": true
+        "Trimming": true,
+        "BlackOpeners": "(",
+        "BlackClosers": ")",
+        "CrLfRemoval": true
       }
     }
   ],
