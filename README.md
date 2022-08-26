@@ -14,6 +14,8 @@ Markup related components used to export Cadmus data into some markup language, 
 
 ## History
 
+- 2022-08-26: completing `TeiStandoffApparatusJsonRenderer`.
+
 ### 0.0.11
 
 - 2022-08-22: refactored sentence splitter.
