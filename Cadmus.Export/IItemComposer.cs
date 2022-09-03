@@ -5,7 +5,7 @@ using System.IO;
 namespace Cadmus.Export
 {
     /// <summary>
-    /// Item composer interface. An item composer task is composing some or
+    /// Item composer interface. The item composer's task is composing some or
     /// all the parts of an item together, building some specific output from it.
     /// An item composer typically has an instance of <see cref="ITextBlockRenderer"/>
     /// to render the item's text part (if any), and a number of
