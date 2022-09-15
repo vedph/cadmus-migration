@@ -41,6 +41,92 @@ The note renderer here generated some HTML code representing the note's text: it
 
 ![rendition of the note part](img/ui-preview5.png)
 
+In the API backend, preview capabilities are configured in a dedicated JSON document, which in the case of this demo is:
+
+```json
+{
+  "RendererFilters": [
+    {
+      "Keys": "markdown",
+      "Id": "it.vedph.renderer-filter.markdown",
+      "Options": {
+        "MarkdownOpen": "<_md>",
+        "MarkdownClose": "</_md>",
+        "Format": "html"
+      }
+    }
+  ],
+  "JsonRenderers": [
+    {
+      "Keys": "it.vedph.note",
+      "Id": "it.vedph.json-renderer.xslt",
+      "Options": {
+        "QuoteStripping ": true,
+        "Xslt": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns:tei=\"http://www.tei-c.org/ns/1.0\" version=\"1.0\"><xsl:output method=\"html\" encoding=\"UTF-8\" omit-xml-declaration=\"yes\"/><xsl:template match=\"tag\"><p class=\"muted\"><xsl:value-of select=\".\"/></p></xsl:template><xsl:template match=\"text\"><div><_md><xsl:value-of select=\".\"/></_md></div></xsl:template><xsl:template match=\"root\"><xsl:apply-templates/></xsl:template><xsl:template match=\"*\"/></xsl:stylesheet>",
+        "FilterKeys": "markdown"
+      }
+    },
+    {
+      "Keys": "it.vedph.token-text",
+      "Id": "it.vedph.json-renderer.null"
+    },
+    {
+      "Keys": "it.vedph.token-text-layer|fr.it.vedph.comment",
+      "Id": "it.vedph.json-renderer.null"
+    },
+    {
+      "Keys": "it.vedph.token-text-layer|fr.it.vedph.orthography",
+      "Id": "it.vedph.json-renderer.null"
+    }
+  ],
+  "TextPartFlatteners": [
+    {
+      "Keys": "it.vedph.token-text",
+      "Id": "it.vedph.text-flattener.token"
+    }
+  ]
+}
+```
+
+Here, we first define a renderer filter to handle Markdown: it renders it into HTML (cf. `Format`), and uses the mock escape `<_md>...</_md>` to signal which parts of the string being processed require this rendition.
+
+Then, we define 4 generic renderers (`JsonRenderers`):
+
+- a renderer for the note part. This is the only true renderer; all the others are just mock renderers, added for testing purposes, and using a null renderer which just returns an empty string.
+- a mock renderer for the base text part.
+- a mock renderer for the comment layer part.
+- a mock renderer for the orthography layer part.
+
+The renderer for the note part is configured as follows:
+
+- it uses an XSLT-based renderer.
+- it trims the wrapper quotes (`"..."`) once JSON transforms have completed.
+- it uses the markdown filter defined above for rendering Markdown text regions into HTML.
+- it uses the following XSLT script for rendering the JSON code representing the part once automatically transformed into XML. The note model just includes an optional `tag` property (string) with some classification for the note, and a `text` property (Markdown string) with the note's content. The transform just renders the tag with some specific style in its own `div`, and the text included in a mock `<_md>` element used to signal to the Markdown filter where it should be applied.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:tei="http://www.tei-c.org/ns/1.0" version="1.0">
+    <xsl:output method="html" encoding="UTF-8" omit-xml-declaration="yes" />
+    <xsl:template match="tag">
+        <p class="muted">
+            <xsl:value-of select="." />
+        </p>
+    </xsl:template>
+    <xsl:template match="text">
+        <div>
+            <_md>
+                <xsl:value-of select="." />
+            </_md>
+        </div>
+    </xsl:template>
+    <xsl:template match="root">
+        <xsl:apply-templates />
+    </xsl:template>
+    <xsl:template match="*" />
+</xsl:stylesheet>
+```
+
 ## Layered Text Part
 
 For a text part (or a text layer part), the text with the available layers will be visualized in an interactive viewer.
