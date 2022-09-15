@@ -363,12 +363,14 @@ This is because in the rendered result each block is a `div` with a class contai
 </div>
 ```
 
-As you can see, here we have a `div` for each row, which includes another `div` with the row number, and a custom element to display text blocks. This comes directly from Cadmus UI bricks at <https://github.com/vedph/cadmus-bricks-shell/tree/master/projects/myrmidon/cadmus-text-block-view>.
+Here we have a `div` for each row, which includes another `div` with the row number, and a custom element to display text blocks. This comes directly from [Cadmus UI bricks](https://github.com/vedph/cadmus-bricks-shell/tree/master/projects/myrmidon/cadmus-text-block-view).
 
 The UI component in bricks is a more general purpose component which can be reused in other contexts. Here we are using it for the editor's preview, but it can be applied to any UI requiring to show several layers on a text. For instance, the figure below shows the rendition of a complex set of data from another project of mine, related to the analysis of prose rhythm:
 
 ![blocks UI in Cursus](img/blocks-ui.png)
 
-Note here that this time the backend also provides some "decorations" for each block. These decorations are defined via SVG code, and are a way for summarizing data in a visual manner. For instance, here the orange rectangles label rhythmic bigrams, while other renditions show in the upper part syllabic quantity, and in the lower part (with a different color) the Latin accent type and position in the corresponding word.
+Note here that this time the backend also provides some "decorations" for each block. These decorations are defined via SVG code, and are a way for summarizing data in a visual manner.
+
+For instance, here the orange rectangles label rhythmic bigrams, while other renditions show in the upper part syllabic quantity, and in the lower part (with a different color) the Latin accent type and position in the corresponding word.
 
 The other elements of this UI, like the top bar with a heat map of the distribution and extent of rhythmic cadences in each sentence, or the side panel with the details about cadences, are independent from the blocks view at the center of the page. This is based on the same bricks used by Cadmus.
