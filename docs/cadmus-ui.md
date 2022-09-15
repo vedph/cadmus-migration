@@ -88,14 +88,14 @@ In the API backend, preview capabilities are configured in a dedicated JSON docu
 }
 ```
 
-Here, we first define a renderer filter to handle Markdown: it renders it into HTML (cf. `Format`), and uses the mock escape `<_md>...</_md>` to signal which parts of the string being processed require this rendition.
+Here, we first define a renderer filter to handle Markdown after the renderer has completed: it renders it into HTML (cf. `Format`), and uses a mock escape `<_md>...</_md>` to signal which parts of the string being processed require this rendition.
 
 Then, we define 4 generic renderers (`JsonRenderers`):
 
-- a renderer for the note part. This is the only true renderer; all the others are just mock renderers, added for testing purposes, and using a null renderer which just returns an empty string.
-- a mock renderer for the base text part.
-- a mock renderer for the comment layer part.
-- a mock renderer for the orthography layer part.
+- a renderer for the _note_ part. This is the only true renderer; all the others are just mock renderers, added for testing purposes, and using a null renderer which just returns an empty string.
+- a mock renderer for the _base text_ part.
+- a mock renderer for the _comment layer_ part.
+- a mock renderer for the _orthography layer_ part.
 
 The renderer for the note part is configured as follows:
 
