@@ -10,6 +10,11 @@ The standard [Cadmus UI](https://github.com/vedph/cadmus-shell) leverages a set 
 
 ![API preview endpoints](img/ui-preview-api.png)
 
+- `api/preview/keys` is an infrastructural endpoint. It is used to get the list of all the registered renderers, according to their category: text flatteneres, item compoers, JSON renderers. This can be used to let users select among several previews for the same data.
+- `api/preview/parts/{id}` gets the rendition for the part with the specified ID. This uses a generic renderer, where any part, whatever its type, is handled in the same way: the renderer just gets its JSON, and transforms it.
+- `api/preview/text-parts/{id}` gets the text blocks built by flattening the text part with the specified ID with all the layers specified in the query parameter `layerId` (an array of layer part IDs, eventually followed by `=` and an arbitrary ID to assign to the layer type of that part). This optional query parameter is used to rename the layer IDs into the combination of part type ID and fragment type ID, used to identify fragments and colorize them.
+- `api/preview/parts/{id}/{frIndex}` gets the rendition of a single fragment at index `frIndex` in the layer part with ID equal to `id`.
+
 ## Generic Part
 
 For a generic part, the UI just requests a rendition, which fetches the part's content in JSON, and transforms it into HTML.
