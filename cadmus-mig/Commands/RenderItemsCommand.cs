@@ -2,6 +2,7 @@
 using Cadmus.Core;
 using Cadmus.Core.Storage;
 using Cadmus.Export;
+using Cadmus.Export.ML;
 using Cadmus.Export.Preview;
 using Cadmus.Migration.Cli.Services;
 using Fusi.Cli;
@@ -87,7 +88,8 @@ namespace Cadmus.Migration.Cli.Commands
                 ColorConsole.WriteError("Preview factory provider not found");
                 return Task.CompletedTask;
             }
-            CadmusPreviewFactory factory = provider.GetFactory(config);
+            CadmusPreviewFactory factory = provider.GetFactory(config,
+                typeof(FSTeiStandoffItemComposer).Assembly);
             factory.ConnectionString = cs;
 
             ColorConsole.WriteInfo("Building repository factory...");
