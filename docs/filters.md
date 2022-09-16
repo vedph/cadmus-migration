@@ -1,6 +1,7 @@
 # Renderer Filters
 
 - [Renderer Filters](#renderer-filters)
+  - [Appender Filter](#appender-filter)
   - [Fragment Link Filter](#fragment-link-filter)
   - [Markdown Conversion Filter](#markdown-conversion-filter)
   - [Text Replacements Filter](#text-replacements-filter)
@@ -10,6 +11,14 @@
 Cadmus provides some builtin filters which can be used by JSON renderers or text block renderers; as for any other component type, you are free to add your own filters.
 
 The filters to be used are typically specified in a JSON-based [configuration](config.md), where each filter type has its own ID. You can concatenate as many filters as you want, even when they are of the same type. All the filters will be applied in the order they are defined. Here I list the builtin filters.
+
+## Appender Filter
+
+Append the specified text to the input.
+
+- ID: `it.vedph.renderer-filter.appender`
+- options:
+  - `Text`: the text to append.
 
 ## Fragment Link Filter
 

@@ -340,29 +340,6 @@ namespace Cadmus.Export.Preview
             return filters;
         }
 
-        private IDictionary<string, IJsonRenderer> GetJsonRenderers(
-            HashSet<string> keys, string collectionPath)
-        {
-            IList<ComponentFactoryConfigEntry> entries =
-                ComponentFactoryConfigEntry.ReadComponentEntries(
-                Configuration, collectionPath);
-
-            Dictionary<string, IJsonRenderer> renderers = new();
-            foreach (ComponentFactoryConfigEntry entry in entries)
-            {
-                foreach (string key in entry.Keys!)
-                {
-                    IJsonRenderer? renderer = GetComponent<IJsonRenderer>(
-                        entry.Id!,
-                        entry.OptionsPath!);
-
-                    if (renderer != null && keys?.Contains(key) != false)
-                        renderers[key] = renderer;
-                }
-            }
-            return renderers;
-        }
-
         /// <summary>
         /// Gets an item composer by key.
         /// </summary>

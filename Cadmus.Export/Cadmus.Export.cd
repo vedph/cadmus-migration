@@ -35,7 +35,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>EAAACAAAAAACAAAAAAAAAAUAAAYAAAAEACCACCAANAE=</HashCode>
+      <HashCode>EAAACAAAAAACAAAAAAAAAAUAAAYAAAAEACAACCAANAE=</HashCode>
       <FileName>Preview\CadmusPreviewFactory.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -166,7 +166,7 @@
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AACABAAEAAAgBEAAAAAEAAgAAAAAAAAAACAAEAAAAAA=</HashCode>
+      <HashCode>AACABAAEAAAgBEAAAAAEBAgAAAAAAAAAACAAEAAAAAA=</HashCode>
       <FileName>MongoItemIdCollector.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -322,6 +322,21 @@
     <TypeIdentifier>
       <HashCode>AAAAAAAAAgAAAAAEAAAAACAAAAAAAQAAAAAEAAAAAAA=</HashCode>
       <FileName>Filters\ReplaceRendererFilter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cadmus.Export.Filters.AppenderRendererFilter">
+    <Position X="20.5" Y="2.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAABAAAAAAAAAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>Filters\AppenderRendererFilter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Cadmus.Export.Filters.AppenderRendererFilterOptions" Collapsed="true">
+    <Position X="20.5" Y="4.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>Filters\AppenderRendererFilter.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Interface Name="Cadmus.Export.IJsonRenderer">
