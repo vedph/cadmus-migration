@@ -4,9 +4,9 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Version>0.0.11</Version>
-    <FileVersion>0.0.11</FileVersion>
-    <AssemblyVersion>0.0.11</AssemblyVersion>
+    <Version>0.0.12</Version>
+    <FileVersion>0.0.12</FileVersion>
+    <AssemblyVersion>0.0.12</AssemblyVersion>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 

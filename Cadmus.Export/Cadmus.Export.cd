@@ -105,7 +105,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Cadmus.Export.XsltJsonRenderer">
-    <Position X="7" Y="4" Width="1.75" />
+    <Position X="7" Y="4.5" Width="1.75" />
     <Members>
       <Method Name="XsltJsonRenderer" Hidden="true" />
     </Members>
@@ -122,11 +122,11 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Fusi.Xml.Extras.Render.XsltTransformer" Collapsed="true">
-    <Position X="7" Y="6.25" Width="1.75" />
+    <Position X="7" Y="6.75" Width="1.75" />
     <TypeIdentifier />
   </Class>
   <Class Name="Cadmus.Export.NullJsonRenderer">
-    <Position X="9.25" Y="4" Width="1.75" />
+    <Position X="9.25" Y="4.5" Width="1.75" />
     <Members>
       <Method Name="NullJsonRenderer" Hidden="true" />
     </Members>

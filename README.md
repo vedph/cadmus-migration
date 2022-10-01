@@ -14,6 +14,9 @@ Markup related components used to export Cadmus data into some markup language, 
 
 ## History
 
+### 0.0.12
+
+- 2022-10-01: added `MongoTokenExtractorRendererFilter`.
 - 2022-08-26: completing `TeiStandoffApparatusJsonRenderer`.
 
 ### 0.0.11
