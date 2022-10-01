@@ -83,18 +83,14 @@ namespace Cadmus.Export.Preview
         }
 
         /// <summary>
-        /// Renders the part with the specified ID, using the renderer targeting
-        /// its part type ID.
+        /// Renders the JSON code representing a part.
         /// </summary>
-        /// <param name="id">The part's identifier.</param>
-        /// <returns>Rendition.</returns>
-        /// <exception cref="ArgumentNullException">id</exception>
-        public string RenderPart(string id)
+        /// <param name="json">The JSON code.</param>
+        /// <returns>Rendition or empty string.</returns>
+        /// <exception cref="ArgumentNullException">json</exception>
+        public string RenderPartJson(string json)
         {
-            if (id is null) throw new ArgumentNullException(nameof(id));
-
-            string? json = _repository.GetPartContent(id);
-            if (json == null) return "";
+            if (json is null) throw new ArgumentNullException(nameof(json));
 
             // get part type ID
             JsonDocument doc = JsonDocument.Parse(json);
@@ -105,7 +101,24 @@ namespace Cadmus.Export.Preview
             IJsonRenderer? renderer = GetRendererFromKey(typeId);
 
             // render
-            return renderer != null? renderer.Render(json) : "";
+            return renderer != null ? renderer.Render(json) : "";
+        }
+
+        /// <summary>
+        /// Renders the part with the specified ID, using the renderer targeting
+        /// its part type ID.
+        /// </summary>
+        /// <param name="id">The part's identifier.</param>
+        /// <returns>Rendition or empty string.</returns>
+        /// <exception cref="ArgumentNullException">id</exception>
+        public string RenderPart(string id)
+        {
+            if (id is null) throw new ArgumentNullException(nameof(id));
+
+            string? json = _repository.GetPartContent(id);
+            if (json == null) return "";
+
+            return RenderPartJson(json);
         }
 
         private static JsonElement? GetFragmentAt(JsonElement fragments, int index)
@@ -122,24 +135,16 @@ namespace Cadmus.Export.Preview
         }
 
         /// <summary>
-        /// Renders the fragment at index <paramref name="frIndex"/> in the part
-        /// with ID <paramref name="id"/>, using the renderer targeting
-        /// its part role ID.
+        /// Renders the specified fragment's JSON, representing a layer part.
         /// </summary>
-        /// <param name="id">The part's identifier.</param>
-        /// <returns>Rendition.</returns>
-        /// <param name="frIndex">The fragment's index in the layer part's
-        /// fragments array.</param>
-        /// <exception cref="ArgumentNullException">id</exception>
-        /// <exception cref="ArgumentOutOfRangeException">frIndex less than 0
-        /// </exception>
-        public string RenderFragment(string id, int frIndex)
+        /// <param name="json">The JSON code representing the layer part.</param>
+        /// <param name="frIndex">Index of the fragment in the <c>fragments</c>
+        /// array of the received layer part.</param>
+        /// <returns>Rendition or empty string.</returns>
+        /// <exception cref="ArgumentNullException">json</exception>
+        public string RenderFragmentJson(string json, int frIndex)
         {
-            if (id is null) throw new ArgumentNullException(nameof(id));
-            if (frIndex < 0) throw new ArgumentOutOfRangeException(nameof(frIndex));
-
-            string? json = _repository.GetPartContent(id);
-            if (json == null) return "";
+            if (json is null) throw new ArgumentNullException(nameof(json));
 
             // get the part type ID and role ID (=fragment type)
             JsonDocument doc = JsonDocument.Parse(json);
@@ -154,14 +159,36 @@ namespace Cadmus.Export.Preview
             IJsonRenderer? renderer = GetRendererFromKey(key);
 
             // extract the targeted fragment
-            JsonElement fragments = doc.RootElement
-                .GetProperty("fragments");
+            JsonElement fragments = doc.RootElement.GetProperty("fragments");
             JsonElement? fr = GetFragmentAt(fragments, frIndex);
             if (fr == null) return "";
 
             // render
             string frJson = fr.ToString()!;
             return renderer != null ? renderer.Render(frJson) : "";
+        }
+
+        /// <summary>
+        /// Renders the fragment at index <paramref name="frIndex"/> in the part
+        /// with ID <paramref name="id"/>, using the renderer targeting
+        /// its part role ID.
+        /// </summary>
+        /// <param name="id">The part's identifier.</param>
+        /// <returns>Rendition or empty string.</returns>
+        /// <param name="frIndex">The fragment's index in the layer part's
+        /// fragments array.</param>
+        /// <exception cref="ArgumentNullException">id</exception>
+        /// <exception cref="ArgumentOutOfRangeException">frIndex less than 0
+        /// </exception>
+        public string RenderFragment(string id, int frIndex)
+        {
+            if (id is null) throw new ArgumentNullException(nameof(id));
+            if (frIndex < 0) throw new ArgumentOutOfRangeException(nameof(frIndex));
+
+            string? json = _repository.GetPartContent(id);
+            if (json == null) return "";
+
+            return RenderFragmentJson(json, frIndex);
         }
 
         /// <summary>
