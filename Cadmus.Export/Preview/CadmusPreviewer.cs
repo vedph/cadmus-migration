@@ -13,7 +13,7 @@ namespace Cadmus.Export.Preview
     /// </summary>
     public sealed class CadmusPreviewer
     {
-        private readonly ICadmusRepository _repository;
+        private readonly ICadmusRepository? _repository;
         private readonly CadmusPreviewFactory _factory;
         private TextBlockBuilder? _blockBuilder;
         // cache
@@ -23,16 +23,17 @@ namespace Cadmus.Export.Preview
         /// <summary>
         /// Initializes a new instance of the <see cref="CadmusPreviewer"/> class.
         /// </summary>
-        /// <param name="repository">The repository.</param>
         /// <param name="factory">The factory.</param>
+        /// <param name="repository">The optional repository. You should always
+        /// pass a repository, unless you are just consuming the methods using
+        /// JSON as their input.</param>
         /// <exception cref="ArgumentNullException">repository or factory</exception>
-        public CadmusPreviewer(ICadmusRepository repository,
-            CadmusPreviewFactory factory)
+        public CadmusPreviewer(CadmusPreviewFactory factory,
+            ICadmusRepository? repository)
         {
-            _repository = repository ??
-                throw new ArgumentNullException(nameof(repository));
             _factory = factory ??
                 throw new ArgumentNullException(nameof(factory));
+            _repository = repository;
 
             // cached components
             _jsonRenderers = new Dictionary<string, IJsonRenderer>();
@@ -107,6 +108,7 @@ namespace Cadmus.Export.Preview
         /// <summary>
         /// Renders the part with the specified ID, using the renderer targeting
         /// its part type ID.
+        /// Note that this method requires a repository.
         /// </summary>
         /// <param name="id">The part's identifier.</param>
         /// <returns>Rendition or empty string.</returns>
@@ -115,7 +117,7 @@ namespace Cadmus.Export.Preview
         {
             if (id is null) throw new ArgumentNullException(nameof(id));
 
-            string? json = _repository.GetPartContent(id);
+            string? json = _repository?.GetPartContent(id);
             if (json == null) return "";
 
             return RenderPartJson(json);
@@ -172,6 +174,7 @@ namespace Cadmus.Export.Preview
         /// Renders the fragment at index <paramref name="frIndex"/> in the part
         /// with ID <paramref name="id"/>, using the renderer targeting
         /// its part role ID.
+        /// Note that this method requires a repository.
         /// </summary>
         /// <param name="id">The part's identifier.</param>
         /// <returns>Rendition or empty string.</returns>
@@ -185,7 +188,7 @@ namespace Cadmus.Export.Preview
             if (id is null) throw new ArgumentNullException(nameof(id));
             if (frIndex < 0) throw new ArgumentOutOfRangeException(nameof(frIndex));
 
-            string? json = _repository.GetPartContent(id);
+            string? json = _repository?.GetPartContent(id);
             if (json == null) return "";
 
             return RenderFragmentJson(json, frIndex);
@@ -193,6 +196,7 @@ namespace Cadmus.Export.Preview
 
         /// <summary>
         /// Builds the text blocks from the specified text part.
+        /// Note that this method requires a repository.
         /// </summary>
         /// <param name="id">The part identifier.</param>
         /// <param name="layerPartIds">The IDs of the layers to include in the
@@ -209,6 +213,8 @@ namespace Cadmus.Export.Preview
         {
             if (id is null) throw new ArgumentNullException(nameof(id));
             if (layerPartIds is null) throw new ArgumentNullException(nameof(layerPartIds));
+
+            if (_repository == null) return Array.Empty<TextBlockRow>();
 
             string? json = _repository.GetPartContent(id);
             if (json == null) return Array.Empty<TextBlockRow>();
@@ -232,10 +238,10 @@ namespace Cadmus.Export.Preview
             }
 
             // load part and layers
-            IPart? part = _repository.GetPart<IPart>(id);
+            IPart? part = _repository?.GetPart<IPart>(id);
             if (part == null) return Array.Empty<TextBlockRow>();
             List<IPart> layerParts = layerPartIds
-                .Select(lid => _repository.GetPart<IPart>(lid))
+                .Select(lid => _repository!.GetPart<IPart>(lid))
                 .Where(p => p != null)
                 .ToList();
 

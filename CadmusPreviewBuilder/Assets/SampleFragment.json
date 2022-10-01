@@ -1,0 +1,67 @@
+﻿{
+  "root": {
+    "location": "1.2",
+    "tag": "marginal",
+    "entries": [
+      {
+        "type": 0,
+        "subrange": null,
+        "tag": null,
+        "value": "pulsisque",
+        "normValue": "pulsisque",
+        "isAccepted": true,
+        "groupId": null,
+        "witnesses": [
+          {
+            "value": "B",
+            "note": "manus altera"
+          },
+          {
+            "value": "O"
+          }
+        ],
+        "authors": [
+          {
+            "value": "Cursius",
+            "note": "(dubitanter)"
+          }
+        ]
+      },
+      {
+        "type": 0,
+        "value": "",
+        "witnesses": [
+          {
+            "value": "Q"
+          },
+          {
+            "value": "Z"
+          }
+        ]
+      },
+      {
+        "type": 0,
+        "value": "pulsosque",
+        "normValue": "pulsosque",
+        "witnesses": [
+          {
+            "value": "P"
+          },
+          {
+            "value": "r"
+          }
+        ],
+        "authors": [
+          {
+            "value": "Serv. ad Aen. 1,2",
+            "note": "(de ablativo casu)"
+          }
+        ]
+      },
+      {
+        "type": 3,
+        "note": "non liquet an lacuna postulanda sit."
+      }
+    ]
+  }
+}

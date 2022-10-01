@@ -6,16 +6,10 @@ using Cadmus.General.Parts;
 using Cadmus.Mongo;
 using Cadmus.Philology.Parts;
 using Cadmus.Refs.Bricks;
-using Fusi.Microsoft.Extensions.Configuration.InMemoryJson;
-using Microsoft.Extensions.Configuration;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
-using SimpleInjector;
 using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Text;
 using System.Text.Json;
 using Xunit;
 
@@ -185,7 +179,7 @@ namespace Cadmus.Export.Test
         private static CadmusPreviewer GetPreviewer(ICadmusRepository repository)
         {
             CadmusPreviewFactory factory = TestHelper.GetFactory();
-            return new(repository, factory);
+            return new(factory, repository);
         }
 
         [Fact]
