@@ -339,6 +339,34 @@
       <FileName>Filters\AppenderRendererFilter.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="Cadmus.Export.Filters.MongoTokenExtractorRendererFilter">
+    <Position X="23.25" Y="2.25" Width="1.5" />
+    <Members>
+      <Method Name="GetRepository" Hidden="true" />
+      <Method Name="GetTokenTextPart" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAACAAAAQRBAAAgAAABAAAAAAAABAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>Filters\MongoTokenExtractorRendererFilter.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_options" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Cadmus.Export.Filters.MongoTokenExtractorRendererFilterOptions">
+    <Position X="25.75" Y="2.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAAAAIACAAAAAAAAAAIAACAAAgAAAAA=</HashCode>
+      <FileName>Filters\MongoTokenExtractorRendererFilter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Interface Name="Cadmus.Export.IJsonRenderer">
     <Position X="8" Y="0.5" Width="1.5" />
     <TypeIdentifier>
@@ -388,7 +416,7 @@
     </TypeIdentifier>
   </Interface>
   <Interface Name="Cadmus.Export.Filters.IRendererFilter">
-    <Position X="15" Y="0.5" Width="1.5" />
+    <Position X="18.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Filters\IRendererFilter.cs</FileName>

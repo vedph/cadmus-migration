@@ -6,6 +6,7 @@
   - [Markdown Conversion Filter](#markdown-conversion-filter)
   - [Text Replacements Filter](#text-replacements-filter)
   - [Thesaurus Lookup Filter](#thesaurus-lookup-filter)
+  - [Token-based Text Extractor Filter](#token-based-text-extractor-filter)
   - [Sentence Split Filter](#sentence-split-filter)
 
 Cadmus provides some builtin filters which can be used by JSON renderers or text block renderers; as for any other component type, you are free to add your own filters.
@@ -61,6 +62,29 @@ Lookup any thesaurus entry by its ID, replacing it with its value when found, or
 - options:
   - `ConnectionString`: connection string to the Mongo DB. This is usually omitted and supplied by the client code from its own application settings.
   - `Pattern`: the regular expression pattern representing a thesaurus ID to lookup: it is assumed that this expression has two named captures, `t` for the thesaurus ID, and `e` for its entry ID. The default pattern is a `$` followed by the thesaurus ID, `:`, and the entry ID.
+
+## Token-based Text Extractor Filter
+
+Replace all the text locations matched via a specified regular expression pattern with the corresponding text from the base text part.
+
+- ID: `it.vedph.renderer-filter.mongo-token-extractor`
+- options:
+  - `ConnectionString`: connection string to the Mongo DB. This is usually omitted and supplied by the client code from its own application settings.
+  - `LocationPattern`: the regular expression pattern representing a text location expression. It is assumed that the first capture group in it is the text location.
+  - `WholeToken`: a value indicating whether to extract the whole token from the base text, even when the oordinates refer to a portion of it.
+  - `StartMarker` (when `WholeToken` is true): the start marker to insert at the beginning of the token portion when extracting the whole token. Default is `[`.
+  - `EndMarker` (when `WholeToken` is true): the end marker to insert at the end of the token portion when extracting the whole token. Default is `]`.
+  - `TextCutting`: true to enable text cutting.
+
+When text cutting is enabled, you can specify these additional options:
+
+- `Mode:`: the operational mode for the cutter: 0=cut tail (like `ABC...`); 1=cut head (like `...ABC`); 2=cut both tail and head (like `...ABC...`); 3=cut body (like `ABC...DEF`).
+- `Limit`:  the limit to the resulting text extent. This is either the maximum desired text length, or the maximum desired text extent expressed as a percentage of the total text's length. Default=100.
+- `MinusLimit`: the limit by which the maximum length can be reduced. Default=10.
+- `PlusLimit`: the limit by which the maximum length can be increased. Default=10.
+- `LimitAsPercents`: true if limits are expressed as percentages.
+- `Ellipsis`: the text to append as ellipsis indicator when text is cut. Default=`...`.
+- `StopChars`: characters marking a stop, in descending order of importance. Default=`.?!;:,/ -`. These are used to locate the preferred locations for a cut.
 
 ## Sentence Split Filter
 
