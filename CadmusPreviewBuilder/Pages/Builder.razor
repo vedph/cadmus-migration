@@ -48,6 +48,14 @@
             </InputTextArea>
         </div>
     </div>
+    <div class="row">
+        <div class="col">
+            <InputCheckbox id="fr"
+                           @bind-Value="Model.IsFragment">
+            </InputCheckbox>
+            fragment (1st entry from fragments array)
+        </div>
+    </div>
 </EditForm>
 <br />
 <div style="display: flex; gap:8px; flex-flow: row nowrap; align-items: center">
