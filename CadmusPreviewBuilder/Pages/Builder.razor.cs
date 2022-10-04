@@ -88,6 +88,23 @@ namespace CadmusPreviewBuilder.Pages
             }
         }
 
+        private string WrapIntoHtml(string result)
+        {
+            StringBuilder sb = new();
+            sb.Append("<html><head><title>Sample</title>");
+            if (!string.IsNullOrEmpty(Model.Css))
+            {
+                sb.Append("<style type=\"text/css\">)")
+                  .Append(Model.Css)
+                  .Append("</style>");
+            }
+            sb.Append("</head><body>")
+              .Append(result)
+              .Append("</body></html>");
+
+            return sb.ToString();
+        }
+
         private async Task PreviewAsync()
         {
             if (Model.Json.Length == 0 || Model.Config.Length == 0 ||
@@ -118,8 +135,8 @@ namespace CadmusPreviewBuilder.Pages
                     else
                         result = _previewer.RenderPartJson(Model.Json);
 
-                    // TODO combine with CSS
-                    Model.Html = result;
+                    Model.Html = Model.IsWrapEnabled
+                        ? WrapIntoHtml(result) : result;
 
                     Model.Result = (MarkupString)result;
                 });

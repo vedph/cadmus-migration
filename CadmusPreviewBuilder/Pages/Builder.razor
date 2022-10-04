@@ -48,13 +48,16 @@
             </InputTextArea>
         </div>
     </div>
-    <div class="row">
-        <div class="col">
-            <InputCheckbox id="fr"
-                           @bind-Value="Model.IsFragment">
-            </InputCheckbox>
-            fragment (1st entry from fragments array)
-        </div>
+    <div>
+        <InputCheckbox id="fr"
+                        @bind-Value="Model.IsFragment">
+        </InputCheckbox>
+        fragment
+        &nbsp;
+        <InputCheckbox id="wrap"
+                       @bind-Value="Model.IsWrapEnabled">
+        </InputCheckbox>
+        wrap in HTML page
     </div>
 </EditForm>
 <br />
@@ -68,7 +71,13 @@
     }
 </div>
 <br />
-<!-- result -->
+<!-- html -->
+@if (Model.Html != null)
+{
 <div style="border: 1px solid silver;border-radius:6px;padding:8px;background-color:#f0f0f0;">
     <code>@Model.Html</code>
 </div>
+<div style="border: 1px solid silver;border-radius:6px;padding:8px">
+    @Model.Result
+</div>
+}

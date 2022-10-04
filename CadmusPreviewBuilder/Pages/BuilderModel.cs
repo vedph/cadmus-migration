@@ -6,6 +6,7 @@ namespace CadmusPreviewBuilder.Pages
     public class BuilderModel
     {
         public bool IsFragment { get; set; }
+        public bool IsWrapEnabled { get; set; }
 
         [Required]
         public string Json { get; set; }
