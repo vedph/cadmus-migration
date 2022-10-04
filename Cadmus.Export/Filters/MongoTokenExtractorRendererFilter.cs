@@ -1,8 +1,6 @@
-﻿using Cadmus.Core.Config;
-using Cadmus.Core;
+﻿using Cadmus.Core;
 using Cadmus.Core.Storage;
 using Cadmus.General.Parts;
-using Cadmus.Mongo;
 using Fusi.Tools.Config;
 using System;
 using System.Linq;
@@ -26,28 +24,9 @@ namespace Cadmus.Export.Filters
     {
         private MongoTokenExtractorRendererFilterOptions? _options;
         private Regex? _locRegex;
-        private ICadmusRepository? _repository;
 
         private string? _itemId;
         private TokenTextPart? _part;
-
-        private ICadmusRepository GetRepository()
-        {
-            TagAttributeToTypeMap map = new();
-            map.Add(new[]
-            {
-                typeof(NotePart).Assembly
-            });
-            MongoCadmusRepository repository = new(
-                new StandardPartTypeProvider(map),
-                new StandardItemSortKeyBuilder());
-            repository.Configure(new MongoCadmusRepositoryOptions
-            {
-                // use the default ConnectionStringTemplate (local DB)
-                ConnectionString = _options!.ConnectionString
-            });
-            return repository;
-        }
 
         /// <summary>
         /// Configures this filter with the specified options.
@@ -60,12 +39,13 @@ namespace Cadmus.Export.Filters
             _locRegex = new Regex(_options.LocationPattern, RegexOptions.Compiled);
         }
 
-        private TokenTextPart? GetTokenTextPart(string itemId)
+        private static TokenTextPart? GetTokenTextPart(string itemId,
+            ICadmusRepository repository)
         {
-            IItem? item = _repository!.GetItem(itemId);
+            IItem? item = repository!.GetItem(itemId);
             if (item == null) return null;
 
-            IPart? part = _repository.GetItemParts(new[] { itemId },
+            IPart? part = repository.GetItemParts(new[] { itemId },
                 typeof(TokenTextPart).GetCustomAttribute<TagAttribute>()?.Tag,
                 PartBase.BASE_TEXT_ROLE_ID).FirstOrDefault();
 
@@ -89,14 +69,15 @@ namespace Cadmus.Export.Filters
                 : null;
             if (itemId == null) return text;
 
-            if (_repository == null) _repository = GetRepository();
+            ICadmusRepository? repository = context?.Repository;
+            if (repository == null) return text;
 
             // get base text part
             TokenTextPart? part;
             if (_itemId == itemId) part = _part!;
             else
             {
-                part = GetTokenTextPart(itemId);
+                part = GetTokenTextPart(itemId, repository);
                 if (part == null) return text;
                 // cache the item's base text part
                 _itemId = itemId;

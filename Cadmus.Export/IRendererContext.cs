@@ -1,4 +1,5 @@
-﻿using Fusi.Tools;
+﻿using Cadmus.Core.Storage;
+using Fusi.Tools;
 using System.Collections.Generic;
 
 namespace Cadmus.Export
@@ -15,5 +16,13 @@ namespace Cadmus.Export
         /// and values are the corresponding block IDs.
         /// </summary>
         IDictionary<string, string> TargetIds { get; }
+
+        /// <summary>
+        /// Gets or sets the optional Cadmus repository to be consumed by
+        /// components using this context. Typically this is required by
+        /// some filters, like the one resolving thesauri IDs, or the one
+        /// extracting text from a fragment's location.
+        /// </summary>
+        ICadmusRepository? Repository { get; set; }
     }
 }

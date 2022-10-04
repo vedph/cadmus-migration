@@ -11,7 +11,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAgQAAQAAABAAAAAAQEAAAQAAABAAAEAAAAKACBAAEE=</HashCode>
+      <HashCode>AAgQAAQAAABAACAAAQEAAAQAAABAAAEAAAAKACBAAEE=</HashCode>
       <FileName>Preview\CadmusPreviewer.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -203,7 +203,7 @@
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
       <FileName>RendererContext.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -267,16 +267,12 @@
   <Class Name="Cadmus.Export.Filters.MongoThesRendererFilter">
     <Position X="14.75" Y="2.25" Width="2" />
     <Members>
-      <Method Name="GetRepository" Hidden="true" />
       <Method Name="MongoThesRendererFilter" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AAACAAAAAZBAAAAAAABAAAAAAEAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAJAAAAAAAABAAAAAAEAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Filters\MongoThesRendererFilter.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Field Name="_options" />
-    </ShowAsAssociation>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Cadmus.Export.Filters.ReplaceRendererFilter" BaseTypeListCollapsed="true">
@@ -351,14 +347,13 @@
   <Class Name="Cadmus.Export.Filters.MongoTokenExtractorRendererFilter">
     <Position X="23.25" Y="2.25" Width="1.5" />
     <Members>
-      <Method Name="GetRepository" Hidden="true" />
       <Method Name="GetTokenTextPart" Hidden="true" />
     </Members>
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAACAAAAQRBAAAgAAABAAAAAAAABAAAAAAAQAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAQRAAAAgAAABAAAAAAAABAAAAAAAQAAAAAAA=</HashCode>
       <FileName>Filters\MongoTokenExtractorRendererFilter.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>

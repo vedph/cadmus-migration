@@ -1,8 +1,5 @@
 ﻿using Cadmus.Core.Config;
-using Cadmus.Core;
 using Cadmus.Core.Storage;
-using Cadmus.General.Parts;
-using Cadmus.Mongo;
 using Fusi.Tools.Config;
 using System;
 using System.Collections.Generic;
@@ -24,9 +21,7 @@ namespace Cadmus.Export.Filters
         IConfigurable<MongoThesRendererFilterOptions>
     {
         private readonly Dictionary<string, Thesaurus> _cache;
-        private MongoThesRendererFilterOptions? _options;
         private Regex? _idRegex;
-        private ICadmusRepository? _repository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MongoThesRendererFilter"/>
@@ -37,24 +32,6 @@ namespace Cadmus.Export.Filters
             _cache = new Dictionary<string, Thesaurus>();
         }
 
-        private ICadmusRepository GetRepository()
-        {
-            TagAttributeToTypeMap map = new();
-            map.Add(new[]
-            {
-                typeof(NotePart).Assembly
-            });
-            MongoCadmusRepository repository = new(
-                new StandardPartTypeProvider(map),
-                new StandardItemSortKeyBuilder());
-            repository.Configure(new MongoCadmusRepositoryOptions
-            {
-                // use the default ConnectionStringTemplate (local DB)
-                ConnectionString = _options!.ConnectionString
-            });
-            return repository;
-        }
-
         /// <summary>
         /// Configures this filter with the specified options.
         /// </summary>
@@ -62,8 +39,8 @@ namespace Cadmus.Export.Filters
         /// <exception cref="ArgumentNullException">options</exception>
         public void Configure(MongoThesRendererFilterOptions options)
         {
-            _options = options ?? throw new ArgumentNullException(nameof(options));
-            _idRegex = new Regex(_options.Pattern, RegexOptions.Compiled);
+            if (options == null) throw new ArgumentNullException(nameof(options));
+            _idRegex = new Regex(options.Pattern, RegexOptions.Compiled);
         }
 
         /// <summary>
@@ -76,7 +53,8 @@ namespace Cadmus.Export.Filters
         {
             if (_idRegex == null) return text;
 
-            if (_repository == null) _repository = GetRepository();
+            ICadmusRepository? repository = context?.Repository;
+            if (repository == null) return text;
 
             return _idRegex.Replace(text, (m) =>
             {
@@ -86,7 +64,7 @@ namespace Cadmus.Export.Filters
                 if (_cache.ContainsKey(tId)) thesaurus = _cache[tId];
                 else
                 {
-                    thesaurus = _repository.GetThesaurus(tId);
+                    thesaurus = repository.GetThesaurus(tId);
                     if (thesaurus != null) _cache[tId] = thesaurus;
                 }
 

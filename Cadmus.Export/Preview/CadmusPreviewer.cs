@@ -1,5 +1,6 @@
 ﻿using Cadmus.Core;
 using Cadmus.Core.Storage;
+using Fusi.Xml.Extras.Scan;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -83,11 +84,14 @@ namespace Cadmus.Export.Preview
             return renderer;
         }
 
-        private static IRendererContext? BuildContext(IItem? item)
+        private IRendererContext? BuildContext(IItem? item)
         {
             if (item == null) return null;
 
-            RendererContext context = new();
+            RendererContext context = new()
+            {
+                Repository = _repository
+            };
 
             context.Data[ItemComposer.M_ITEM_ID] = item.Id;
             context.Data[ItemComposer.M_ITEM_FACET] = item.FacetId;

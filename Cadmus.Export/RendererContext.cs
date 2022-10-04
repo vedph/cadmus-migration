@@ -1,4 +1,5 @@
-﻿using Fusi.Tools;
+﻿using Cadmus.Core.Storage;
+using Fusi.Tools;
 using System.Collections.Generic;
 
 namespace Cadmus.Export
@@ -13,6 +14,12 @@ namespace Cadmus.Export
         /// and values are the corresponding block IDs.
         /// </summary>
         public IDictionary<string, string> TargetIds { get; }
+
+        /// <summary>
+        /// Gets or sets the optional Cadmus repository to be consumed by
+        /// components using this context.
+        /// </summary>
+        public ICadmusRepository? Repository { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RendererContext"/>

@@ -1,5 +1,9 @@
-﻿using Cadmus.Core.Config;
+﻿using Cadmus.Core;
+using Cadmus.Core.Config;
+using Cadmus.Core.Storage;
 using Cadmus.Export.Filters;
+using Cadmus.General.Parts;
+using Cadmus.Mongo;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 using Xunit;
@@ -14,6 +18,23 @@ namespace Cadmus.Export.Test.Filters
         public MongoThesRendererFilterTest()
         {
             _client = new MongoClient(TestHelper.CS);
+        }
+
+        private static ICadmusRepository GetRepository()
+        {
+            TagAttributeToTypeMap map = new();
+            map.Add(new[]
+            {
+                typeof(NotePart).Assembly
+            });
+            MongoCadmusRepository repository = new(
+                new StandardPartTypeProvider(map),
+                new StandardItemSortKeyBuilder());
+            repository.Configure(new MongoCadmusRepositoryOptions
+            {
+                ConnectionString = TestHelper.CS
+            });
+            return repository;
         }
 
         private void InitDatabase()
@@ -76,7 +97,8 @@ namespace Cadmus.Export.Test.Filters
                 ConnectionString = TestHelper.CS,
             });
 
-            string result = filter.Apply("My color is: $colors:r!");
+            string result = filter.Apply("My color is: $colors:r!",
+                new RendererContext { Repository = GetRepository() });
 
             Assert.Equal("My color is: red!", result);
         }

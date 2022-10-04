@@ -14,6 +14,10 @@ Markup related components used to export Cadmus data into some markup language, 
 
 ## History
 
+### 0.0.15
+
+- moved repository dependency out of database-dependent filters. The repository is now a property of the renderer context.
+
 ### 0.0.14
 
 - added item ID to previewer and context to its filters.

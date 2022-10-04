@@ -4,9 +4,9 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>0.0.14</Version>
-		<FileVersion>0.0.14</FileVersion>
-		<AssemblyVersion>0.0.14</AssemblyVersion>
+		<Version>0.0.15</Version>
+		<FileVersion>0.0.15</FileVersion>
+		<AssemblyVersion>0.0.15</AssemblyVersion>
 		<Authors>Daniele Fusi</Authors>
 		<Company>Fusi</Company>
 		<Product>Cadmus</Product>
