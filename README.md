@@ -14,6 +14,14 @@ Markup related components used to export Cadmus data into some markup language, 
 
 ## History
 
+### 0.0.14
+
+- added item ID to previewer and context to its filters.
+
+### 0.0.13
+
+- added `TextTemplate` to `MongoTokenExtractorRendererFilter`.
+
 ### 0.0.12
 
 - 2022-10-01:

@@ -19,6 +19,7 @@ namespace Cadmus.Export.Test
     public sealed class CadmusPreviewerTest
     {
         private const string DB_NAME = "cadmus-test";
+        private const string ITEM_ID = "ccc23d28-d10a-4fe3-b1aa-9907679c881f";
         private const string TEXT_ID = "9a801c84-0c93-4074-b071-9f4f9885ba66";
         private const string ORTH_ID = "c99072ea-c488-484b-ac37-e22027039dc0";
         private const string COMM_ID = "b7bc0fec-4a69-42d1-835b-862330c6e7fa";
@@ -72,7 +73,23 @@ namespace Cadmus.Export.Test
 
         private void SeedData(IMongoDatabase db)
         {
-            // we need just parts for our tests
+            // item
+            IMongoCollection<MongoItem> items = db.GetCollection<MongoItem>
+                (MongoItem.COLLECTION);
+            items.InsertOne(new MongoItem
+            {
+                Id = ITEM_ID,
+                FacetId = "default",
+                Flags = 2,
+                Title = "Sample",
+                Description = "Sample",
+                GroupId = "group",
+                SortKey = "sample",
+                CreatorId = "zeus",
+                UserId = "zeus"
+            });
+
+            // parts
             IMongoCollection<MongoPart> parts = db.GetCollection<MongoPart>
                 (MongoPart.COLLECTION);
 
@@ -189,7 +206,7 @@ namespace Cadmus.Export.Test
             ICadmusRepository repository = GetRepository();
             CadmusPreviewer previewer = GetPreviewer(repository);
 
-            string json = previewer.RenderPart(TEXT_ID);
+            string json = previewer.RenderPart(ITEM_ID, TEXT_ID);
 
             string json2 = repository.GetPartContent(TEXT_ID);
             Assert.Equal(json, json2);
@@ -217,7 +234,7 @@ namespace Cadmus.Export.Test
             ICadmusRepository repository = GetRepository();
             CadmusPreviewer previewer = GetPreviewer(repository);
 
-            string json2 = previewer.RenderFragment(ORTH_ID, index);
+            string json2 = previewer.RenderFragment(ITEM_ID, ORTH_ID, index);
 
             string json = repository.GetPartContent(ORTH_ID);
             JsonDocument doc = JsonDocument.Parse(json);

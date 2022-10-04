@@ -119,6 +119,10 @@ namespace Cadmus.Export.Filters
                 if (_options?.TextCutting == true)
                     text = TextCutter.Cut(text, _options)!;
 
+                // insert into template if required
+                if (!string.IsNullOrEmpty(_options?.TextTemplate))
+                    text = _options.TextTemplate.Replace("{text}", text);
+
                 return text;
             });
         }
@@ -141,6 +145,15 @@ namespace Cadmus.Export.Filters
         /// in it is the text location.
         /// </summary>
         public string LocationPattern { get; set; }
+
+        /// <summary>
+        /// Gets or sets the optional text template. When not specified, the
+        /// location matched with <see cref="LocationPattern"/> is just replaced
+        /// with the extracted text; when specified, the location is replaced
+        /// with this template, where the placeholder <c>{text}</c> represents
+        /// the extracted text. Default is null.
+        /// </summary>
+        public string? TextTemplate { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to extract the whole token

@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 
 namespace Cadmus.Export.Preview
 {
@@ -84,13 +83,34 @@ namespace Cadmus.Export.Preview
             return renderer;
         }
 
+        private static IRendererContext? BuildContext(IItem? item)
+        {
+            if (item == null) return null;
+
+            RendererContext context = new();
+
+            context.Data[ItemComposer.M_ITEM_ID] = item.Id;
+            context.Data[ItemComposer.M_ITEM_FACET] = item.FacetId;
+
+            if (!string.IsNullOrEmpty(item.GroupId))
+                context.Data[ItemComposer.M_ITEM_GROUP] = item.GroupId;
+
+            context.Data[ItemComposer.M_ITEM_TITLE] = item.Title;
+
+            if (item.Flags != 0)
+                context.Data[ItemComposer.M_ITEM_FLAGS] = item.Flags;
+
+            return context;
+        }
+
         /// <summary>
         /// Renders the JSON code representing a part.
         /// </summary>
         /// <param name="json">The JSON code representing the part's content.</param>
         /// <returns>Rendition or empty string.</returns>
+        /// <param name="context">The optional renderer context.</param>
         /// <exception cref="ArgumentNullException">json</exception>
-        public string RenderPartJson(string json)
+        public string RenderPartJson(string json, IRendererContext? context = null)
         {
             if (json is null) throw new ArgumentNullException(nameof(json));
 
@@ -105,7 +125,7 @@ namespace Cadmus.Export.Preview
             IJsonRenderer? renderer = GetRendererFromKey(typeId);
 
             // render
-            return renderer != null ? renderer.Render(json) : "";
+            return renderer != null ? renderer.Render(json, context) : "";
         }
 
         /// <summary>
@@ -113,17 +133,25 @@ namespace Cadmus.Export.Preview
         /// its part type ID.
         /// Note that this method requires a repository.
         /// </summary>
-        /// <param name="id">The part's identifier.</param>
+        /// <param name="itemId">The item's identifier. This is used to get
+        /// item's metadata, eventually consumed by filters. If there is no
+        /// repository, or the item is not found, no context will be created
+        /// and passed to filters.</param>
+        /// <param name="partId">The part's identifier.</param>
         /// <returns>Rendition or empty string.</returns>
-        /// <exception cref="ArgumentNullException">id</exception>
-        public string RenderPart(string id)
+        /// <exception cref="ArgumentNullException">itemId or partId</exception>
+        public string RenderPart(string itemId, string partId)
         {
-            if (id is null) throw new ArgumentNullException(nameof(id));
+            if (itemId is null) throw new ArgumentNullException(nameof(itemId));
+            if (partId is null) throw new ArgumentNullException(nameof(partId));
 
-            string? json = _repository?.GetPartContent(id);
+            IItem? item = _repository?.GetItem(itemId, false);
+            IRendererContext? context = BuildContext(item);
+
+            string? json = _repository?.GetPartContent(partId);
             if (json == null) return "";
 
-            return RenderPartJson(json);
+            return RenderPartJson(json, context);
         }
 
         private static JsonElement? GetFragmentAt(JsonElement fragments, int index)
@@ -146,9 +174,11 @@ namespace Cadmus.Export.Preview
         /// content.</param>
         /// <param name="frIndex">Index of the fragment in the <c>fragments</c>
         /// array of the received layer part.</param>
+        /// <param name="context">The optional renderer context.</param>
         /// <returns>Rendition or empty string.</returns>
         /// <exception cref="ArgumentNullException">json</exception>
-        public string RenderFragmentJson(string json, int frIndex)
+        public string RenderFragmentJson(string json, int frIndex,
+            IRendererContext? context = null)
         {
             if (json is null) throw new ArgumentNullException(nameof(json));
 
@@ -189,31 +219,40 @@ namespace Cadmus.Export.Preview
 
             // render
             string frJson = fr.ToString()!;
-            return renderer != null ? renderer.Render(frJson) : "";
+            return renderer != null ? renderer.Render(frJson, context) : "";
         }
 
         /// <summary>
         /// Renders the fragment at index <paramref name="frIndex"/> in the part
-        /// with ID <paramref name="id"/>, using the renderer targeting
+        /// with ID <paramref name="partId"/>, using the renderer targeting
         /// its part role ID.
         /// Note that this method requires a repository.
         /// </summary>
-        /// <param name="id">The part's identifier.</param>
+        /// <param name="itemId">The item's identifier. This is used to get
+        /// item's metadata, eventually consumed by filters. If there is no
+        /// repository, or the item is not found, no context will be created
+        /// and passed to filters.</param>
+        /// <param name="partId">The part's identifier.</param>
         /// <returns>Rendition or empty string.</returns>
         /// <param name="frIndex">The fragment's index in the layer part's
         /// fragments array.</param>
-        /// <exception cref="ArgumentNullException">id</exception>
+        /// <exception cref="ArgumentNullException">itemId or partId</exception>
         /// <exception cref="ArgumentOutOfRangeException">frIndex less than 0
         /// </exception>
-        public string RenderFragment(string id, int frIndex)
+        public string RenderFragment(string itemId, string partId, int frIndex)
         {
-            if (id is null) throw new ArgumentNullException(nameof(id));
+            if (itemId is null) throw new ArgumentNullException(nameof(itemId));
+            if (partId is null) throw new ArgumentNullException(nameof(partId));
             if (frIndex < 0) throw new ArgumentOutOfRangeException(nameof(frIndex));
 
-            string? json = _repository?.GetPartContent(id);
+            string? json = _repository?.GetPartContent(partId);
             if (json == null) return "";
 
-            return RenderFragmentJson(json, frIndex);
+            IItem? item = _repository?.GetItem(itemId, false);
+
+            IRendererContext? context = BuildContext(item);
+
+            return RenderFragmentJson(json, frIndex, context);
         }
 
         /// <summary>

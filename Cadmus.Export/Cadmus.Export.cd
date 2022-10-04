@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Cadmus.Export.Preview.CadmusPreviewer">
-    <Position X="3.5" Y="0.5" Width="1.5" />
+    <Position X="3.5" Y="0.5" Width="1.75" />
     <Members>
       <Method Name="CadmusPreviewer" Hidden="true" />
       <Method Name="GetFragmentAt" Hidden="true" />
@@ -11,7 +11,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAgAAAQAAABAAAAAAQAAAAQAAABAAAEAAAAKACBAAEE=</HashCode>
+      <HashCode>AAgQAAQAAABAAAAAAQEAAAQAAABAAAEAAAAKACBAAEE=</HashCode>
       <FileName>Preview\CadmusPreviewer.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -113,7 +113,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAQAAAAAAAABAAAAgAAAAgAAAgAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAQAQAAAAAABAAAAgAAAAgAAAgAAAAAAAAAA=</HashCode>
       <FileName>XsltJsonRenderer.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -145,6 +145,9 @@
       <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAAAgAAAABAAAAAAAAA=</HashCode>
       <FileName>JsonRenderer.cs</FileName>
     </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Filters" />
+    </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Cadmus.Export.MongoItemIdCollector">
     <Position X="13.5" Y="11.5" Width="2" />
@@ -281,6 +284,9 @@
     <Members>
       <Method Name="ReplaceRendererFilter" Hidden="true" />
     </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
       <HashCode>AgAAAAAAABAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Filters\ReplaceRendererFilter.cs</FileName>
@@ -326,6 +332,9 @@
   </Class>
   <Class Name="Cadmus.Export.Filters.AppenderRendererFilter">
     <Position X="20.5" Y="2.25" Width="2" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
       <HashCode>AAAAAAAAABAAAAAAAABAAAAAAAAAAAAIAAAAAAAAAAA=</HashCode>
       <FileName>Filters\AppenderRendererFilter.cs</FileName>
@@ -389,7 +398,7 @@
     </TypeIdentifier>
   </Interface>
   <Interface Name="Cadmus.Core.Storage.ICadmusRepository" Collapsed="true">
-    <Position X="4.5" Y="3.25" Width="2" />
+    <Position X="4.75" Y="3.5" Width="2" />
     <TypeIdentifier />
   </Interface>
   <Interface Name="Cadmus.Export.IItemComposer">
@@ -416,7 +425,7 @@
     </TypeIdentifier>
   </Interface>
   <Interface Name="Cadmus.Export.Filters.IRendererFilter">
-    <Position X="18.75" Y="0.5" Width="1.5" />
+    <Position X="18" Y="0.5" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Filters\IRendererFilter.cs</FileName>
