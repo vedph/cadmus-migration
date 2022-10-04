@@ -1,5 +1,4 @@
-﻿using Cadmus.Core;
-using Cadmus.Mongo;
+﻿using Cadmus.Mongo;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 using System.Collections.Generic;
@@ -8,6 +7,7 @@ using Xunit;
 
 namespace Cadmus.Export.Test
 {
+    [Collection(nameof(NonParallelResourceCollection))]
     public sealed class MongoItemIdCollectorTest
     {
         private const string DB_NAME = "cadmus-test";

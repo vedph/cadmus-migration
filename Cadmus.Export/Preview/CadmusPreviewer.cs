@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace Cadmus.Export.Preview
 {
@@ -86,7 +87,7 @@ namespace Cadmus.Export.Preview
         /// <summary>
         /// Renders the JSON code representing a part.
         /// </summary>
-        /// <param name="json">The JSON code.</param>
+        /// <param name="json">The JSON code representing the part's content.</param>
         /// <returns>Rendition or empty string.</returns>
         /// <exception cref="ArgumentNullException">json</exception>
         public string RenderPartJson(string json)
@@ -95,7 +96,9 @@ namespace Cadmus.Export.Preview
 
             // get part type ID
             JsonDocument doc = JsonDocument.Parse(json);
-            string? typeId = doc.RootElement.GetProperty("typeId").GetString();
+            if (!doc.RootElement.TryGetProperty("typeId", out JsonElement typeIdElem))
+                return "";
+            string? typeId = typeIdElem.GetString();
             if (typeId == null) return "";
 
             // get the renderer targeting the part type ID
@@ -139,7 +142,8 @@ namespace Cadmus.Export.Preview
         /// <summary>
         /// Renders the specified fragment's JSON, representing a layer part.
         /// </summary>
-        /// <param name="json">The JSON code representing the layer part.</param>
+        /// <param name="json">The JSON code representing the layer part's
+        /// content.</param>
         /// <param name="frIndex">Index of the fragment in the <c>fragments</c>
         /// array of the received layer part.</param>
         /// <returns>Rendition or empty string.</returns>
@@ -150,9 +154,23 @@ namespace Cadmus.Export.Preview
 
             // get the part type ID and role ID (=fragment type)
             JsonDocument doc = JsonDocument.Parse(json);
-            string? typeId = doc.RootElement.GetProperty("typeId").GetString();
+
+            // type
+            if (!doc.RootElement.TryGetProperty("typeId",
+                out JsonElement typeIdElem))
+            {
+                return "";
+            }
+            string? typeId = typeIdElem.GetString();
             if (typeId == null) return "";
-            string? roleId = doc.RootElement.GetProperty("roleId").GetString();
+
+            // role
+            if (!doc.RootElement.TryGetProperty("roleId",
+                out JsonElement roleIdElem))
+            {
+                return "";
+            }
+            string? roleId = roleIdElem.GetString();
             if (roleId == null) return "";
 
             // the target ID is the combination of these two IDs
@@ -161,7 +179,11 @@ namespace Cadmus.Export.Preview
             IJsonRenderer? renderer = GetRendererFromKey(key);
 
             // extract the targeted fragment
-            JsonElement fragments = doc.RootElement.GetProperty("fragments");
+            if (!doc.RootElement.TryGetProperty("fragments",
+                out JsonElement fragments))
+            {
+                return "";
+            }
             JsonElement? fr = GetFragmentAt(fragments, frIndex);
             if (fr == null) return "";
 

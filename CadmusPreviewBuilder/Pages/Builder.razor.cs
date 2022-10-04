@@ -26,6 +26,7 @@ namespace CadmusPreviewBuilder.Pages
             Model = new BuilderModel();
             Context = new EditContext(Model);
             Model.Json = LoadResourceText("SampleFragment.json");
+            Model.IsFragment = true;
             Model.Config = LoadResourceText("SampleConfig.json");
             Model.Css = LoadResourceText("SampleStyles.css");
         }
