@@ -62,6 +62,7 @@
 </EditForm>
 <br />
 <div style="display: flex; gap:8px; flex-flow: row nowrap; align-items: center">
+    <button style="flex: 0 0 auto" class="btn btn-primary" @onclick="WrapJsonInRoot">Wrap JSON</button>
     <button style="flex: 0 0 auto" class="btn btn-primary" @onclick="BuildXml">Build XML</button>
     <button style="flex: 0 0 auto" class="btn btn-primary" @onclick="PreviewAsync">Preview</button>
     @if (Model.IsRunning)
@@ -71,7 +72,7 @@
     }
 </div>
 <br />
-<!-- html -->
+<!-- result -->
 @if (Model.Html != null)
 {
 <div style="border: 1px solid silver;border-radius:6px;padding:8px;background-color:#f0f0f0;">

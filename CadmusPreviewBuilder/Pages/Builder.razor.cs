@@ -9,6 +9,7 @@ using SimpleInjector;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 
 namespace CadmusPreviewBuilder.Pages
@@ -60,6 +61,21 @@ namespace CadmusPreviewBuilder.Pages
             };
         }
 
+        private static string WrapJson(string json)
+        {
+            if (string.IsNullOrEmpty(json)) return "{}";
+
+            if (!Regex.IsMatch(json, @"^\s*\{\s*""root"":"))
+                json = "{\"root\":" + json + "}";
+            return json;
+        }
+
+        private void WrapJsonInRoot()
+        {
+            if (!string.IsNullOrEmpty(Model.Json))
+                Model.Json = WrapJson(Model.Json);
+        }
+
         private void BuildXml()
         {
             if (Model.Json.Length == 0 || Model.IsRunning) return;
@@ -69,7 +85,8 @@ namespace CadmusPreviewBuilder.Pages
                 Model.IsRunning = true;
                 Model.Error = null;
 
-                XmlDocument? doc = JsonConvert.DeserializeXmlNode(Model.Json);
+                string json = WrapJson(Model.Json);
+                XmlDocument? doc = JsonConvert.DeserializeXmlNode(json);
                 if (doc is null)
                 {
                     Model.Xml = "";

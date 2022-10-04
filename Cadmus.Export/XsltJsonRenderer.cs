@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 
 namespace Cadmus.Export
@@ -27,6 +28,7 @@ namespace Cadmus.Export
         // https://www.newtonsoft.com/json/help/html/ConvertingJSONandXML.htm
 
         private readonly XmlWriterSettings _xmlWriterSettings;
+        private readonly Regex _rootRegex;
         private XsltJsonRendererOptions? _options;
         private XsltTransformer? _transformer;
 
@@ -35,6 +37,7 @@ namespace Cadmus.Export
         /// </summary>
         public XsltJsonRenderer()
         {
+            _rootRegex = new Regex(@"^\s*\{\s*""root"":", RegexOptions.Compiled);
             _xmlWriterSettings = new XmlWriterSettings()
             {
                 ConformanceLevel = ConformanceLevel.Fragment,
@@ -65,7 +68,9 @@ namespace Cadmus.Export
         /// <summary>
         /// Renders the specified JSON code.
         /// </summary>
-        /// <param name="json">The input JSON.</param>
+        /// <param name="json">The input JSON. This will be automatically wrapped
+        /// into a root object with a single <c>root</c> property whose value
+        /// is the received JSON code, unless this already has this form.</param>
         /// <param name="context">The optional renderer context.</param>
         /// <returns>Rendered output.</returns>
         /// <exception cref="ArgumentNullException">json</exception>
@@ -82,8 +87,9 @@ namespace Cadmus.Export
                 return "";
             }
 
-            // wrap object properties in root
-            json = "{\"root\":" + json + "}";
+            // wrap object properties in root (unless already wrapped)
+            if (!_rootRegex.IsMatch(json))
+                json = "{\"root\":" + json + "}";
 
             // decorate if requested
             if (_options.FrDecoration)
