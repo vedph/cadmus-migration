@@ -206,7 +206,7 @@ namespace Cadmus.Export.ML
         /// </summary>
         public TeiStandoffTextBlockRendererOptions()
         {
-            RowOpen = "<div xml:id=\"{" +
+            RowOpen = "<div xml:id=\"r{" +
                 TeiStandoffTextBlockRenderer.M_ITEM_NR + "}_{" +
                 TeiStandoffTextBlockRenderer.M_ROW_Y + "}\">";
             RowClose = "</div>";

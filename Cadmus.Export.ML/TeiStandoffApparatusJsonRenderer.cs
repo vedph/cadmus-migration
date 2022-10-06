@@ -171,17 +171,15 @@ namespace Cadmus.Export.ML
                 string layerPrefix = context.LayerIds.First(
                     p => p.Value == layerId).Key;
                 string frKey = $"{layerPrefix}{frIndex}";
+                string loc = context.FragmentIds[frKey];
 
                 int n = 0;
                 foreach (ApparatusEntry entry in fr.Entries)
                 {
                     // div/app @n="INDEX + 1"
                     XElement app = new(MLHelper.TEI + "app",
-                        new XAttribute("n", ++n));
-
-                    string frId = context.FragmentIds[frKey];
-                    app.SetAttributeValue("loc", frId);
-
+                        new XAttribute("n", ++n),
+                        new XAttribute("loc", loc));
                     frDiv.Add(app);
 
                     // app @type="TAG"
