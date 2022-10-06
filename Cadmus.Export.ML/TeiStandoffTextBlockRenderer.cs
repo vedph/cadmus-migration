@@ -100,30 +100,39 @@ namespace Cadmus.Export.ML
             {
                 context!.Data[M_BLOCK_ID] = block.Id;
 
-                foreach (string id in block.LayerIds)
+                if (block.LayerIds.Count > 0)
                 {
-                    string layerPrefix = GetLayerIdPrefix(id);
-                    string frId = $"{context.Data[M_ITEM_NR]}_" +
-                        $"{context.LayerIds[layerPrefix]}_" +
-                        $"{y}_{block.Id}";
-                    context.FragmentIds[id] = frId;
-                    context.Data[M_FRAGMENT_ID] = frId;
+                    foreach (string id in block.LayerIds)
+                    {
+                        string layerPrefix = GetLayerIdPrefix(id);
+                        string frId = $"{context.Data[M_ITEM_NR]}_" +
+                            $"{context.LayerIds[layerPrefix]}_" +
+                            $"{y}_" +
+                            $"{block.Id}";
+                        context.FragmentIds[id] = frId;
+                        context.Data[M_FRAGMENT_ID] = frId;
+                    }
+
+                    // open block
+                    if (!string.IsNullOrEmpty(_options.BlockOpen))
+                    {
+                        text.Append(TextTemplate.FillTemplate(_options.BlockOpen,
+                            context?.Data ?? _nullCtxData));
+                    }
+
+                    text.Append(Xmlize(block.Text));
+
+                    // close block
+                    if (!string.IsNullOrEmpty(_options.BlockClose))
+                    {
+                        text.Append(TextTemplate.FillTemplate(_options.BlockClose,
+                            context?.Data ?? _nullCtxData));
+                    }
                 }
-
-                // open block
-                if (!string.IsNullOrEmpty(_options.BlockOpen))
+                else
                 {
-                    text.Append(TextTemplate.FillTemplate(_options.BlockOpen,
-                        context?.Data ?? _nullCtxData));
-                }
-
-                text.Append(Xmlize(block.Text));
-
-                // close block
-                if (!string.IsNullOrEmpty(_options.BlockClose))
-                {
-                    text.Append(TextTemplate.FillTemplate(_options.BlockClose,
-                        context?.Data ?? _nullCtxData));
+                    context.Data.Remove(M_FRAGMENT_ID);
+                    text.Append(Xmlize(block.Text));
                 }
             }
 
