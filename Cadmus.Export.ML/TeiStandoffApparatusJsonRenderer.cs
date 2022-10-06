@@ -6,7 +6,6 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Xml.Linq;
 using System.Linq;
-using static Cadmus.Export.ML.TeiStandoffApparatusJsonRenderer;
 
 namespace Cadmus.Export.ML
 {
@@ -65,8 +64,23 @@ namespace Cadmus.Export.ML
     {
         private readonly XNamespace XML = "http://www.w3.org/XML/1998/namespace";
         private readonly XNamespace TEI = "http://www.tei-c.org/ns/1.0";
+        private readonly JsonSerializerOptions _jsonOptions;
 
-        private TeiStandoffApparatusJsonRendererOptions? _options;
+        private TeiStandoffApparatusJsonRendererOptions _options;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TeiStandoffApparatusJsonRenderer"/>
+        /// class.
+        /// </summary>
+        public TeiStandoffApparatusJsonRenderer()
+        {
+            _jsonOptions = new()
+            {
+                AllowTrailingCommas = true,
+                PropertyNameCaseInsensitive = true,
+            };
+            _options = new();
+        }
 
         private string BuildValue(ApparatusEntry entry)
         {
@@ -124,7 +138,7 @@ namespace Cadmus.Export.ML
             JsonNode? root = JsonNode.Parse(json);
             if (root == null) return "";
             ApparatusLayerFragment[]? fragments =
-                root["fragments"].Deserialize<ApparatusLayerFragment[]>();
+                root["fragments"].Deserialize<ApparatusLayerFragment[]>(_jsonOptions);
             if (fragments == null || context == null) return "";
 
             // div @xml:id="ITEM_ID"
@@ -146,6 +160,7 @@ namespace Cadmus.Export.ML
                     // div/app @n="INDEX + 1" [@type="TAG"]
                     XElement app = new(TEI + "app",
                         new XAttribute("n", ++n));
+                    frDiv.Add(app);
                     if (!string.IsNullOrEmpty(entry.Tag))
                         app.SetAttributeValue("type", entry.Tag);
 

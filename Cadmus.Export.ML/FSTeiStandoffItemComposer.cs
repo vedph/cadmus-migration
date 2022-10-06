@@ -48,7 +48,8 @@ namespace Cadmus.Export.ML
                 Directory.CreateDirectory(_options.OutputDirectory ?? "");
             }
             Output.Writers[key] = new StreamWriter(
-                Path.Combine(_options!.OutputDirectory ?? "", key + ".xml"),
+                Path.Combine(_options!.OutputDirectory ?? "",
+                key.Replace('|', '_') + ".xml"),
                 false,
                 Encoding.UTF8);
 

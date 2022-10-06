@@ -14,17 +14,19 @@ Markup related components used to export Cadmus data into some markup language, 
 
 ## History
 
+- 2022-10-06: fixes to TEI standoff item composer (`Cadmus.Export.ML`).
+
 ### 0.0.15
 
-- moved repository dependency out of database-dependent filters. The repository is now a property of the renderer context.
+- 2022-10-04: moved repository dependency out of database-dependent filters. The repository is now a property of the renderer context.
 
 ### 0.0.14
 
-- added item ID to previewer and context to its filters.
+- 2022-10-04: added item ID to previewer and context to its filters.
 
 ### 0.0.13
 
-- added `TextTemplate` to `MongoTokenExtractorRendererFilter`.
+- 2022-10-02: added `TextTemplate` to `MongoTokenExtractorRendererFilter`.
 
 ### 0.0.12
 
