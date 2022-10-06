@@ -147,7 +147,8 @@ namespace Cadmus.Export
 
             // reset context
             Context.Data.Clear();
-            Context.TargetIds.Clear();
+            Context.LayerIds.Clear();
+            Context.FragmentIds.Clear();
 
             // set output
             Output = output ?? new ItemComposition();

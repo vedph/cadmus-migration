@@ -22,11 +22,11 @@ namespace Cadmus.Export.ML
         /// </summary>
         public const string M_ITEM_NR = "item-nr";
         /// <summary>
-        /// The name of the metadata placeholder for each block's target ID.
+        /// The name of the metadata placeholder for each block's fragment ID.
         /// This is defined by this renderer by concatenating item number,
-        /// row number, and block ID, all separated by underscore.
+        /// layer ID, row number, and block ID, all separated by underscore.
         /// </summary>
-        public const string M_TARGET_ID = "target-id";
+        public const string M_FRAGMENT_ID = "target-id";
         /// <summary>
         /// The name of the metadata placeholder for row's y number (1-N).
         /// </summary>
@@ -78,6 +78,13 @@ namespace Cadmus.Export.ML
             return sb.ToString();
         }
 
+        private static string GetLayerIdPrefix(string id)
+        {
+            int i = id.Length;
+            while (i > 0 && (id[i - 1] >= '0' && id[i - 1] <= '9')) i--;
+            return id[0..i];
+        }
+
         private void RenderRowText(int y, TextBlockRow row, StringBuilder text,
             IRendererContext context)
         {
@@ -93,10 +100,15 @@ namespace Cadmus.Export.ML
             {
                 context!.Data[M_BLOCK_ID] = block.Id;
 
-                string targetId = $"{context.Data[M_ITEM_NR]}_{y}_{block.Id}";
-                context.Data[M_TARGET_ID] = targetId;
                 foreach (string id in block.LayerIds)
-                    context.TargetIds[id] = targetId;
+                {
+                    string layerPrefix = GetLayerIdPrefix(id);
+                    string frId = $"{context.Data[M_ITEM_NR]}_" +
+                        $"{context.LayerIds[layerPrefix]}_" +
+                        $"{y}_{block.Id}";
+                    context.FragmentIds[id] = frId;
+                    context.Data[M_FRAGMENT_ID] = frId;
+                }
 
                 // open block
                 if (!string.IsNullOrEmpty(_options.BlockOpen))
@@ -187,7 +199,7 @@ namespace Cadmus.Export.ML
                 TeiStandoffTextBlockRenderer.M_ROW_Y + "}\">";
             RowClose = "</div>";
             BlockOpen = "<seg xml:id=\"{" +
-                TeiStandoffTextBlockRenderer.M_TARGET_ID + "}\">";
+                TeiStandoffTextBlockRenderer.M_FRAGMENT_ID + "}\">";
             BlockClose = "</seg>";
         }
     }

@@ -7,8 +7,8 @@ namespace Cadmus.Export.ML.Test
         private static IRendererContext GetContext()
         {
             RendererContext context = new();
-            context.TargetIds["typex|roley0"] = "1_2_3";
-            context.TargetIds["typez1"] = "2_4_6";
+            context.FragmentIds["typex|roley0"] = "1_2_3";
+            context.FragmentIds["typez1"] = "2_4_6";
             return context;
         }
 

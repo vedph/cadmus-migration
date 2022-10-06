@@ -63,8 +63,8 @@ namespace Cadmus.Export.ML
 
                 // extract and resolve key if possible
                 string key = text.Substring(j, i - j);
-                if (context.TargetIds.ContainsKey(key))
-                    sb.Append(context.TargetIds[key]);
+                if (context.FragmentIds.ContainsKey(key))
+                    sb.Append(context.FragmentIds[key]);
                 else
                     sb.Append(key);
 

@@ -53,7 +53,7 @@ namespace Cadmus.Export.ML
                 false,
                 Encoding.UTF8);
 
-            string? head = key == PartBase.BASE_TEXT_ROLE_ID
+            string head = key == PartBase.BASE_TEXT_ROLE_ID
                 ? FillTemplate(_options.TextHead)
                 : FillTemplate(_options.LayerHead);
             WriteOutput(key, head);
@@ -70,7 +70,7 @@ namespace Cadmus.Export.ML
             {
                 Context.Data[M_FLOW_KEY] = p.Key;
 
-                string? tail = p.Key == PartBase.BASE_TEXT_ROLE_ID
+                string tail = p.Key == PartBase.BASE_TEXT_ROLE_ID
                     ? FillTemplate(_options?.TextTail)
                     : FillTemplate(_options?.LayerTail);
                 if (!string.IsNullOrEmpty(tail)) p.Value.WriteLine(tail);

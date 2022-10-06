@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
+using System.Xml.Linq;
 
 namespace Cadmus.Export.ML
 {
@@ -20,9 +22,22 @@ namespace Cadmus.Export.ML
     {
         private readonly TextBlockBuilder _blockBuilder;
         private readonly JsonSerializerOptions _jsonOptions;
+        private int _nextLayerId;
 
-        /// <summary>The text flow metadata key (<c>flow-key</c>).</summary>
+        /// <summary>
+        /// The TEI namespace.
+        /// </summary>
+        public readonly XNamespace TEI_NS = "http://www.tei-c.org/ns/1.0";
+
+        /// <summary>
+        /// The text flow metadata key (<c>flow-key</c>).
+        /// </summary>
         public const string M_FLOW_KEY = "flow-key";
+        /// <summary>
+        /// The layer identifier (<c>layer-id</c>). This is from the renderer
+        /// context layer ID mappings.
+        /// </summary>
+        public const string M_LAYER_ID = "layer-id";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TeiStandoffItemComposer"/>
@@ -37,10 +52,15 @@ namespace Cadmus.Export.ML
             };
         }
 
-        private static string BuildLayerId(IPart part)
+        private string BuildLayerId(IPart part)
         {
             string id = part.TypeId;
             if (!string.IsNullOrEmpty(part.RoleId)) id += "|" + part.RoleId;
+
+            // save layer ID (1-N)
+            if (!Context.LayerIds.ContainsKey(id))
+                Context.LayerIds[id] = ++_nextLayerId;
+
             return id;
         }
 
@@ -65,7 +85,10 @@ namespace Cadmus.Export.ML
 
             // layers
             IList<IPart> layerParts = item.Parts.Where(p =>
-                    p.RoleId.StartsWith(PartBase.FR_PREFIX)).ToList();
+                    p.RoleId.StartsWith(PartBase.FR_PREFIX))
+                // just to ensure mapping consistency between successive runs
+                .OrderBy(p => p.RoleId)
+                .ToList();
 
             // flatten and render into blocks
             var tr = TextPartFlattener.GetTextRanges(textPart,
@@ -83,8 +106,10 @@ namespace Cadmus.Export.ML
             foreach (IPart layerPart in layerParts)
             {
                 string id = BuildLayerId(layerPart);
+
                 if (JsonRenderers.ContainsKey(id))
                 {
+                    Context.Data[M_LAYER_ID] = Context.LayerIds[id];
                     string json = JsonSerializer.Serialize<object>(layerPart,
                         _jsonOptions);
                     result = JsonRenderers[id].Render(json, Context);
@@ -150,9 +175,11 @@ namespace Cadmus.Export.ML
         {
             TextHead = "<body>";
             TextTail = "</body>";
-            LayerHead = "<standOff type=\"{" +
+            LayerHead = "<TEI xmlns=\"http://www.tei-c.org/ns/1.0\">" +
+                Environment.NewLine +
+                "<standOff type=\"{" +
                 ItemComposer.M_ITEM_NR + "}\">";
-            LayerTail = "</standOff>";
+            LayerTail = "</standOff>" + Environment.NewLine + "</TEI>";
         }
     }
 }

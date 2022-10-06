@@ -62,8 +62,6 @@ namespace Cadmus.Export.ML
     public sealed class TeiStandoffApparatusJsonRenderer : JsonRenderer,
         IJsonRenderer, IConfigurable<TeiStandoffApparatusJsonRendererOptions>
     {
-        private readonly XNamespace XML = "http://www.w3.org/XML/1998/namespace";
-        private readonly XNamespace TEI = "http://www.tei-c.org/ns/1.0";
         private readonly JsonSerializerOptions _jsonOptions;
 
         private TeiStandoffApparatusJsonRendererOptions _options;
@@ -142,14 +140,15 @@ namespace Cadmus.Export.ML
             if (fragments == null || context == null) return "";
 
             // div @xml:id="ITEM_ID"
-            XElement itemDiv = new(TEI + "div",
-                new XAttribute(XML + "id", context.Data[ItemComposer.M_ITEM_ID]));
+            XElement itemDiv = new(MLHelper.TEI + "div",
+                new XAttribute(MLHelper.XML + "id",
+                    context.Data[ItemComposer.M_ITEM_ID]));
 
             // process each fragment
             foreach (ApparatusLayerFragment fr in fragments)
             {
                 // div @type="TAG"
-                XElement frDiv = new(TEI + "div");
+                XElement frDiv = new(MLHelper.TEI + "div");
                 if (!string.IsNullOrEmpty(fr.Tag))
                     frDiv.SetAttributeValue("type", fr.Tag);
                 itemDiv.Add(frDiv);
@@ -158,14 +157,14 @@ namespace Cadmus.Export.ML
                 foreach (ApparatusEntry entry in fr.Entries)
                 {
                     // div/app @n="INDEX + 1" [@type="TAG"]
-                    XElement app = new(TEI + "app",
+                    XElement app = new(MLHelper.TEI + "app",
                         new XAttribute("n", ++n));
                     frDiv.Add(app);
                     if (!string.IsNullOrEmpty(entry.Tag))
                         app.SetAttributeValue("type", entry.Tag);
 
                     // div/rdg or div/note with value[+note]
-                    XElement rdgOrNote = new(TEI +
+                    XElement rdgOrNote = new(MLHelper.TEI +
                         (entry.Type == ApparatusEntryType.Note? "note" : "rdg"),
                         BuildValue(entry));
                     app.Add(rdgOrNote);
@@ -188,7 +187,10 @@ namespace Cadmus.Export.ML
                 }
             }
 
-            return itemDiv.ToString(SaveOptions.OmitDuplicateNamespaces);
+            return itemDiv.ToString(SaveOptions.OmitDuplicateNamespaces)
+                // remove default TEI namespace
+                .Replace(" xmlns=\"http://www.tei-c.org/ns/1.0\"", "")
+                + Environment.NewLine;
         }
     }
 

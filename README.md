@@ -14,7 +14,9 @@ Markup related components used to export Cadmus data into some markup language, 
 
 ## History
 
-- 2022-10-06: fixes to TEI standoff item composer (`Cadmus.Export.ML`).
+- 2022-10-06:
+  - fixes to TEI standoff item composer.
+  - minor refactorings to renderer context.
 
 ### 0.0.15
 
