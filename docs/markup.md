@@ -77,14 +77,13 @@ this identifies:
 
 Such identifiers are unique in the context of each _item_; but when rendering a TEI document, we must ensure that identifiers are globally unique in the context of all the generated TEI files.
 
-To this end, the block layer IDs are mapped into fragment IDs, built when rendering the text. These fragment IDs are built by concatenating 4 numbers, all separated by underscore:
+To this end, the block layer IDs are mapped into fragment IDs, built when rendering the text. These fragment IDs are built by concatenating 3 numbers, all separated by underscore:
 
 1. the item's ordinal number.
 2. the fragment's ID. A numeric ID is arbitrarily assigned by the item composer to each layer type (i.e. each unique combination of part type ID + fragment type ID).
-3. the blocks row ordinal number.
-4. the fragment's index.
+3. the block's ordinal number (which internally is also its ID).
 
-When rendering the text, the renderer stores the mappings between each layer ID and its corresponding fragment ID (e.g. `it.vedph.token-text-layer|fr.it.vedph.comment0` => `1_1_2_0`). Once the text part is rendered, we have all the mappings in place; the layer parts are then rendered via a set of JSON renderers.
+When rendering the text, the renderer stores the mappings between each layer ID and its corresponding fragment ID (e.g. `it.vedph.token-text-layer|fr.it.vedph.comment0` => `1_2_0`). Once the text part is rendered, we have all the mappings in place; the layer parts are then rendered via a set of JSON renderers.
 
 At this stage, even before processing the input JSON code, a special filtering feature of JSON renderers injects a `_key` property into each object representing a fragment in the layer part. The value of this key is represented by the layer ID for the fragment, like `it.vedph.token-text-layer|fr.it.vedph.comment0`. Once each fragment has this property, the JSON renderer can include it in its output, e.g. as an attribute of an XML element (XML being converted from JSON). Then, the same renderer transforms this XML via XSLT, and eventually applies a number of filters on its output.
 

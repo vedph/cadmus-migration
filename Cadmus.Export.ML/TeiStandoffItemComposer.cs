@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Xml.Linq;
 
@@ -52,7 +51,7 @@ namespace Cadmus.Export.ML
             };
         }
 
-        private string BuildLayerId(IPart part)
+        private string BuildLayerIdPrefix(IPart part)
         {
             string id = part.TypeId;
             if (!string.IsNullOrEmpty(part.RoleId)) id += "|" + part.RoleId;
@@ -63,6 +62,18 @@ namespace Cadmus.Export.ML
 
             return id;
         }
+
+        /// <summary>
+        /// Builds the fragment identifier from the specified data. A fragment
+        /// ID is built with item number + layer ID + fragment index, all
+        /// separated by underscore.
+        /// </summary>
+        /// <param name="itemNr">The item nr.</param>
+        /// <param name="layerId">The layer identifier.</param>
+        /// <param name="frIndex">Index of the fr.</param>
+        /// <returns>Fragment ID.</returns>
+        public static string BuildFragmentId(int itemNr, int layerId, int frIndex) =>
+            $"{itemNr}_{layerId}_{frIndex}";
 
         /// <summary>
         /// Renders the various flows of text.
@@ -83,7 +94,7 @@ namespace Cadmus.Export.ML
                 return;
             }
 
-            // layers
+            // layers: collect item layer parts
             IList<IPart> layerParts = item.Parts.Where(p =>
                     p.RoleId.StartsWith(PartBase.FR_PREFIX))
                 // just to ensure mapping consistency between successive runs
@@ -93,7 +104,8 @@ namespace Cadmus.Export.ML
             // flatten and render into blocks
             var tr = TextPartFlattener.GetTextRanges(textPart,
                 layerParts,
-                (IList<string?>)layerParts.Select(p => BuildLayerId(p)).ToList());
+                (IList<string?>)layerParts.Select(
+                    p => BuildLayerIdPrefix(p)).ToList());
 
             List<TextBlockRow> rows =
                 _blockBuilder.Build(tr.Item1, tr.Item2).ToList();
@@ -105,7 +117,7 @@ namespace Cadmus.Export.ML
             // render layers
             foreach (IPart layerPart in layerParts)
             {
-                string id = BuildLayerId(layerPart);
+                string id = BuildLayerIdPrefix(layerPart);
 
                 if (JsonRenderers.ContainsKey(id))
                 {
@@ -130,6 +142,7 @@ namespace Cadmus.Export.ML
         }
      }
 
+    #region TeiStandoffItemComposerOptions
     /// <summary>
     /// Base options for TEI standoff item composers.
     /// </summary>
@@ -182,4 +195,5 @@ namespace Cadmus.Export.ML
             LayerTail = "</standOff>" + Environment.NewLine + "</TEI>";
         }
     }
+    #endregion
 }

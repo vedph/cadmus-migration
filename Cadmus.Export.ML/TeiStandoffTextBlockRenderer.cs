@@ -2,6 +2,7 @@
 using Fusi.Tools.Text;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace Cadmus.Export.ML
@@ -85,7 +86,7 @@ namespace Cadmus.Export.ML
             return id[0..i];
         }
 
-        private void RenderRowText(int y, TextBlockRow row, StringBuilder text,
+        private void RenderRowText(TextBlockRow row, StringBuilder text,
             IRendererContext context)
         {
             // open row
@@ -105,10 +106,12 @@ namespace Cadmus.Export.ML
                     foreach (string id in block.LayerIds)
                     {
                         string layerPrefix = GetLayerIdPrefix(id);
-                        string frId = $"{context.Data[M_ITEM_NR]}_" +
-                            $"{context.LayerIds[layerPrefix]}_" +
-                            $"{y}_" +
-                            $"{block.Id}";
+
+                        string frId = TeiStandoffItemComposer.BuildFragmentId(
+                            (int)context.Data[M_ITEM_NR],
+                            context.LayerIds[layerPrefix],
+                            int.Parse(block.Id, CultureInfo.InvariantCulture));
+
                         context.FragmentIds[id] = frId;
                         context.Data[M_FRAGMENT_ID] = frId;
                     }
@@ -161,7 +164,7 @@ namespace Cadmus.Export.ML
             foreach (TextBlockRow row in rows)
             {
                 if (context != null) context.Data[M_ROW_Y] = ++y;
-                RenderRowText(y, row, text, context!);
+                RenderRowText(row, text, context!);
             }
 
             return text.ToString();

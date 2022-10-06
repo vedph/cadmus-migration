@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Xml.Linq;
 using System.Linq;
+using System.Net.Mime;
 
 namespace Cadmus.Export.ML
 {
@@ -83,7 +84,10 @@ namespace Cadmus.Export.ML
         private string BuildValue(ApparatusEntry entry)
         {
             StringBuilder sb = new();
-            if (!string.IsNullOrEmpty(entry.Value)) sb.Append(entry.Value);
+            if (!string.IsNullOrEmpty(entry.Value))
+            {
+                sb.Append(entry.Value);
+            }
             else if (entry.Type == ApparatusEntryType.Replacement &&
                 !string.IsNullOrEmpty(_options?.ZeroVariant))
             {
@@ -92,6 +96,8 @@ namespace Cadmus.Export.ML
 
             if (!string.IsNullOrEmpty(entry.Note))
             {
+                if (sb.Length > 0) sb.Append(' ');
+
                 if (!string.IsNullOrEmpty(entry.Value) &&
                     !string.IsNullOrEmpty(_options?.NotePrefix))
                 {
@@ -145,6 +151,7 @@ namespace Cadmus.Export.ML
                     context.Data[ItemComposer.M_ITEM_ID]));
 
             // process each fragment
+            int frIndex = 0;
             foreach (ApparatusLayerFragment fr in fragments)
             {
                 // div @type="TAG"
@@ -153,13 +160,31 @@ namespace Cadmus.Export.ML
                     frDiv.SetAttributeValue("type", fr.Tag);
                 itemDiv.Add(frDiv);
 
+                // app @loc="FRID"
+                // the fragment ID must be fetched from the fragment IDs
+                // map in context; to get the ID for this fragment, we rely
+                // on the current layer ID, get its prefix, and use this to
+                // build the map's key (prefix + fragment index). This is done
+                // once and reused for each entry in the fragment, as all the
+                // entries in it refer to the same location.
+                int layerId = (int)context.Data[TeiStandoffItemComposer.M_LAYER_ID];
+                string layerPrefix = context.LayerIds.First(
+                    p => p.Value == layerId).Key;
+                string frKey = $"{layerPrefix}{frIndex}";
+
                 int n = 0;
                 foreach (ApparatusEntry entry in fr.Entries)
                 {
-                    // div/app @n="INDEX + 1" [@type="TAG"]
+                    // div/app @n="INDEX + 1"
                     XElement app = new(MLHelper.TEI + "app",
                         new XAttribute("n", ++n));
+
+                    string frId = context.FragmentIds[frKey];
+                    app.SetAttributeValue("loc", frId);
+
                     frDiv.Add(app);
+
+                    // app @type="TAG"
                     if (!string.IsNullOrEmpty(entry.Tag))
                         app.SetAttributeValue("type", entry.Tag);
 
@@ -174,17 +199,18 @@ namespace Cadmus.Export.ML
                     {
                         rdgOrNote.SetAttributeValue("wit",
                             string.Join(" ", from av in entry.Witnesses
-                                             select RenderAnnotatedValue(av)));
+                                             select $"#{av.Value}"));
                     }
 
                     // @source
                     if (entry.Authors?.Count > 0)
                     {
                         rdgOrNote.SetAttributeValue("source",
-                            string.Join(" ", from av in entry.Witnesses
-                                             select RenderAnnotatedValue(av)));
+                            string.Join(" ", from av in entry.Authors
+                                             select $"#{av.Value}"));
                     }
                 }
+                frIndex++;
             }
 
             return itemDiv.ToString(SaveOptions.OmitDuplicateNamespaces)
