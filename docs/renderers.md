@@ -173,6 +173,26 @@ The resulting XML has an `entries` element for each entry, without a wrapper par
 
 This can be fine if your XSLT just matches `entries`, as it usually is the case with apparatus; but in other cases, having a wrapper element could be useful. For instance, imagine a list of categories, where you want to wrap the list inside a HTML unordered list. In this case you would need to match the parent to open and close the unordered list (`ul` element); and then each child entry to generate the list item (`li`) elements. In this case, having a parent wrapper makes things easier.
 
+So, if you use a configuration like this for apparatus entries:
+
+```json
+{
+    "WrappedEntryNames": [
+        "entries": "entry"
+    ]
+}
+```
+
+you will rather get a structure like this:
+
+```xml
+<entries>
+    <entry>...</entry>
+    <entry>...</entry>
+    <entry>...</entry>
+</entries>
+```
+
 ### TEI Standoff Apparatus Json Renderer
 
 - ID: `it.vedph.json-renderer.tei-standoff.apparatus`
