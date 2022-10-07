@@ -146,8 +146,8 @@ namespace Cadmus.Export.ML
             if (fragments == null || context == null) return "";
 
             // div @xml:id="ITEM_ID"
-            XElement itemDiv = new(MLHelper.TEI + "div",
-                new XAttribute(MLHelper.XML + "id",
+            XElement itemDiv = new(NamespaceOptions.TEI + "div",
+                new XAttribute(NamespaceOptions.XML + "id",
                     context.Data[ItemComposer.M_ITEM_ID]));
 
             // process each fragment
@@ -155,7 +155,7 @@ namespace Cadmus.Export.ML
             foreach (ApparatusLayerFragment fr in fragments)
             {
                 // div @type="TAG"
-                XElement frDiv = new(MLHelper.TEI + "div");
+                XElement frDiv = new(NamespaceOptions.TEI + "div");
                 if (!string.IsNullOrEmpty(fr.Tag))
                     frDiv.SetAttributeValue("type", fr.Tag);
                 itemDiv.Add(frDiv);
@@ -177,7 +177,7 @@ namespace Cadmus.Export.ML
                 foreach (ApparatusEntry entry in fr.Entries)
                 {
                     // div/app @n="INDEX + 1"
-                    XElement app = new(MLHelper.TEI + "app",
+                    XElement app = new(NamespaceOptions.TEI + "app",
                         new XAttribute("n", ++n),
                         new XAttribute("loc", loc));
                     frDiv.Add(app);
@@ -187,7 +187,7 @@ namespace Cadmus.Export.ML
                         app.SetAttributeValue("type", entry.Tag);
 
                     // div/rdg or div/note with value[+note]
-                    XElement rdgOrNote = new(MLHelper.TEI +
+                    XElement rdgOrNote = new(NamespaceOptions.TEI +
                         (entry.Type == ApparatusEntryType.Note? "note" : "rdg"),
                         BuildValue(entry));
                     app.Add(rdgOrNote);

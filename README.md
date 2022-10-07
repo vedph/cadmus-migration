@@ -14,6 +14,7 @@ Markup related components used to export Cadmus data into some markup language, 
 
 ## History
 
+- 2022-10-07: added array wrapping to XSLT JSON renderer.
 - 2022-10-06:
   - fixes to TEI standoff item composer.
   - minor refactorings to renderer context.

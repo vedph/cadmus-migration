@@ -9,8 +9,10 @@ using SimpleInjector;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text;
+using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace CadmusPreviewBuilder.Pages
 {
@@ -125,7 +127,10 @@ namespace CadmusPreviewBuilder.Pages
         private async Task PreviewAsync()
         {
             if (Model.Json.Length == 0 || Model.Config.Length == 0 ||
-                Model.IsRunning) return;
+                Model.IsRunning)
+            {
+                return;
+            }
 
             try
             {

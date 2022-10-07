@@ -13,10 +13,12 @@
 	<ItemGroup>
 	  <None Remove="Assets\Preview.json" />
 	  <None Remove="Assets\TokenTextPart.xslt" />
+	  <None Remove="Assets\TokenTextPartWrap.xslt" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <EmbeddedResource Include="Assets\Preview.json" />
+	  <EmbeddedResource Include="Assets\TokenTextPartWrap.xslt" />
 	  <EmbeddedResource Include="Assets\TokenTextPart.xslt" />
 	</ItemGroup>
 

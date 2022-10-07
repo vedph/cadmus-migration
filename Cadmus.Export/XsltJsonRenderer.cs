@@ -4,9 +4,11 @@ using Fusi.Xml.Extras.Render;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace Cadmus.Export
 {
@@ -31,6 +33,7 @@ namespace Cadmus.Export
         private readonly Regex _rootRegex;
         private XsltJsonRendererOptions? _options;
         private XsltTransformer? _transformer;
+        private IDictionary<XName, XName>? _wrappedEntryNames;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XsltJsonRenderer"/> class.
@@ -63,6 +66,60 @@ namespace Cadmus.Export
                 _transformer = new XsltTransformer(options.Xslt);
             else
                 _transformer = null;
+
+            if (_options.WrappedEntryNames?.Count > 0)
+            {
+                _wrappedEntryNames = new Dictionary<XName, XName>();
+                IXmlNamespaceResolver nsmgr = _options.GetResolver();
+
+                foreach (var p in _options.WrappedEntryNames)
+                {
+                    XName key = NamespaceOptions.PrefixedNameToXName(p.Key,
+                        nsmgr,
+                        _options.DefaultNsPrefix);
+                    _wrappedEntryNames[key] =
+                        NamespaceOptions.PrefixedNameToXName(p.Value,
+                        nsmgr,
+                        _options.DefaultNsPrefix);
+                }
+            }
+            else _wrappedEntryNames = null;
+        }
+
+        /// <summary>
+        /// Wraps sequences of the specified XML elements into a parent element.
+        /// </summary>
+        /// <param name="doc">The document to edit.</param>
+        /// <param name="map">The map between the name of the elements to be
+        /// wrapped (keys) and the name of the wrapping element (value).</param>
+        /// <exception cref="ArgumentNullException">doc or map</exception>
+        public static void WrapXmlArrays(XDocument doc,
+            IDictionary<XName, XName> map)
+        {
+            if (doc is null) throw new ArgumentNullException(nameof(doc));
+            if (map is null) throw new ArgumentNullException(nameof(map));
+
+            foreach (XName name in map.Keys)
+            {
+                List<XElement> headElems = doc.Descendants(name)
+                    .Where(e => e.ElementsBeforeSelf().LastOrDefault()?.Name != name
+                             && e.ElementsAfterSelf().FirstOrDefault()?.Name == name)
+                    .ToList();
+
+                foreach (XElement headElem in headElems)
+                {
+                    List<XElement> list = new();
+                    list.AddRange(headElem
+                        .ElementsAfterSelf()
+                        .TakeWhile(e => e.Name == name));
+                    foreach (XElement e in list) e.Remove();
+
+                    list.Insert(0, headElem);
+                    headElem.ReplaceWith(new XElement(
+                        name,
+                        list.Select(e => new XElement(map[name], e.Nodes()))));
+                }
+            }
         }
 
         /// <summary>
@@ -117,18 +174,30 @@ namespace Cadmus.Export
                 XmlDocument? doc = JsonConvert.DeserializeXmlNode(json);
                 if (doc is null) return "";
 
+                // wrap array elements if required
+                string xml;
+                if (_wrappedEntryNames?.Count > 0)
+                {
+                    XDocument xdoc = doc.ToXDocument();
+                    WrapXmlArrays(xdoc, _wrappedEntryNames);
+                    xml = xdoc.ToString(SaveOptions.DisableFormatting |
+                        SaveOptions.OmitDuplicateNamespaces);
+                }
+                else xml = doc.OuterXml;
+
                 // transform via XSLT
-                return _transformer.Transform(doc.OuterXml, _xmlWriterSettings);
+                return _transformer.Transform(xml, _xmlWriterSettings);
             }
 
             return json;
         }
     }
 
+    #region XsltJsonRendererOptions
     /// <summary>
     /// Options for <see cref="XsltJsonRenderer"/>.
     /// </summary>
-    public class XsltJsonRendererOptions
+    public class XsltJsonRendererOptions : NamespaceOptions
     {
         /// <summary>
         /// Gets or sets a value indicating whether fragment decoration
@@ -157,6 +226,21 @@ namespace Cadmus.Export
         public string? Xslt { get; set; }
 
         /// <summary>
+        /// Gets or sets the names of the XML elements representing entries
+        /// derived from the conversion of a JSON array. When converting JSON
+        /// into XML, any JSON array is converted into a list of entry elements.
+        /// So, from a <c>guys</c> array with 3 entries you get 3 elements
+        /// named <c>guys</c>. If you want to wrap these elements into an array
+        /// parent element, set the name of the entries element as the key of this
+        /// dictionary, and the name of the single entry element as the value
+        /// of this dictionary (e.g. key=<c>guys</c>, value=<c>guy</c>,
+        /// essentially plural=singular). If you need to set a namespace, add
+        /// its prefix before colon, like <c>tei:div</c>. These prefixes are
+        /// optionally defined in <see cref="NamespaceOptions.Namespaces"/>.
+        /// </summary>
+        public IDictionary<string, string>? WrappedEntryNames { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="XsltJsonRendererOptions"/>
         /// class.
         /// </summary>
@@ -165,4 +249,5 @@ namespace Cadmus.Export
             JsonExpressions = new List<string>();
         }
     }
+    #endregion
 }
