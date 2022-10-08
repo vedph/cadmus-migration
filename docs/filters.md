@@ -3,6 +3,7 @@
 - [Renderer Filters](#renderer-filters)
   - [Appender Filter](#appender-filter)
   - [Fragment Link Filter](#fragment-link-filter)
+  - [ISO 639 Lookup Filter](#iso-639-lookup-filter)
   - [Markdown Conversion Filter](#markdown-conversion-filter)
   - [Text Replacements Filter](#text-replacements-filter)
   - [Thesaurus Lookup Filter](#thesaurus-lookup-filter)
@@ -29,6 +30,13 @@ Map layer keys into target IDs, leveraging the metadata built by the text render
 - options:
   - `TagOpen`: the opening tag for fragment key.
   - `TagClose`: the closing tag for fragment key.
+
+## ISO 639 Lookup Filter
+
+- ID: `it.vedph.renderer-filter.iso639`
+- options:
+  - `Pattern`: the pattern used to identify ISO codes. It is assumed that the code is the first captured group in a match. Default is `^^` followed by 3 letters for ISO 639-3.
+  - `TwoLetters`: true to use 2-letters codes instead of 3-letters codes.
 
 ## Markdown Conversion Filter
 

@@ -177,9 +177,9 @@ So, if you use a configuration like this for apparatus entries:
 
 ```json
 {
-    "WrappedEntryNames": [
+    "WrappedEntryNames": {
         "entries": "entry"
-    ]
+    }
 }
 ```
 
@@ -264,4 +264,4 @@ Here you have:
 - a text block renderer for standoff TEI, named `tei`. This uses the `nl-appender` filter just to emit a newline after each `div`, to make the resulting output more readable.
 - the apparatus standoff TEI JSON renderer. Note that its key is equal to the part type followed by `|` and the fragment type. This is required for Cadmus to match the renderer with the part. The `Id` instead is the ID of the software component. Should you want to render additional layers, just add more JSON renderers, one for each layer type.
 - an item composer for standoff TEI. This uses the specified text flattener and block renderer, and the JSON renderer for the apparatus; it outputs its XML files into the specified output directory.
-- an item ID collector which collects the IDs of all the items to be exported from a Cadmus MongoDB database. This filters the items to get only those with facet=`text`.
+- an [item ID collector](collectors.md) which collects the IDs of all the items to be exported from a Cadmus MongoDB database. This filters the items to get only those with facet=`text`.

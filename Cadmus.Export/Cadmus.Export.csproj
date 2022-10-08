@@ -21,6 +21,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="Assets\Iso639.txt" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Assets\Iso639.txt" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Cadmus.Core" Version="4.0.4" />
 		<PackageReference Include="Cadmus.General.Parts" Version="2.1.0" />
 		<PackageReference Include="Cadmus.Mongo" Version="4.0.4" />
