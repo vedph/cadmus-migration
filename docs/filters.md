@@ -33,9 +33,11 @@ Map layer keys into target IDs, leveraging the metadata built by the text render
 
 ## ISO 639 Lookup Filter
 
+Language codes ISO639-3 or ISO639-2 filter. This is a simple lookup filter replacing these ISO codes with the corresponding English language names, e.g. `eng` with `English`. Often, when dealing with such codes they rather belong to a thesaurus (e.g. the list of languages used in a manuscript); in this case, you will rather use a thesaurus filter to resolve the codes, as this ensures that you get the desired name and locale. This filter instead is used as a quick way of resolving language codes when you just deal with ISO639 without recurring to a thesaurus, nor requiring localization.
+
 - ID: `it.vedph.renderer-filter.iso639`
 - options:
-  - `Pattern`: the pattern used to identify ISO codes. It is assumed that the code is the first captured group in a match. Default is `^^` followed by 3 letters for ISO 639-3.
+  - `Pattern`: the pattern used to identify ISO codes. It is assumed that the code is the first captured group in a match. Default is `^^` followed by 3 lowercase letters for ISO 639-3. For all the matches, the filter will extract the code, lookup it, and replace the matched expression with either the result or the code itself, when it was not found.
   - `TwoLetters`: true to use 2-letters codes instead of 3-letters codes.
 
 ## Markdown Conversion Filter
