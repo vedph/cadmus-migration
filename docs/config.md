@@ -15,7 +15,7 @@ Each array in the configuration contains any number of JSON _objects_ having:
 
 - an `Id` property.
 - an optional `Options` object to configure the component. All the `JsonRenderers` can have a `FilterKeys` array property, specifying the filters to apply after its rendition. Each entry in the array is one of the filters keys as defined in the `RendererFilters` section.
-- a `Keys` property is used to include the key of the object type being processed.
+- a `Keys` property is used to include the key(s) of the object type being processed. This is a string property, but several keys could be added by separating them with space. For the purposes of preview components anyway there is no need for more than a single key.
 
 As a sample, consider this configuration:
 
