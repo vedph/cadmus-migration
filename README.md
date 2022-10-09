@@ -14,6 +14,8 @@ Markup related components used to export Cadmus data into some markup language, 
 
 ## History
 
+### 0.0.16
+
 - 2022-10-08: added ISO639 filter.
 - 2022-10-07: added array wrapping to XSLT JSON renderer.
 - 2022-10-06:
