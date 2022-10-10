@@ -10,3 +10,5 @@ Tools for migrating (importing/exporting) Cadmus data. Export tools also include
 - [markup export](markup.md)
 - [configuration samples](config-samples.md)
 - [Cadmus UI](cadmus-ui.md)
+
+>💡 For real-world examples of preview scripts, see the [Cadmus previews repository](https://github.com/vedph/cadmus-previews).

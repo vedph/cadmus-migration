@@ -5,6 +5,7 @@
   - [Specialized Preview](#specialized-preview)
   - [Higher Level Components](#higher-level-components)
   - [JSON Rendering and Other Techs](#json-rendering-and-other-techs)
+  - [Sample](#sample)
 
 The main components of the Cadmus preview architecture are summarized in Figure 1:
 
@@ -174,3 +175,216 @@ So, the final output is:
 ```
 
 Of course, that's just a trivial example, but it should be enough to show the power of this multi-technology approach to JSON rendering. In real-world, the Cadmus editor will use HTML output, thus providing a highly structured presentational markup as the rendition for any part.
+
+## Sample
+
+To better illustrate this point, here is a more realistic sample.
+
+Say you have this comments layer part. You enter its data via the comment fragment editor, as shown in the following screenshots:
+
+![comment - text](img/comment-editor1.png)
+
+- _The comment editor with Markdown text and a tag named "general"._
+
+![comment - categories](img/comment-editor2.png)
+
+- _The comment editor references. There are two bibliographic references, and two external identifiers._
+
+![comment - text](img/comment-editor3.png)
+
+- _The comment editor categories. Categories are listed in a hierarchy, displayed as a tree. Here we have picked a couple of categories (history and literature)._
+
+![comment - text](img/comment-editor4.png)
+
+- _The comment editor keywords. There are a couple of English keywords, one related to a specific index (persons)._
+
+The corresponding JSON code representing this comment layer part follows (limited to a single comment fragment for brevity):
+
+```json
+{
+  "_id": "988a47cf-47f9-4678-bf5a-27221cc23c56",
+  "itemId": "b2271044-32e5-4b6e-b643-cfd925bbdda0",
+  "typeId": "it.vedph.token-text-layer",
+  "roleId": "fr.it.vedph.comment",
+  "thesaurusScope": null,
+  "content": {
+    "fragments": [
+      {
+        "location": "7.1",
+        "tag": "general",
+        "text": "Hic dolores quo.",
+        "references": [
+          {
+            "type": "biblio",
+            "tag": "tag",
+            "citation": "Nienow 2013",
+            "note": "Quod reprehenderit et libero quia ut."
+          }
+        ],
+        "externalIds": [
+          {
+            "assertion": null,
+            "tag": null,
+            "value": "JBOD",
+            "scope": "mydb"
+          },
+          {
+            "assertion": null,
+            "tag": null,
+            "value": "SQL",
+            "scope": "mydb"
+          }
+        ],
+        "categories": ["language.syntax"],
+        "keywords": [
+          {
+            "indexId": "ixb",
+            "note": null,
+            "tag": null,
+            "language": "ita",
+            "value": "a"
+          },
+          {
+            "indexId": "ixa",
+            "note": null,
+            "tag": null,
+            "language": "eng",
+            "value": "perferendis"
+          }
+        ]
+      },
+      {
+        "location": "4.8",
+        "tag": "general",
+        "text": "The *Fort Vancouver Centennial half dollar* is a commemorative fifty-cent piece struck by the United States Bureau of the Mint in 1925 in honor of the founding of Fort Vancouver in present-day Vancouver, Washington.\r\n\r\n- The obverse of the commemorative coin (pictured) depicts John McLoughlin, who built the fort for the Hudson's Bay Company in 1825.\r\n- The reverse shows an armed frontiersman standing in front of the fort.\r\n\r\nRepresentative Albert Johnson of Washington state was able to get Congress to authorize a coin for Fort Vancouver's centennial celebrations, and President Calvin Coolidge signed the authorizing act on February 24, 1925. Laura Gardin Fraser was engaged to design the coin on the recommendation of the United States Commission of Fine Arts. The coins were struck at the San Francisco Mint, and then were flown to Washington state by airplane as a publicity stunt. They sold badly, and are valuable today since few of the coins survive.",
+        "references": [
+          {
+            "type": "biblio",
+            "tag": "tag",
+            "citation": "Kihn 2021",
+            "note": ""
+          },
+          {
+            "type": "biblio",
+            "tag": "tag",
+            "citation": "Hilpert 2012",
+            "note": "A note about this reference."
+          }
+        ],
+        "externalIds": [
+          {
+            "assertion": null,
+            "tag": null,
+            "value": "http://mydb.org/1234",
+            "scope": "mydb"
+          },
+          {
+            "assertion": null,
+            "tag": null,
+            "value": "http://mydb.org/8865",
+            "scope": "mydb"
+          }
+        ],
+        "categories": ["history", "literature"],
+        "keywords": [
+          {
+            "indexId": "",
+            "note": null,
+            "tag": null,
+            "language": "eng",
+            "value": "coin"
+          },
+          {
+            "indexId": "persons",
+            "note": null,
+            "tag": null,
+            "language": "eng",
+            "value": "Albert Johnson"
+          }
+        ]
+      }
+    ],
+    "id": "988a47cf-47f9-4678-bf5a-27221cc23c56",
+    "itemId": "b2271044-32e5-4b6e-b643-cfd925bbdda0",
+    "typeId": "it.vedph.token-text-layer",
+    "roleId": "fr.it.vedph.comment",
+    "thesaurusScope": null,
+    "timeCreated": "2022-10-04T10:01:58.28Z",
+    "creatorId": "zeus",
+    "timeModified": "2022-10-10T11:02:28.7506614Z",
+    "userId": "zeus"
+  },
+  "timeCreated": "2022-10-04T10:01:58.280+0000",
+  "creatorId": "zeus",
+  "timeModified": "2022-10-10T11:02:28.750+0000",
+  "userId": "zeus"
+}
+```
+
+Now, when viewing this comment part in the item, the editor finds a suitable previewer for its type, and thus a preview button appears next to it. The same happens for a couple of other part types (base text and critical apparatus):
+
+![comment part in item](img/comment-preview-btn.png)
+
+When clicking on this button, you get to the layer preview. This shows the text with green hilights for each portion of the text which is linked to a comment fragment in the comments layer part. By clicking on any of these portions, the previewer generates the corresponding output which is shown below the text:
+
+![comment - text](img/comment-preview.png)
+
+- _Previewing a comment's fragment (for `provident`)._
+
+As you can see, the comment preview here presents all the information found in the comment part, in a more compact and user-friendly way:
+
+- at the top `general` is the comment's tag.
+- below it, its two categories are shown.
+- the comment's text has been rendered from Markdown, and shown in a couple of columns (the actual number depends on the width of the browser's window).
+- under the text, its keywords are listed with their language and optional container index.
+- below the text, references are listed with their type and tag, and eventual notes.
+- finally, identifiers are listed with their scope. As these IDs happen to begin with `http`, they are rendered as clickable links.
+
+Here is the configuration used for getting this preview:
+
+```json
+{
+  "RendererFilters": [
+    {
+      "Keys": "markdown",
+      "Id": "it.vedph.renderer-filter.markdown",
+      "Options": {
+        "MarkdownOpen": "<_md>",
+        "MarkdownClose": "</_md>",
+        "Format": "html"
+      }
+    },
+    {
+      "Keys": "iso639-3",
+      "Id": "it.vedph.renderer-filter.iso639"
+    }
+  ],
+  "JsonRenderers": [
+    {
+      "Keys": "it.vedph.token-text-layer|fr.it.vedph.comment",
+      "Id": "it.vedph.json-renderer.xslt",
+      "Options": {
+        "WrappedEntryNames": {
+          "categories": "category",
+          "references": "reference",
+          "keywords": "keyword",
+          "externalIds": "externalId"
+        },
+        "Xslt": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" exclude-result-prefixes=\"xs\" version=\"1.0\"><xsl:output media-type=\"text/html\" method=\"html\" omit-xml-declaration=\"yes\" encoding=\"UTF-8\"/><xsl:template match=\"*[not(*) and not(normalize-space())]\"></xsl:template><xsl:template name=\"build-link\"><xsl:param name=\"val\"/><xsl:choose><xsl:when test=\"starts-with($val, 'http')\"><xsl:element name=\"a\"><xsl:attribute name=\"href\"><xsl:value-of select=\"$val\"/></xsl:attribute><xsl:attribute name=\"target\">_blank</xsl:attribute><xsl:value-of select=\"$val\"/></xsl:element></xsl:when><xsl:otherwise><xsl:value-of select=\"$val\"/></xsl:otherwise></xsl:choose></xsl:template><xsl:template match=\"reference\"><li><xsl:if test=\"type[normalize-space(.)]\"><span class=\"comment-ref-y\"><xsl:value-of select=\"type\"/></span></xsl:if><xsl:if test=\"tag[normalize-space(.)]\"><span class=\"comment-ref-t\"><xsl:value-of select=\"tag\"/></span></xsl:if><xsl:if test=\"citation\"><span class=\"comment-ref-c\"><xsl:call-template name=\"build-link\"><xsl:with-param name=\"val\" select=\"citation\"></xsl:with-param></xsl:call-template></span></xsl:if><xsl:if test=\"note[normalize-space(.)]\"><xsl:text></xsl:text><span class=\"comment-ref-n\"><xsl:value-of select=\"note\"/></span></xsl:if></li></xsl:template><xsl:template match=\"root\"><div class=\"comment\"><xsl:if test=\"tag[normalize-space(.)]\"><div class=\"comment-tag\"><xsl:value-of select=\"tag\"/></div></xsl:if><xsl:if test=\"categories/category\"><div class=\"pv-flex-row comment-categories\"><xsl:for-each select=\"categories/category\"><div class=\"comment-category\"><xsl:value-of select=\".\"/></div></xsl:for-each></div></xsl:if><xsl:if test=\"text\"><div class=\"comment-text\"><_md><xsl:value-of select=\"text\"/></_md></div></xsl:if><xsl:if test=\"keywords/keyword\"><ul class=\"comment-keywords\"><xsl:for-each select=\"keywords/keyword\"><xsl:sort select=\"indexId\"/><xsl:sort select=\"language\"/><xsl:sort select=\"value\"/><li><xsl:if test=\"indexId[normalize-space(.)]\"><span class=\"comment-kw-x\"><xsl:value-of select=\"indexId\"/></span></xsl:if><span class=\"comment-kw-l\">^^<xsl:value-of select=\"language\"/></span><span class=\"comment-kw-v\"><xsl:value-of select=\"value\"/></span></li></xsl:for-each></ul></xsl:if><xsl:if test=\"references/*\"><div class=\"comment-hdr\">references</div><ol class=\"comment-references\"><xsl:apply-templates select=\"references/reference\"/></ol></xsl:if><xsl:if test=\"externalIds/*\"><div class=\"comment-hdr\">identifiers</div><ul class=\"comment-ids\"><xsl:for-each select=\"externalIds/externalId\"><li><xsl:if test=\"tag[normalize-space(.)]\"><span class=\"comment-id-t\"><xsl:value-of select=\"tag\"/></span></xsl:if><xsl:if test=\"scope[normalize-space(.)]\"><span class=\"comment-id-s\"><xsl:value-of select=\"scope\"/></span></xsl:if><span class=\"comment-id-v\"><xsl:call-template name=\"build-link\"><xsl:with-param name=\"val\" select=\"value\"/></xsl:call-template></span><xsl:if test=\"assertion/*\"><div class=\"comment-assertion\"><xsl:if test=\"assertion/tag\"><span class=\"comment-id-t\"><xsl:value-of select=\"assertion/tag\"/></span></xsl:if><xsl:if test=\"assertion/rank\"><xsl:text></xsl:text><span class=\"comment-id-r\">R<xsl:value-of select=\"assertion/rank\"/></span></xsl:if><xsl:if test=\"assertion/note\"><xsl:text></xsl:text><div class=\"comment-id-n\"><xsl:value-of select=\"assertion/note\"/></div></xsl:if><xsl:if test=\"assertion/references\"><ol class=\"comment-assertion-refs\"><xsl:apply-templates select=\"assertion/references/reference\"/></ol></xsl:if></div></xsl:if></li></xsl:for-each></ul></xsl:if></div></xsl:template><xsl:template match=\"*\"/></xsl:stylesheet>",
+        "FilterKeys": ["markdown", "iso639-3"]
+      }
+    }
+  ],
+  "TextPartFlatteners": [
+    {
+      "Keys": "it.vedph.token-text",
+      "Id": "it.vedph.text-flattener.token"
+    }
+  ]
+}
+```
+
+The rendition happens via an [XSLT-based JSON renderer](renderers.md#xslt-json-renderer). This is configured to wrap a number of entries into a parent element representing the original arrays in the JSON code (`WrappedEntryNames`), and to use a couple of filters:
+
+- a [Markdown filter](filters#markdown-conversion-filter), which renders Markdown text into HTML. In fact, as you can observe from the above screenshot, the preview shows some text in italic, and a couple of paragraphs as a bulleted list. This is the effect of rendering Markdown.
+- an [ISO 639 language code filter](filters#iso-639-lookup-filter), which converts ISO639-3 letters codes representing languages into their corresponding English name. In fact, instead of getting `eng` for keyword codes, which is the value stored in the database part, you get `English` by virtue of this filter.
