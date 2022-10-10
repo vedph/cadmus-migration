@@ -5,9 +5,9 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
-    <Version>0.0.17</Version>
-    <FileVersion>0.0.17</FileVersion>
-    <AssemblyVersion>0.0.17</AssemblyVersion>
+    <Version>0.0.18</Version>
+    <FileVersion>0.0.18</FileVersion>
+    <AssemblyVersion>0.0.18</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>

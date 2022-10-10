@@ -5,7 +5,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
@@ -29,7 +28,6 @@ namespace Cadmus.Export
         // https://github.com/jdevillard/JmesPath.Net
         // https://www.newtonsoft.com/json/help/html/ConvertingJSONandXML.htm
 
-        private readonly XmlWriterSettings _xmlWriterSettings;
         private readonly Regex _rootRegex;
         private XsltJsonRendererOptions? _options;
         private XsltTransformer? _transformer;
@@ -41,13 +39,6 @@ namespace Cadmus.Export
         public XsltJsonRenderer()
         {
             _rootRegex = new Regex(@"^\s*\{\s*""root"":", RegexOptions.Compiled);
-            _xmlWriterSettings = new XmlWriterSettings()
-            {
-                ConformanceLevel = ConformanceLevel.Fragment,
-                Encoding = Encoding.UTF8,
-                NamespaceHandling = NamespaceHandling.OmitDuplicates,
-                Indent = false
-            };
         }
 
         /// <summary>
@@ -186,7 +177,7 @@ namespace Cadmus.Export
                 else xml = doc.OuterXml;
 
                 // transform via XSLT
-                return _transformer.Transform(xml, _xmlWriterSettings);
+                return _transformer.Transform(xml);
             }
 
             return json;

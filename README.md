@@ -14,6 +14,12 @@ Markup related components used to export Cadmus data into some markup language, 
 
 ## History
 
+### 0.0.18
+
+- 2022-10-10:
+  - use XSLT script settings in XSLT JSON renderer.
+  - updated packages.
+
 ### 0.0.17
 
 - 2022-10-08: fix to array wrapper in XSLT JSON renderer.
