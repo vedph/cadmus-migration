@@ -87,7 +87,8 @@ namespace Cadmus.Export
         }
 
         /// <summary>
-        /// Wraps sequences of the specified XML elements into a parent element.
+        /// Wraps sequences of 1 or more of the specified XML elements into
+        /// a parent element.
         /// </summary>
         /// <param name="doc">The document to edit.</param>
         /// <param name="map">The map between the name of the elements to be
@@ -102,8 +103,7 @@ namespace Cadmus.Export
             foreach (XName name in map.Keys)
             {
                 List<XElement> headElems = doc.Descendants(name)
-                    .Where(e => e.ElementsBeforeSelf().LastOrDefault()?.Name != name
-                             && e.ElementsAfterSelf().FirstOrDefault()?.Name == name)
+                    .Where(e => e.ElementsBeforeSelf().LastOrDefault()?.Name != name)
                     .ToList();
 
                 foreach (XElement headElem in headElems)

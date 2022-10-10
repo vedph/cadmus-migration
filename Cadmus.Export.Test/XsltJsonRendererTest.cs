@@ -23,18 +23,25 @@ namespace Cadmus.Export.Test
         }
 
         [Fact]
-        public void WrapXmlArrays_NoArray_Unchanged()
+        public void WrapXmlArrays_Single_Changed()
         {
             Dictionary<XName, XName> map = new()
             {
                 ["entries"] = "entry"
             };
             XDocument doc = GetSampleDocument(1);
-            string xml = doc.ToString(SaveOptions.DisableFormatting);
 
             XsltJsonRenderer.WrapXmlArrays(doc, map);
 
-            Assert.Equal(xml, doc.ToString(SaveOptions.DisableFormatting));
+            Assert.NotNull(doc.Root!.Element("entries"));
+            for (int i = 0; i < 1; i++)
+            {
+                XElement? entry = doc.Root.Element("entries")!
+                    .Elements("entry").Skip(i).FirstOrDefault();
+                Assert.NotNull(entry);
+                Assert.Equal($"<entry><a>{i}</a><b>{i}</b></entry>",
+                    entry.ToString(SaveOptions.DisableFormatting));
+            }
         }
 
         [Fact]

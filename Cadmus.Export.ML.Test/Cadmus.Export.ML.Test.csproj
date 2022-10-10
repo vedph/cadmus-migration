@@ -7,11 +7,11 @@
 
     <IsPackable>false</IsPackable>
 
-    <Version>0.0.16</Version>
+    <Version>0.0.17</Version>
 
-    <FileVersion>0.0.16</FileVersion>
+    <FileVersion>0.0.17</FileVersion>
 
-    <AssemblyVersion>0.0.16</AssemblyVersion>
+    <AssemblyVersion>0.0.17</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
