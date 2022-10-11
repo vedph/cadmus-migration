@@ -5,9 +5,9 @@
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<IsPackable>false</IsPackable>
-		<Version>0.0.18</Version>
-		<FileVersion>0.0.18</FileVersion>
-		<AssemblyVersion>0.0.18</AssemblyVersion>
+		<Version>0.0.19</Version>
+		<FileVersion>0.0.19</FileVersion>
+		<AssemblyVersion>0.0.19</AssemblyVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -23,7 +23,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Cadmus.Mongo" Version="4.0.5" />
+		<PackageReference Include="Cadmus.Mongo" Version="4.1.0" />
 		<PackageReference Include="Fusi.Microsoft.Extensions.Configuration.InMemoryJson" Version="1.0.3" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
 		<PackageReference Include="xunit" Version="2.4.2" />

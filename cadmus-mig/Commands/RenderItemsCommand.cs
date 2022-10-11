@@ -62,6 +62,22 @@ namespace Cadmus.Migration.Cli.Commands
             });
         }
 
+        private static ICadmusRepository GetCadmusRepository(string tag,
+            string connStr)
+        {
+            IRepositoryProvider provider = PluginFactoryProvider
+                .GetFromTag<IRepositoryProvider>(tag);
+            if (provider == null)
+            {
+                throw new FileNotFoundException(
+                    "The requested repository provider tag " + tag +
+                    " was not found among plugins in " +
+                    PluginFactoryProvider.GetPluginsDir());
+            }
+            provider.ConnectionString = connStr;
+            return provider.CreateRepository();
+        }
+
         public Task Run()
         {
             ColorConsole.WriteWrappedHeader("Render Items",
@@ -93,21 +109,12 @@ namespace Cadmus.Migration.Cli.Commands
             factory.ConnectionString = cs;
 
             ColorConsole.WriteInfo("Building repository factory...");
-            ICliCadmusRepositoryProvider repositoryProvider =
-                _options.RepositoryProviderTag != null
-                ? PluginFactoryProvider.GetFromTag<ICliCadmusRepositoryProvider>
-                    (_options.RepositoryProviderTag)
-                : new StandardCliCadmusRepositoryProvider(_options.Configuration!)
-                {
-                    ConnectionString = cs
-                };
-            if (repositoryProvider == null)
+            ICadmusRepository repository = GetCadmusRepository(
+                _options.RepositoryProviderTag!, cs);
+            if (repository == null)
             {
-                throw new FileNotFoundException(
-                    "The requested repository provider tag " +
-                    _options.RepositoryProviderTag +
-                    " was not found among plugins in " +
-                    PluginFactoryProvider.GetPluginsDir());
+                throw new InvalidOperationException(
+                    "Unable to create Cadmus repository");
             }
 
             // create composer
@@ -132,9 +139,6 @@ namespace Cadmus.Migration.Cli.Commands
 
             // process items
             ColorConsole.WriteInfo("Processing items...");
-
-            ICadmusRepository repository = repositoryProvider.CreateRepository(
-                _options.DatabaseName);
 
             composer.Open();
             foreach (string id in collector.GetIds())

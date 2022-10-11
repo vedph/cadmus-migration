@@ -3,19 +3,27 @@ using Cadmus.Core;
 using Cadmus.Core.Storage;
 using Cadmus.General.Parts;
 using Cadmus.Mongo;
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Reflection;
 using Cadmus.Philology.Parts;
-using Cadmus.Cli.Core;
+using Fusi.Tools.Config;
 
 namespace Cadmus.Migration.Cli.Services
 {
-    public sealed class StandardCliCadmusRepositoryProvider : ICliCadmusRepositoryProvider
+    /// <summary>
+    /// Standard repository provider using the core general and philology parts
+    /// from Cadmus.
+    /// Tag: <c>repository-provider.standard</c>.
+    /// </summary>
+    /// <seealso cref="IRepositoryProvider" />
+    [Tag("repository-provider.standard")]
+    public sealed class StandardRepositoryProvider : IRepositoryProvider
     {
-        private readonly IConfiguration _configuration;
         private readonly IPartTypeProvider _partTypeProvider;
 
+        /// <summary>
+        /// The connection string.
+        /// </summary>
         public string? ConnectionString { get; set; }
 
         /// <summary>
@@ -24,11 +32,8 @@ namespace Cadmus.Migration.Cli.Services
         /// </summary>
         /// <param name="configuration">The configuration.</param>
         /// <exception cref="ArgumentNullException">configuration</exception>
-        public StandardCliCadmusRepositoryProvider(IConfiguration configuration)
+        public StandardRepositoryProvider()
         {
-            _configuration = configuration ??
-                throw new ArgumentNullException(nameof(configuration));
-
             TagAttributeToTypeMap map = new();
             map.Add(new[]
             {
@@ -53,21 +58,19 @@ namespace Cadmus.Migration.Cli.Services
         /// <summary>
         /// Creates a Cadmus repository.
         /// </summary>
-        /// <param name="database">The database name.</param>
         /// <returns>repository</returns>
         /// <exception cref="ArgumentNullException">null database</exception>
-        public ICadmusRepository CreateRepository(string database)
+        public ICadmusRepository CreateRepository()
         {
-            if (database == null)
-                throw new ArgumentNullException(nameof(database));
-
             // create the repository (no need to use container here)
             MongoCadmusRepository repository =
                 new(_partTypeProvider, new StandardItemSortKeyBuilder());
 
             repository.Configure(new MongoCadmusRepositoryOptions
             {
-                ConnectionString = ConnectionString
+                ConnectionString = ConnectionString ??
+                throw new InvalidOperationException(
+                    "No connection string set for IRepositoryProvider implementation")
             });
 
             return repository;
