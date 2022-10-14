@@ -197,11 +197,13 @@ For instance, this is the first portion of the TEI text. Rendition here is limit
 
 As you can see, `body` contains a set of children `div` elements, each representing a row of text blocks; its ID, starting with `r`, is built from the item's ordinal number plus the row's ordinal number. So, `r1_1` is item 1, row 1; while `r2_1` is item 2, row 1.
 
-In turn, each of these "row" `div` elements contains text mixed with `seg` elements. These `seg` elements are used to wrap any arbitrarily defined portion of text under an ID, so that it can be referenced from a TEI standoff file. So, with reference to the text blocks model, each block here is either a text node (when it has no links), or a `seg` element (when it has 1 or more links).
+In turn, each of these "row" `div` elements contains text mixed with `seg` elements. These `seg` elements are used to wrap any arbitrarily defined portion of text under an ID, so that it can be referenced from a TEI standoff file. Thus, with reference to the text blocks model, each block here is either a text node (when it has no links), or a `seg` element (when it has 1 or more links).
 
 Each `seg` element has an ID defined by `f` (=fragment) followed by the item's ordinal number, the layer ID, and the fragment index.
 
 This segmentation of the text is the result of [flattening](markup.md) text layers into a set of abstractions, the "text blocks", which just represent the maximum extent of text linked to the same set of annotations. This allows minimizing the requirements for text segmentation, by wrapping into `seg` only those portions of text which require to be linked from any of the layers selected for output. This approach is thus much more efficient than systematically wrapping the whole text in advance, using a fixed level of granularity (e.g. wrap each graphical word into an element with a unique ID). Here, wrapping occurs only when necessary, and might extend from 1 to N characters, with no predefined (and thus fixed) level of granularity.
+
+You might notice here that not all the `seg` elements found in the text are referenced from the apparatus layer. That's because the sample text has many other layers besides apparatus; so, even though we are generating output only for apparatus, we stick to the blocks defined by flattening all the layers. This ensures that two different exports of the same text created by selecting different layers will produce the same segmentation.
 
 ## Exporting Text Items in Plain Text
 
