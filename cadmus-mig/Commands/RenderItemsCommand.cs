@@ -73,6 +73,8 @@ namespace Cadmus.Migration.Cli.Commands
             Console.WriteLine($"Config path: {_options.ConfigPath}");
             Console.WriteLine("Factory provider tag: " +
                 $"{_options.PreviewFactoryProviderTag ?? "---"}");
+            Console.WriteLine("Repository provider tag: " +
+                $"{_options.RepositoryProviderTag ?? "---"}");
             Console.WriteLine($"Composer key: {_options.ComposerKey}\n");
 
             string cs = string.Format(

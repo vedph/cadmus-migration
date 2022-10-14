@@ -1,43 +1,64 @@
 # Overview
 
 - [Overview](#overview)
-  - [Generic Preview](#generic-preview)
-  - [Specialized Preview](#specialized-preview)
-  - [Higher Level Components](#higher-level-components)
-  - [JSON Rendering and Other Techs](#json-rendering-and-other-techs)
-  - [Sample](#sample)
+  - [Data Export](#data-export)
+    - [Flow](#flow)
+    - [Generic Preview](#generic-preview)
+    - [Specialized Preview](#specialized-preview)
+    - [Higher Level Components](#higher-level-components)
+    - [JSON Rendering and Other Techs](#json-rendering-and-other-techs)
+    - [Sample](#sample)
 
-The main components of the Cadmus preview architecture are summarized in Figure 1:
+This Cadmus module contains basic data migration tools for Cadmus.
+
+## Data Export
+
+Data export in Cadmus is used for both exporting data into files, and for providing a frontend interface with "previews", i.e. views which summarize structured data for human readers. For instance, in the former case you can export standoff TEI documents from text items with layers; in the latter case, you can view a compact and human-friendly data summary inside the editor itself.
+
+So, export may be done at different levels of granularity:
+
+- you can export all the items or a subset of them;
+- you can export a subset of parts of each item;
+- you can export a single text part, with all its related layer parts, or a subset of them;
+- you can export a single part.
+
+### Flow
+
+The main components of the Cadmus export architecture are summarized in Figure 1:
 
 ![overview](img/cadmus-export.png)
 
-- _Figure 1: Cadmus preview architecture_
+- _Figure 1: Cadmus export architecture_
 
-It all starts from the Cadmus **database**, including items with their parts. Some of these parts may represent text (with a text part) or layered text (with a text part and any number of text layer parts). Many other parts may well represent non-textual data (e.g. the codicological description of a manuscript). Usually, items are processed from an **item ID collector**, which gets the IDs of all the matching items in their order (at present we just have a single [builtin collector](collectors.md)).
+It all starts from the Cadmus **database**, including items with their parts.
 
-As for preview, the main distinction is between a **generic preview**, which can be applied to any part; and a **specialized preview** specifically designed for layered texts.
+Some of these parts may represent text (with a text part) or layered text (with a text part and any number of text layer parts). Many other parts may well represent non-textual data (e.g. the codicological description of a manuscript).
 
-## Generic Preview
+When exporting into files, usually the entry point is represented by an **item ID collector**, which collects the IDs of all the matching items in their order. This is used to select and order the items for export; currently, we just have a single [builtin collector](collectors.md).
 
-The _generic_ preview relies on some **JSON renderer** component. A JSON renderer component is just a component which takes JSON (representing any Cadmus data object: part, fragment, or item), and renders it into some text-based format, like HTML, XML, etc.
+As for preview, the main distinction is between a **generic preview**, which can be applied to any part; and a **specialized preview**, specifically designed for layered texts.
+
+### Generic Preview
+
+The _generic_ preview relies on a **JSON renderer** component. A JSON renderer component is a component which takes JSON (representing any Cadmus data object: part, fragment, or item), and renders it into some text-based format, like HTML, XML, etc.
 
 In Figure 1, you can see that a JSON renderer picked from a set of available renderers can be used to produce some text-based output from a Cadmus part, whatever its type.
 
 To this end, the JSON renderer or the text block renderer may also use a set of **renderer filters**. Such filters are executed in the order they are defined for each renderer, just after its rendition completes. Each filter has a specific task, often general enough to be reused in other renderers.
 
-For instance, some [prebuilt filters](filters.md) allow you to lookup thesauri (resolving their IDs into values), convert Markdown text into HTML or plain text, perform text replacements (either based on literals, and on regular expressions), or resolve the mapping between layer IDs and target IDs in text.
+For instance, some [prebuilt filters](filters.md) allow you to lookup thesauri (resolving their IDs into values), convert Markdown text into HTML or plain text, perform text replacements (either based on literals, and on regular expressions), resolve ISO639 language codes, or the mapping between layer IDs and target IDs in text.
 
-## Specialized Preview
+### Specialized Preview
 
-The _specialized preview_ is for layered text parts.
+The _specialized preview_ is for layered text parts. These usually require more processing, because when exporting into a text-based format we need to flatten the multi-layered Cadmus text into a single structure, like the tree behind HTML or TEI code.
 
 As you can see from Figure 1, this preview uses a number of components:
 
-- some **text part flattener** (`ITextPartFlattener`) is used to flatten a layered text (i.e. one text part plus any number of text layer parts) into a set of _text blocks_. Each text block is a span of text with a number of layer IDs, linking that text with its annotations from layers. This is also the input model for a related HTML visualization leveraging [this brick](https://github.com/vedph/cadmus-bricks-shell/tree/master/projects/myrmidon/cadmus-text-block-view). Once the text and its layers are flattened, blocks are built using logic shared among all the flatteners (implemented in `TextBlockBuilder`). So, while the flattening logic varies according to the type of the text part (e.g. `TokenTextPart` or `TiledTextPart`), the block building logic stays the same. The resulting blocks are an abstraction, which can be easily leveraged in an interactive UI, as well as represent the source for building some other output like TEI.
+- a **text part flattener** (`ITextPartFlattener`), used to flatten a layered text (i.e. one text part, plus any number of text layer parts) into a set of _text blocks_. Each text block is a span of text with a number of layer IDs, linking that text with its annotations from layers. This is also the input model for a related HTML visualization leveraging [this brick](https://github.com/vedph/cadmus-bricks-shell/tree/master/projects/myrmidon/cadmus-text-block-view). Once the text and its layers are flattened, blocks are built using logic shared among all the flatteners (implemented in `TextBlockBuilder`). So, while the flattening logic varies according to the type of the text part (e.g. `TokenTextPart` or `TiledTextPart`), the block building logic stays the same. The resulting blocks are an abstraction, which can be easily leveraged in an interactive UI, as well as represent the source for building some other output like TEI.
 
-- some **text block renderer** can be used to generate a text-based output from these blocks. For instance, you can use a TEI block renderer to build TEI from text blocks.
+- a **text block renderer** can be used to generate a text-based output from these blocks. For instance, you can use a TEI block renderer to build standoff TEI from text blocks.
 
-## Higher Level Components
+### Higher Level Components
 
 Higher level components can be used to orchestrate the tasks performed by these various components.
 
@@ -45,7 +66,7 @@ The **item composer** is a configurable component designed to compose the rendit
 
 The **Cadmus previewer** is the surface component used by Cadmus API. This allows rendering a part, a layer part's fragment, and eventually even an item (via an item composer). This previewer is configured in a simple [JSON document](config.md).
 
-## JSON Rendering and Other Techs
+### JSON Rendering and Other Techs
 
 Any Cadmus object, either part or fragment, is ultimately archived as JSON. So, JSON is the starting point when rendering the output. As seen above, any component implementing `IJsonRenderer` can be registered in the previewer factory and used in the rendering configuration, with all its settings.
 
@@ -176,7 +197,7 @@ So, the final output is:
 
 Of course, that's just a trivial example, but it should be enough to show the power of this multi-technology approach to JSON rendering. In real-world, the Cadmus editor will use HTML output, thus providing a highly structured presentational markup as the rendition for any part.
 
-## Sample
+### Sample
 
 To better illustrate this point, here is a more realistic sample.
 
