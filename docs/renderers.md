@@ -9,6 +9,8 @@
 
 ## JSON Renderers
 
+Here you can find a list of builting JSON renderers.
+
 ### Filters
 
 Under its `Options`, any renderer can have a `FilterKeys` property which is an array of filter keys, representing the filters used by that renderer, to be applied in the specified order.
@@ -19,7 +21,7 @@ These filters are specified in the `Filters` section of the [configuration](conf
 
 - ID: `it.vedph.json-renderer.null`
 
-Null JSON renderer. This just returns the received JSON, and can be used for diagnostic purposes, or to apply some filters to the received text.
+Null JSON renderer. This is a pass-through filter, which just returns the received JSON. It can be used for diagnostic purposes, or to apply some filters to the received text.
 
 ### XSLT Json Renderer
 

@@ -22,9 +22,24 @@ So, export may be done at different levels of granularity:
 - you can export a single text part, with all its related layer parts, or a subset of them;
 - you can export a single part.
 
+The export process is totally driven by a JSON-based configuration, which assembles and configures its components. In most cases, it relies on a set of transformations. As Cadmus data is based on objects (items, parts, and fragments), each of them can be serialized with an object notation like JSON. This is what effectively happens when these objects are stored in the Cadmus database.
+
+This means that any object, and thus any data, can be represented as a JSON document. So, the builtin export tools assume JSON documents as their input, while allowing you to produce any desired output.
+
+Producing output essentially means transforming JSON documents. This may be done with a mix of different technologies, chosen according to data structure and export purposes:
+
+- as for the _architecture_, you can use builtin components, which are either generic components with a high level of customization, allowing you to get your output by just providing a configuration file; or specialized components, which, though still configurable, have a more specific logic (like the component used to generate a TEI apparatus). In most cases you can just combine generic and specialized builtin components to generate your desired output. Anyway, it is always possible to build your own components and use them as plugins.
+
+- as for _transformation technologies_, given that we start with JSON and we usually end with a text-based format, you can mix a number of approaches, using what best fits your scenario:
+  - [JMESPath](https://jmespath.org/tutorial.html), a powerful selection and transformation language for JSON.
+  - XSLT, by using a component which automatically converts JSON into an XML dialect.
+  - [filters](filters.md), a set of components used to post-process the transformation results by further changing it according to some logic, ranging from simple text replacements to database lookups.
+
+Also, in this context a special transformation for Cadmus layered texts can be used to flatten any number of text layers with their base text into a single structure, which can then be used to generate outputs like HTML or XML TEI.
+
 ### Flow
 
-The main components of the Cadmus export architecture are summarized in Figure 1:
+The data flow and the main components of the Cadmus export architecture are summarized in Figure 1:
 
 ![overview](img/cadmus-export.png)
 
