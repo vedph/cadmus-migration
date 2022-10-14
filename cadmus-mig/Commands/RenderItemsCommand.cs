@@ -1,5 +1,4 @@
-﻿using Cadmus.Cli.Core;
-using Cadmus.Core;
+﻿using Cadmus.Core;
 using Cadmus.Core.Storage;
 using Cadmus.Export;
 using Cadmus.Export.ML;
@@ -10,7 +9,6 @@ using Fusi.Cli.Commands;
 using Microsoft.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace Cadmus.Migration.Cli.Commands
@@ -40,8 +38,12 @@ namespace Cadmus.Migration.Cli.Commands
             CommandArgument cfgPathArgument = app.Argument("[ConfigPath]",
                "The path to the rendering configuration file.");
 
-            CommandOption pluginTagOption = app.Option("--plugin|-p",
+            CommandOption previewPluginTagOption = app.Option("--preview|-p",
                 "The tag of the factory provider plugin",
+                CommandOptionType.SingleValue);
+
+            CommandOption repositoryPluginTagOption = app.Option("--repository|-r",
+                "The tag of the Cadmus repository plugin",
                 CommandOptionType.SingleValue);
 
             CommandOption composerKeyOption = app.Option("--composer|-c",
@@ -55,27 +57,12 @@ namespace Cadmus.Migration.Cli.Commands
                     {
                         DatabaseName = dbArgument.Value,
                         ConfigPath = cfgPathArgument.Value,
-                        PreviewFactoryProviderTag = pluginTagOption.Value(),
+                        PreviewFactoryProviderTag = previewPluginTagOption.Value(),
+                        RepositoryProviderTag = repositoryPluginTagOption.Value(),
                         ComposerKey = composerKeyOption.Value() ?? "default",
                     });
                 return 0;
             });
-        }
-
-        private static ICadmusRepository GetCadmusRepository(string tag,
-            string connStr)
-        {
-            IRepositoryProvider provider = PluginFactoryProvider
-                .GetFromTag<IRepositoryProvider>(tag);
-            if (provider == null)
-            {
-                throw new FileNotFoundException(
-                    "The requested repository provider tag " + tag +
-                    " was not found among plugins in " +
-                    PluginFactoryProvider.GetPluginsDir());
-            }
-            provider.ConnectionString = connStr;
-            return provider.CreateRepository();
         }
 
         public Task Run()
@@ -92,15 +79,18 @@ namespace Cadmus.Migration.Cli.Commands
                 _options.Configuration.GetConnectionString("Default"),
                 _options.DatabaseName);
 
+            CadmusMigCliContextService contextService =
+                _options.Context.GetContextService(_options.DatabaseName);
+
             // load rendering config
             ColorConsole.WriteInfo("Loading rendering config...");
             string config = CommandHelper.LoadFileContent(_options.ConfigPath!);
 
             // get preview factory from its provider
             ColorConsole.WriteInfo("Building preview factory...");
-            ICadmusPreviewFactoryProvider? provider = _options.Context
-                .GetContextService(_options.DatabaseName)
-                .GetFactoryProvider(_options.PreviewFactoryProviderTag);
+            ICadmusPreviewFactoryProvider? provider =
+                contextService.GetPreviewFactoryProvider(
+                    _options.PreviewFactoryProviderTag);
             if (provider == null)
             {
                 ColorConsole.WriteError("Preview factory provider not found");
@@ -112,8 +102,8 @@ namespace Cadmus.Migration.Cli.Commands
 
             // get the Cadmus repository from the specified plugin
             ColorConsole.WriteInfo("Building repository factory...");
-            ICadmusRepository repository = GetCadmusRepository(
-                _options.RepositoryProviderTag!, cs);
+            ICadmusRepository repository = contextService.GetCadmusRepository(
+                _options.RepositoryProviderTag!);
             if (repository == null)
             {
                 throw new InvalidOperationException(
@@ -136,7 +126,8 @@ namespace Cadmus.Migration.Cli.Commands
             IItemIdCollector? collector = factory.GetItemIdCollector();
             if (collector == null)
             {
-                ColorConsole.WriteError("No item ID collector defined in configuration.");
+                ColorConsole.WriteError(
+                    "No item ID collector defined in configuration.");
                 return Task.CompletedTask;
             }
 

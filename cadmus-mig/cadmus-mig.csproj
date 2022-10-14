@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cadmus.Cli.Core" Version="4.1.1" />
+    <PackageReference Include="Cadmus.Cli.Core" Version="4.1.2" />
     <PackageReference Include="Cadmus.Philology.Parts" Version="4.0.1" />
     <PackageReference Include="Fusi.Cli" Version="1.0.2" />
     <PackageReference Include="Fusi.Cli.Commands" Version="1.0.2" />
