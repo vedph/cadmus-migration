@@ -36,14 +36,14 @@ namespace Cadmus.Migration.Cli.Commands
 
             CommandArgument dbArgument = app.Argument("[DatabaseName]",
                "The name of the source Cadmus database.");
+
             CommandArgument cfgPathArgument = app.Argument("[ConfigPath]",
                "The path to the rendering configuration file.");
-            // when you use plugins, your plugin must import all the required
-            // components, and export a tagged implementation of
-            // ICadmusPreviewFactoryProvider. Its tag is specified here.
+
             CommandOption pluginTagOption = app.Option("--plugin|-p",
                 "The tag of the factory provider plugin",
                 CommandOptionType.SingleValue);
+
             CommandOption composerKeyOption = app.Option("--composer|-c",
                 "The key of the item composer to use (default='default').",
                 CommandOptionType.SingleValue);
@@ -55,8 +55,8 @@ namespace Cadmus.Migration.Cli.Commands
                     {
                         DatabaseName = dbArgument.Value,
                         ConfigPath = cfgPathArgument.Value,
-                        FactoryProviderTag = pluginTagOption.Value(),
-                        ComposerKey = composerKeyOption.Value(),
+                        PreviewFactoryProviderTag = pluginTagOption.Value(),
+                        ComposerKey = composerKeyOption.Value() ?? "default",
                     });
                 return 0;
             });
@@ -84,21 +84,23 @@ namespace Cadmus.Migration.Cli.Commands
                 headerColor: ConsoleColor.Green);
             Console.WriteLine($"Database: {_options.DatabaseName}");
             Console.WriteLine($"Config path: {_options.ConfigPath}");
-            Console.WriteLine($"Factory provider tag: {_options.FactoryProviderTag ?? "---"}");
-            Console.WriteLine($"Composer key: {_options.ComposerKey ?? "---"}\n");
+            Console.WriteLine("Factory provider tag: " +
+                $"{_options.PreviewFactoryProviderTag ?? "---"}");
+            Console.WriteLine($"Composer key: {_options.ComposerKey}\n");
 
             string cs = string.Format(
                 _options.Configuration.GetConnectionString("Default"),
                 _options.DatabaseName);
 
-            // load config
-            ColorConsole.WriteInfo("Loading config...");
+            // load rendering config
+            ColorConsole.WriteInfo("Loading rendering config...");
             string config = CommandHelper.LoadFileContent(_options.ConfigPath!);
 
-            // get factory from its provider
+            // get preview factory from its provider
             ColorConsole.WriteInfo("Building preview factory...");
             ICadmusPreviewFactoryProvider? provider = _options.Context
-                .GetContextService(_options.DatabaseName).GetFactoryProvider();
+                .GetContextService(_options.DatabaseName)
+                .GetFactoryProvider(_options.PreviewFactoryProviderTag);
             if (provider == null)
             {
                 ColorConsole.WriteError("Preview factory provider not found");
@@ -108,6 +110,7 @@ namespace Cadmus.Migration.Cli.Commands
                 typeof(FSTeiStandoffItemComposer).Assembly);
             factory.ConnectionString = cs;
 
+            // get the Cadmus repository from the specified plugin
             ColorConsole.WriteInfo("Building repository factory...");
             ICadmusRepository repository = GetCadmusRepository(
                 _options.RepositoryProviderTag!, cs);
@@ -117,14 +120,14 @@ namespace Cadmus.Migration.Cli.Commands
                     "Unable to create Cadmus repository");
             }
 
-            // create composer
+            // create the preview item composer
             ColorConsole.WriteInfo("Creating item composer...");
-            IItemComposer? composer = factory.GetComposer(
-                _options.ComposerKey ?? "default");
+            IItemComposer? composer = factory.GetComposer(_options.ComposerKey);
             if (composer == null)
             {
                 ColorConsole.WriteError(
-                    $"Could not find composer with key {_options.ComposerKey}.");
+                    $"Could not find composer with key {_options.ComposerKey}. " +
+                    "Please check your rendering configuration.");
                 return Task.CompletedTask;
             }
 
@@ -137,8 +140,8 @@ namespace Cadmus.Migration.Cli.Commands
                 return Task.CompletedTask;
             }
 
-            // process items
-            ColorConsole.WriteInfo("Processing items...");
+            // render items
+            ColorConsole.WriteInfo("Rendering items...");
 
             composer.Open();
             foreach (string id in collector.GetIds())
@@ -161,14 +164,28 @@ namespace Cadmus.Migration.Cli.Commands
         /// Gets or sets the tag of the component found in some plugin and
         /// implementing <see cref="ICadmusPreviewFactoryProvider"/>.
         /// </summary>
-        public string? FactoryProviderTag { get; set; }
+        public string? PreviewFactoryProviderTag { get; set; }
+
         /// <summary>
         /// Gets or sets the tag of the component found in some plugin and
-        /// implementing <see cref="ICliCadmusRepositoryProvider"/>.
+        /// implementing Cadmus <see cref="IRepositoryProvider"/>.
         /// </summary>
         public string? RepositoryProviderTag { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the database to read items from.
+        /// </summary>
         public string DatabaseName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the path to the rendering configuration file.
+        /// </summary>
         public string ConfigPath { get; set; }
+
+        /// <summary>
+        /// Gets or sets the key in the rendering configuration file for the
+        /// item composer to use.
+        /// </summary>
         public string ComposerKey { get; set; }
 
         public RenderItemsCommandOptions(ICliAppContext options)

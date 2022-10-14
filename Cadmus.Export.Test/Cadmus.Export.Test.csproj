@@ -38,7 +38,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Cadmus.Philology.Parts" Version="4.0.0" />
+		<PackageReference Include="Cadmus.Philology.Parts" Version="4.0.1" />
 	</ItemGroup>
 
 	<ItemGroup>

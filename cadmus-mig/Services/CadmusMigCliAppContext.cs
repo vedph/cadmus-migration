@@ -7,6 +7,11 @@ using System.IO;
 
 namespace Cadmus.Migration.Cli.Services
 {
+    /// <summary>
+    /// Application's context. This includes the Cadmus database connection
+    /// string, the local assets directory, and an optional logger.
+    /// </summary>
+    /// <seealso cref="CliAppContext" />
     public class CadmusMigCliAppContext : CliAppContext
     {
         /// <summary>
@@ -33,7 +38,7 @@ namespace Cadmus.Migration.Cli.Services
                 new CadmusMigCliContextServiceConfig
                 {
                     ConnectionString = string.Format(CultureInfo.InvariantCulture,
-                    Configuration.GetConnectionString("Default"), dbName),
+                        Configuration.GetConnectionString("Default"), dbName),
                     LocalDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
                         "Assets")
                 });
