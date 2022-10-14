@@ -96,8 +96,8 @@ namespace Cadmus.Export.ML
             }
 
             // layers: collect item layer parts
-            IList<IPart> layerParts = item.Parts.Where(p =>
-                    p.RoleId.StartsWith(PartBase.FR_PREFIX))
+            IList<IPart> layerParts = item.Parts
+                .Where(p => p.RoleId?.StartsWith(PartBase.FR_PREFIX) == true)
                 // just to ensure mapping consistency between successive runs
                 .OrderBy(p => p.RoleId)
                 .ToList();

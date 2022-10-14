@@ -3,13 +3,14 @@
 - [Configuration Samples](#configuration-samples)
   - [Rendering Note Parts](#rendering-note-parts)
   - [Rendering Critical Apparatus Fragments](#rendering-critical-apparatus-fragments)
+  - [Exporting Text with Apparatus in TEI](#exporting-text-with-apparatus-in-tei)
   - [Exporting Text Items in Plain Text](#exporting-text-items-in-plain-text)
     - [Requirements](#requirements)
     - [Data Architecture](#data-architecture)
     - [Configuration](#configuration)
     - [Sample Output](#sample-output)
 
-Here I collect some real-world samples of [configuration](overview.md#configuration).
+Here I collect some real-world samples of render [configurations](overview.md#configuration).
 
 ## Rendering Note Parts
 
@@ -119,6 +120,88 @@ So, here is what happens:
   ]
 }
 ```
+
+## Exporting Text with Apparatus in TEI
+
+This sample configuration exports all the Cadmus text items into a TEI file for the text, and another TEI file for the critical apparatus, using standoff notation.
+
+- an **item ID collector** collects all the text items (=all the items whose facet is `text`) from the underlying database, in their order.
+- an **item composer** renders each text item in TEI standoff. This uses:
+  - a **text parte flattener** for token-based texts, to flatten metatextual layer(s) with the base text.
+  - a **text block renderer** for TEI standoff notation. In turn, this uses a simple **renderer filter** (`nl-appender`) to append a newline after each `div` element.
+  - a **JSON renderer** for rendering the apparatus layer. This  will build `app` elements from each apparatus layer fragment. To add more layers, just add more renderers, each targeting a specific layer type.
+
+```json
+{
+  "RendererFilters": [
+    {
+      "Keys": "nl-appender",
+      "Id": "it.vedph.renderer-filter.appender",
+      "Options": {
+        "Text": "\r\n"
+      }
+    }
+  ],
+  "TextPartFlatteners": [
+    {
+      "Keys": "it.vedph.token-text",
+      "Id": "it.vedph.text-flattener.token"
+    }
+  ],
+  "TextBlockRenderers": [
+    {
+      "Keys": "tei",
+      "Id": "it.vedph.text-block-renderer.tei-standoff",
+      "Options": {
+        "FilterKeys": ["nl-appender"]
+      }
+    }
+  ],
+  "JsonRenderers": [
+    {
+      "Keys": "it.vedph.token-text-layer|fr.it.vedph.apparatus",
+      "Id": "it.vedph.json-renderer.tei-standoff.apparatus"
+    }
+  ],
+  "ItemComposers": [
+    {
+      "Keys": "default",
+      "Id": "it.vedph.item-composer.tei-standoff.fs",
+      "Options": {
+        "TextPartFlattenerKey": "it.vedph.token-text",
+        "TextBlockRendererKey": "tei",
+        "JsonRendererKeys": [
+          "it.vedph.token-text-layer|fr.it.vedph.apparatus"
+        ],
+        "OutputDirectory": "c:\\users\\dfusi\\Desktop\\out"
+      }
+    }
+  ],
+  "ItemIdCollector": {
+    "Id": "it.vedph.item-id-collector.mongo",
+    "Options": {
+      "FacetId": "text"
+    }
+  }
+}
+```
+
+For instance, this is the first portion of the TEI text. Rendition here is limited to the text itself, without contents in the header:
+
+```xml
+<body><div xml:id="r1_1"><seg xml:id="f1_2_1">ADNARE AD EAM REM</seg>. <seg xml:id="f1_3_3">Cic. de rep. II ‘Ut </seg><seg xml:id="f1_1_4">ad eam</seg><seg xml:id="f1_3_5"> urbem, quam</seg></div><div xml:id="r1_2"><seg xml:id="f1_3_6">incolas, </seg><seg xml:id="f1_1_7">possit</seg><seg xml:id="f1_3_8"> adnare’</seg>.</div>
+<div xml:id="r2_1"><seg xml:id="f2_1_1">‹ADSIDET ILLUM</seg><seg xml:id="f2_1_2">. </seg><seg xml:id="f2_3_3">Cic. pro Gabinio›</seg><seg xml:id="f2_3_4"> ‘neque adsidere Gabinium</seg></div><div xml:id="r2_2"><seg xml:id="f2_3_5">aut alloqui in curia quisquam audebat’</seg>.</div>
+...
+</body>
+```
+
+As you can see, `body` contains a set of children `div` elements, each representing a row of text blocks; its ID, starting with `r`, is built from the item's ordinal number plus the row's ordinal number. So, `r1_1` is item 1, row 1; while `r2_1` is item 2, row 1.
+
+In turn, each of these "row" `div` elements contains text mixed with `seg` elements. These `seg` elements are used to wrap any arbitrarily defined portion of text under an ID, so that it can be referenced from a TEI standoff file. So, with reference to the text blocks model, each block here is either a text node (when it has no links), or a `seg` element (when it has 1 or more links).
+
+Each `seg` element has an ID defined by `f` (=fragment) followed by the item's ordinal number, the layer ID, and the fragment index.
+
+This segmentation of the text is the result of [flattening](markup.md) text layers into a set of abstractions, the "text blocks", which just represent the maximum extent of text linked to the same set of annotations. This allows minimizing the requirements for text segmentation, by wrapping into `seg` only those portions of text which require to be linked from any of the layers selected for output. This approach is thus much more efficient than systematically wrapping the whole text in advance, using a fixed level of granularity (e.g. wrap each graphical word into an element with a unique ID). Here, wrapping occurs only when necessary, and might extend from 1 to N characters, with no predefined (and thus fixed) level of granularity.
 
 ## Exporting Text Items in Plain Text
 

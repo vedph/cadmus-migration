@@ -24,8 +24,9 @@ namespace Cadmus.Export.ML
         public const string M_ITEM_NR = "item-nr";
         /// <summary>
         /// The name of the metadata placeholder for each block's fragment ID.
-        /// This is defined by this renderer by concatenating item number,
-        /// layer ID, row number, and block ID, all separated by underscore.
+        /// A fragment ID is built with item number + layer ID + fragment index,
+        /// all separated by underscore and prefixed by an initial single <c>f</c>
+        /// (e.g. <c>f1_2_3</c>).
         /// </summary>
         public const string M_FRAGMENT_ID = "target-id";
         /// <summary>
@@ -171,6 +172,7 @@ namespace Cadmus.Export.ML
         }
     }
 
+    #region TeiStandoffTextBlockRendererOptions
     /// <summary>
     /// Options for <see cref="TeiStandoffTextBlockRenderer"/>.
     /// </summary>
@@ -215,4 +217,5 @@ namespace Cadmus.Export.ML
             BlockClose = "</seg>";
         }
     }
+    #endregion
 }

@@ -14,6 +14,8 @@ Markup related components used to export Cadmus data into some markup language, 
 
 ## History
 
+- 2022-10-14: fixes to render items command.
+
 ### 0.0.19
 
 - 2022-10-11: updated Cadmus packages.
