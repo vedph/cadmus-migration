@@ -2,7 +2,6 @@
 using Fusi.Tools.Text;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Text;
 
 namespace Cadmus.Export.ML
@@ -23,12 +22,12 @@ namespace Cadmus.Export.ML
         /// </summary>
         public const string M_ITEM_NR = "item-nr";
         /// <summary>
-        /// The name of the metadata placeholder for each block's fragment ID.
-        /// A fragment ID is built with item number + layer ID + fragment index,
-        /// all separated by underscore and prefixed by an initial single <c>f</c>
-        /// (e.g. <c>f1_2_3</c>).
+        /// The name of the metadata placeholder for each block's target ID.
+        /// Each target ID is built with item number + layer ID + block number,
+        /// all separated by underscore and prefixed by an initial single <c>b</c>
+        /// (e.g. <c>b1_2_3</c>).
         /// </summary>
-        public const string M_FRAGMENT_ID = "target-id";
+        public const string M_TARGET_ID = "target-id";
         /// <summary>
         /// The name of the metadata placeholder for row's y number (1-N).
         /// </summary>
@@ -80,14 +79,14 @@ namespace Cadmus.Export.ML
             return sb.ToString();
         }
 
-        private static string GetLayerIdPrefix(string id)
-        {
-            int i = id.Length;
-            while (i > 0 && (id[i - 1] >= '0' && id[i - 1] <= '9')) i--;
-            return id[0..i];
-        }
+        //private static string GetLayerIdPrefix(string id)
+        //{
+        //    int i = id.Length;
+        //    while (i > 0 && (id[i - 1] >= '0' && id[i - 1] <= '9')) i--;
+        //    return id[0..i];
+        //}
 
-        private void RenderRowText(TextBlockRow row, StringBuilder text,
+        private void RenderRowText(int y, TextBlockRow row, StringBuilder text,
             IRendererContext context)
         {
             // open row
@@ -100,22 +99,17 @@ namespace Cadmus.Export.ML
             // for each block in row
             foreach (TextBlock block in row.Blocks)
             {
-                context!.Data[M_BLOCK_ID] = block.Id;
+                // target block ID
+                string targetId = $"{context!.Data[M_ITEM_NR]}_{y}_{block.Id}";
+                context.Data[M_TARGET_ID] = targetId;
+                context.Data[M_BLOCK_ID] = block.Id;
 
+                // is there any layer linked to this block?
                 if (block.LayerIds.Count > 0)
                 {
+                    // collect fragment IDs
                     foreach (string id in block.LayerIds)
-                    {
-                        string layerPrefix = GetLayerIdPrefix(id);
-
-                        string frId = TeiStandoffItemComposer.BuildFragmentId(
-                            (int)context.Data[M_ITEM_NR],
-                            context.LayerIds[layerPrefix],
-                            int.Parse(block.Id, CultureInfo.InvariantCulture));
-
-                        context.FragmentIds[id] = frId;
-                        context.Data[M_FRAGMENT_ID] = frId;
-                    }
+                        context.FragmentIds[id] = targetId;
 
                     // open block
                     if (!string.IsNullOrEmpty(_options.BlockOpen))
@@ -133,9 +127,9 @@ namespace Cadmus.Export.ML
                             context?.Data ?? _nullCtxData));
                     }
                 }
+                // no linked layer: just append text
                 else
                 {
-                    context.Data.Remove(M_FRAGMENT_ID);
                     text.Append(Xmlize(block.Text));
                 }
             }
@@ -160,12 +154,13 @@ namespace Cadmus.Export.ML
         {
             if (rows is null) throw new ArgumentNullException(nameof(rows));
 
+            // render each row of blocks
             StringBuilder text = new();
             int y = 0;
             foreach (TextBlockRow row in rows)
             {
                 if (context != null) context.Data[M_ROW_Y] = ++y;
-                RenderRowText(row, text, context!);
+                RenderRowText(y, row, text, context!);
             }
 
             return text.ToString();
@@ -213,7 +208,7 @@ namespace Cadmus.Export.ML
                 TeiStandoffTextBlockRenderer.M_ROW_Y + "}\">";
             RowClose = "</div>";
             BlockOpen = "<seg xml:id=\"{" +
-                TeiStandoffTextBlockRenderer.M_FRAGMENT_ID + "}\">";
+                TeiStandoffTextBlockRenderer.M_TARGET_ID + "}\">";
             BlockClose = "</seg>";
         }
     }

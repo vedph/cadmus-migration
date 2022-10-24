@@ -4,14 +4,10 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
-
     <IsPackable>false</IsPackable>
-
-    <Version>0.0.19</Version>
-
-    <FileVersion>0.0.19</FileVersion>
-
-    <AssemblyVersion>0.0.19</AssemblyVersion>
+    <Version>0.0.20</Version>
+    <FileVersion>0.0.20</FileVersion>
+    <AssemblyVersion>0.0.20</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>

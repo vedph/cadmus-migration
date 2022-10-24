@@ -64,19 +64,6 @@ namespace Cadmus.Export.ML
         }
 
         /// <summary>
-        /// Builds the fragment identifier from the specified data. A fragment
-        /// ID is built with item number + layer ID + fragment index, all
-        /// separated by underscore and prefixed by an initial single <c>f</c>
-        /// (e.g. <c>f1_2_3</c>).
-        /// </summary>
-        /// <param name="itemNr">The item nr.</param>
-        /// <param name="layerId">The layer identifier.</param>
-        /// <param name="frIndex">Index of the fr.</param>
-        /// <returns>Fragment ID.</returns>
-        public static string BuildFragmentId(int itemNr, int layerId, int frIndex) =>
-            $"f{itemNr}_{layerId}_{frIndex}";
-
-        /// <summary>
         /// Renders the various flows of text.
         /// </summary>
         /// <param name="item">The source item.</param>

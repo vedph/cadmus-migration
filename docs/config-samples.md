@@ -186,24 +186,70 @@ This sample configuration exports all the Cadmus text items into a TEI file for 
 }
 ```
 
-For instance, this is the first portion of the TEI text. Rendition here is limited to the text itself, without contents in the header:
+For instance, this is the first portion of the TEI text, for its first item. Rendition here is limited to the text itself, without contents in the header:
 
 ```xml
-<body><div xml:id="r1_1"><seg xml:id="f1_2_1">ADNARE AD EAM REM</seg>. <seg xml:id="f1_3_3">Cic. de rep. II ‘Ut </seg><seg xml:id="f1_1_4">ad eam</seg><seg xml:id="f1_3_5"> urbem, quam</seg></div><div xml:id="r1_2"><seg xml:id="f1_3_6">incolas, </seg><seg xml:id="f1_1_7">possit</seg><seg xml:id="f1_3_8"> adnare’</seg>.</div>
-<div xml:id="r2_1"><seg xml:id="f2_1_1">‹ADSIDET ILLUM</seg><seg xml:id="f2_1_2">. </seg><seg xml:id="f2_3_3">Cic. pro Gabinio›</seg><seg xml:id="f2_3_4"> ‘neque adsidere Gabinium</seg></div><div xml:id="r2_2"><seg xml:id="f2_3_5">aut alloqui in curia quisquam audebat’</seg>.</div>
+<body><div xml:id="r1_1"><seg xml:id="1_1_1">ADNARE AD EAM REM</seg>. <seg xml:id="1_1_3">Cic. de rep. II ‘Ut </seg><seg xml:id="1_1_4">ad eam</seg><seg xml:id="1_1_5"> urbem, quam</seg></div><div xml:id="r1_2"><seg xml:id="1_2_6">incolas, </seg><seg xml:id="1_2_7">possit</seg><seg xml:id="1_2_8"> adnare’</seg>.</div>
 ...
 </body>
 ```
 
 As you can see, `body` contains a set of children `div` elements, each representing a row of text blocks; its ID, starting with `r`, is built from the item's ordinal number plus the row's ordinal number. So, `r1_1` is item 1, row 1; while `r2_1` is item 2, row 1.
 
-In turn, each of these "row" `div` elements contains text mixed with `seg` elements. These `seg` elements are used to wrap any arbitrarily defined portion of text under an ID, so that it can be referenced from a TEI standoff file. Thus, with reference to the text blocks model, each block here is either a text node (when it has no links), or a `seg` element (when it has 1 or more links).
+In turn, each of these "row" `div` elements contains text mixed with `seg` elements. These `seg` elements are used to wrap any arbitrarily defined portion of text under an ID, so that it can be referenced from a TEI standoff file. So, with reference to the text blocks model, each block here is either a text node (when it has no links), or a `seg` element (when it has 1 or more links).
 
-Each `seg` element has an ID defined by `f` (=fragment) followed by the item's ordinal number, the layer ID, and the fragment index.
+Each `seg` element has an ID defined by `b` (=block) followed by the item's ordinal number, the text blocks row's ordinal number, and the block ordinal number.
 
 This segmentation of the text is the result of [flattening](markup.md) text layers into a set of abstractions, the "text blocks", which just represent the maximum extent of text linked to the same set of annotations. This allows minimizing the requirements for text segmentation, by wrapping into `seg` only those portions of text which require to be linked from any of the layers selected for output. This approach is thus much more efficient than systematically wrapping the whole text in advance, using a fixed level of granularity (e.g. wrap each graphical word into an element with a unique ID). Here, wrapping occurs only when necessary, and might extend from 1 to N characters, with no predefined (and thus fixed) level of granularity.
 
 You might notice here that not all the `seg` elements found in the text are referenced from the apparatus layer. That's because the sample text has many other layers besides apparatus; so, even though we are generating output only for apparatus, we stick to the blocks defined by flattening all the layers. This ensures that two different exports of the same text created by selecting different layers will produce the same segmentation.
+
+So, in the end we have these blocks:
+
+(a) from item 1, row 1:
+
+- `1_1_1`: "ADNARE AD EAM REM"
+- `1_1_3`: "Cic. de rep. II ‘Ut "
+- `1_1_4`: "ad eam"
+- `1_1_5`: " urbem, quam"
+
+(b) from item 1, row 2:
+
+- `1_2_6`: "incolas, "
+- `1_2_7`: "possit"
+- `1_2_8`: " adnare’"
+- (no ID): "."
+
+The corresponding TEI apparatus document (named after its layer type: `it.vedph.token-text-layer_fr.it.vedph.apparatus.xml`) for the first item is:
+
+```xml
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+<standOff type="1">
+  <div xml:id="92769c41-347b-48e0-a1e3-8f6ada7d89c2">
+    <div>
+      <app n="1" loc="#1_1_4">
+        <rdg wit="#n1">adeam</rdg>
+      </app>
+      <app n="2" loc="#1_1_4">
+        <rdg source="#Parrhasius">ad eam</rdg>
+      </app>
+    </div>
+    <div>
+      <app n="1" loc="#1_2_7">
+        <rdg source="#Ursinus">_f._ possis</rdg>
+      </app>
+    </div>
+  </div>
+...
+</standOff>
+</TEI>
+```
+
+The apparatus entries are:
+
+- `1_1_4` (targeting `ad eam`): `adeam` n1.
+- `1_1_4` (targeting `ad eam`): `ad eam` Parrhasius.
+- `1_2_7` (targeting `possit`): `_f._ possis` Ursinus.
 
 ## Exporting Text Items in Plain Text
 

@@ -160,8 +160,8 @@ namespace Cadmus.Export.ML
                     frDiv.SetAttributeValue("type", fr.Tag);
                 itemDiv.Add(frDiv);
 
-                // app @loc="FRID"
-                // the fragment ID must be fetched from the fragment IDs
+                // app @loc="BLOCK_ID"
+                // the target block ID must be fetched from the fragment IDs
                 // map in context; to get the ID for this fragment, we rely
                 // on the current layer ID, get its prefix, and use this to
                 // build the map's key (prefix + fragment index). This is done
@@ -179,7 +179,7 @@ namespace Cadmus.Export.ML
                     // div/app @n="INDEX + 1"
                     XElement app = new(NamespaceOptions.TEI + "app",
                         new XAttribute("n", ++n),
-                        new XAttribute("loc", loc));
+                        new XAttribute("loc", "#" + loc));
                     frDiv.Add(app);
 
                     // app @type="TAG"
