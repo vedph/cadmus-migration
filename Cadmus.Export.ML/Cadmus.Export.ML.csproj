@@ -4,9 +4,9 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>0.0.20</Version>
-		<FileVersion>0.0.20</FileVersion>
-		<AssemblyVersion>0.0.20</AssemblyVersion>
+		<Version>0.0.21</Version>
+		<FileVersion>0.0.21</FileVersion>
+		<AssemblyVersion>0.0.21</AssemblyVersion>
 		<Authors>Daniele Fusi</Authors>
 		<Company>Fusi</Company>
 		<Product>Cadmus</Product>
@@ -19,9 +19,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Cadmus.Core" Version="4.1.0" />
-		<PackageReference Include="Cadmus.General.Parts" Version="2.1.1" />
-		<PackageReference Include="Cadmus.Philology.Parts" Version="4.0.1" />
+		<PackageReference Include="Cadmus.Core" Version="4.1.1" />
+		<PackageReference Include="Cadmus.General.Parts" Version="2.1.2" />
+		<PackageReference Include="Cadmus.Philology.Parts" Version="4.0.2" />
 		<PackageReference Include="Fusi.Xml.Extras" Version="2.0.3" />
 		<PackageReference Include="JmesPath.Net" Version="1.0.205" />
 	</ItemGroup>

@@ -14,6 +14,10 @@ Markup related components used to export Cadmus data into some markup language, 
 
 ## History
 
+### 0.0.21
+
+- 2022-11-03: updated packages.
+
 ### 0.0.20
 
 - 2022-10-24: refactored block ID for TEI standoff export (`Cadmus.Export.ML`).
