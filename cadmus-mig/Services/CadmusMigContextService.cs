@@ -27,7 +27,7 @@ namespace Cadmus.Migration.Cli.Services
         /// <param name="pluginTag">The tag of the component in its plugin,
         /// or null to use the standard preview factory provider.</param>
         /// <returns>The provider.</returns>
-        public ICadmusPreviewFactoryProvider? GetPreviewFactoryProvider(
+        public static ICadmusPreviewFactoryProvider? GetPreviewFactoryProvider(
             string? pluginTag = null)
         {
             if (pluginTag == null)
@@ -49,7 +49,7 @@ namespace Cadmus.Migration.Cli.Services
         {
             if (tag is null) throw new ArgumentNullException(nameof(tag));
 
-            IRepositoryProvider provider = PluginFactoryProvider
+            IRepositoryProvider? provider = PluginFactoryProvider
                 .GetFromTag<IRepositoryProvider>(tag);
             if (provider == null)
             {
@@ -58,7 +58,7 @@ namespace Cadmus.Migration.Cli.Services
                     " was not found among plugins in " +
                     PluginFactoryProvider.GetPluginsDir());
             }
-            provider.ConnectionString = _config.ConnectionString;
+            provider.ConnectionString = _config.ConnectionString!;
             return provider.CreateRepository();
         }
     }

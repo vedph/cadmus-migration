@@ -91,7 +91,7 @@ namespace Cadmus.Migration.Cli.Commands
             // get preview factory from its provider
             ColorConsole.WriteInfo("Building preview factory...");
             ICadmusPreviewFactoryProvider? provider =
-                contextService.GetPreviewFactoryProvider(
+                CadmusMigCliContextService.GetPreviewFactoryProvider(
                     _options.PreviewFactoryProviderTag);
             if (provider == null)
             {
@@ -140,9 +140,12 @@ namespace Cadmus.Migration.Cli.Commands
             foreach (string id in collector.GetIds())
             {
                 ColorConsole.WriteInfo(" - " + id);
-                IItem item = repository.GetItem(id, true);
-                ColorConsole.WriteInfo("   " + item.Title);
-                composer.Compose(item);
+                IItem? item = repository.GetItem(id, true);
+                if (item != null)
+                {
+                    ColorConsole.WriteInfo("   " + item.Title);
+                    composer.Compose(item);
+                }
             }
             composer.Close();
 

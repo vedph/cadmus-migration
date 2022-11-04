@@ -24,16 +24,16 @@ namespace Cadmus.Migration.Cli.Services
         /// <summary>
         /// The connection string.
         /// </summary>
-        public string? ConnectionString { get; set; }
+        public string ConnectionString { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StandardRepositoryProvider"/>
         /// class.
         /// </summary>
-        /// <param name="configuration">The configuration.</param>
         /// <exception cref="ArgumentNullException">configuration</exception>
         public StandardRepositoryProvider()
         {
+            ConnectionString = "";
             TagAttributeToTypeMap map = new();
             map.Add(new[]
             {
