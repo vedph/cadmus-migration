@@ -3,9 +3,9 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
-    <Version>0.0.21</Version>
-	<FileVersion>0.0.21</FileVersion>
-	<AssemblyVersion>0.0.21</AssemblyVersion>
+    <Version>0.1.0</Version>
+	<FileVersion>0.1.0</FileVersion>
+	<AssemblyVersion>0.1.0</AssemblyVersion>
 	<RootNamespace>Cadmus.Migration.Cli</RootNamespace>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -27,7 +27,7 @@
 
   <ItemGroup>
     <PackageReference Include="Cadmus.Cli.Core" Version="4.1.2" />
-    <PackageReference Include="Cadmus.Philology.Parts" Version="4.0.2" />
+    <PackageReference Include="Cadmus.Philology.Parts" Version="4.1.0" />
     <PackageReference Include="Fusi.Cli" Version="1.0.2" />
     <PackageReference Include="Fusi.Cli.Commands" Version="1.0.2" />
     <PackageReference Include="McMaster.NETCore.Plugins" Version="1.4.0" />

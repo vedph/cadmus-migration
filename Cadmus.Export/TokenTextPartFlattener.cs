@@ -97,7 +97,7 @@ namespace Cadmus.Export
             if (l.IsRange)
             {
                 // range
-                range.End = GetIndexFromPoint(l.B, part, true);
+                range.End = GetIndexFromPoint(l.B!, part, true);
             }
             else
             {

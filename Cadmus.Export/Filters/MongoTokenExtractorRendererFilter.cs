@@ -93,8 +93,8 @@ namespace Cadmus.Export.Filters
                 TokenTextLocation tl = TokenTextLocation.Parse(loc);
                 string text = part.GetText(tl,
                     _options?.WholeToken == true,
-                    _options?.StartMarker,
-                    _options?.EndMarker);
+                    _options?.StartMarker!,
+                    _options?.EndMarker!);
 
                 // cut if required
                 if (_options?.TextCutting == true)

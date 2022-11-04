@@ -215,7 +215,7 @@ namespace Cadmus.Export
             Context.Data[M_ITEM_ID] = item.Id;
             Context.Data[M_ITEM_TITLE] = item.Title;
             Context.Data[M_ITEM_FACET] = item.FacetId;
-            Context.Data[M_ITEM_GROUP] = item.GroupId;
+            if (item.GroupId != null) Context.Data[M_ITEM_GROUP] = item.GroupId;
             Context.Data[M_ITEM_FLAGS] = item.Flags;
 
             if (item.GroupId != _lastGroupId)

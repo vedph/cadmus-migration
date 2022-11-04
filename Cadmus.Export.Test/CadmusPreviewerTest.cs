@@ -208,7 +208,7 @@ namespace Cadmus.Export.Test
 
             string json = previewer.RenderPart(ITEM_ID, TEXT_ID);
 
-            string json2 = repository.GetPartContent(TEXT_ID);
+            string? json2 = repository.GetPartContent(TEXT_ID);
             Assert.Equal(json, json2);
         }
 
@@ -236,7 +236,8 @@ namespace Cadmus.Export.Test
 
             string json2 = previewer.RenderFragment(ITEM_ID, ORTH_ID, index);
 
-            string json = repository.GetPartContent(ORTH_ID);
+            string? json = repository.GetPartContent(ORTH_ID);
+            Assert.NotNull(json);
             JsonDocument doc = JsonDocument.Parse(json);
             JsonElement fragments = doc.RootElement
                 .GetProperty("fragments");

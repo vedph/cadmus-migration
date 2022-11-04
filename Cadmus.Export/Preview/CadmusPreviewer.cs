@@ -306,7 +306,7 @@ namespace Cadmus.Export.Preview
             IPart? part = _repository?.GetPart<IPart>(id);
             if (part == null) return Array.Empty<TextBlockRow>();
             List<IPart> layerParts = layerPartIds
-                .Select(lid => _repository!.GetPart<IPart>(lid))
+                .Select(lid => _repository!.GetPart<IPart>(lid)!)
                 .Where(p => p != null)
                 .ToList();
 

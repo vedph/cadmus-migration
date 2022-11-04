@@ -67,7 +67,7 @@ namespace Cadmus.Export
             {
                 foreach (ItemInfo item in page.Items)
                 {
-                    yield return item.Id;
+                    yield return item.Id!;
                 }
                 filter.PageNumber++;
                 page = _repository!.GetItems(filter);
