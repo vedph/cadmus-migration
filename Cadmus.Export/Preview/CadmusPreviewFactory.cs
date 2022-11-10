@@ -233,7 +233,7 @@ namespace Cadmus.Export.Preview
             IConfigurationSection filterKeys = Configuration.GetSection(path);
             if (filterKeys.Exists())
             {
-                string[] keys = filterKeys.Get<string[]>();
+                string[] keys = filterKeys.Get<string[]>() ?? Array.Empty<string>();
                 return GetRendererFilters(keys).ToList();
             }
             return Array.Empty<IRendererFilter>();
@@ -369,7 +369,7 @@ namespace Cadmus.Export.Preview
                 entry.OptionsPath + ":TextPartFlattenerKey");
             if (section.Exists())
             {
-                string cKey = section.Get<string>();
+                string cKey = section.Get<string>()!;
                 composer.TextPartFlattener = GetTextPartFlattener(cKey);
             }
 
@@ -378,7 +378,7 @@ namespace Cadmus.Export.Preview
                 entry.OptionsPath + ":TextBlockRendererKey");
             if (section.Exists())
             {
-                string cKey = section.Get<string>();
+                string cKey = section.Get<string>()!;
                 composer.TextBlockRenderer = GetTextBlockRenderer(cKey);
             }
 
@@ -387,7 +387,7 @@ namespace Cadmus.Export.Preview
                 entry.OptionsPath + ":JsonRendererKeys");
             if (section.Exists())
             {
-                foreach (string cKey in section.Get<string[]>())
+                foreach (string cKey in section.Get<string[]>()!)
                 {
                     IJsonRenderer? renderer = GetJsonRenderer(cKey);
                     if (renderer != null) composer.JsonRenderers[cKey] = renderer;

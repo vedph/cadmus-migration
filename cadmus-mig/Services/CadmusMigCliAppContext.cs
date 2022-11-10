@@ -38,7 +38,7 @@ namespace Cadmus.Migration.Cli.Services
                 new CadmusMigCliContextServiceConfig
                 {
                     ConnectionString = string.Format(CultureInfo.InvariantCulture,
-                        Configuration.GetConnectionString("Default"), dbName),
+                        Configuration!.GetConnectionString("Default")!, dbName),
                     LocalDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
                         "Assets")
                 });

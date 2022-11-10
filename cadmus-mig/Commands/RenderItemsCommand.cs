@@ -78,7 +78,7 @@ namespace Cadmus.Migration.Cli.Commands
             Console.WriteLine($"Composer key: {_options.ComposerKey}\n");
 
             string cs = string.Format(
-                _options.Configuration.GetConnectionString("Default"),
+                _options.Configuration!.GetConnectionString("Default")!,
                 _options.DatabaseName);
 
             CadmusMigCliContextService contextService =
