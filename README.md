@@ -4,6 +4,8 @@ Tools for migrating (importing/exporting) Cadmus data. Export tools also include
 
 - [Documentation](docs/index.md)
 
+👀 [Cadmus Page](https://myrmex.github.io/overview/cadmus/)
+
 ## Cadmus.Export
 
 General purpose components used to export Cadmus data.
@@ -13,6 +15,14 @@ General purpose components used to export Cadmus data.
 Markup related components used to export Cadmus data into some markup language, typically XML.
 
 ## History
+
+### 2.0.2
+
+- 2023-02-01: migrated to new components factory. This is a breaking change for backend components, please see [this page](https://myrmex.github.io/overview/cadmus/dev/history/#2023-02-01---backend-infrastructure-upgrade). Anyway, in the end you just have to update your libraries and a single namespace reference. Benefits include:
+  - more streamlined component instantiation.
+  - more functionality in components factory, including DI.
+  - dropped third party dependencies.
+  - adopted standard MS technologies for DI.
 
 ### 1.0.0
 

@@ -7,157 +7,156 @@ using System.Linq;
 using System.Text;
 using Xunit;
 
-namespace Cadmus.Export.Test
+namespace Cadmus.Export.Test;
+
+public sealed class TokenTextPartFlattenerTest
 {
-    public sealed class TokenTextPartFlattenerTest
+    internal static TokenTextPart GetTextPart(IList<string> lines)
     {
-        internal static TokenTextPart GetTextPart(IList<string> lines)
+        TokenTextPart part = new();
+        int y = 1;
+        foreach (string line in lines)
         {
-            TokenTextPart part = new();
-            int y = 1;
-            foreach (string line in lines)
+            part.Lines.Add(new TextLine
             {
-                part.Lines.Add(new TextLine
-                {
-                    Y = y++,
-                    Text = line
-                });
+                Y = y++,
+                Text = line
+            });
+        }
+        return part;
+    }
+
+    // 123 12345
+    // que vixit
+    // 12345 12
+    // annos XX
+    //    0123456789-1234567
+    // => que vixit|annos XX
+    internal static TokenTextPart GetSampleTextPart()
+        => GetTextPart(new[] { "que vixit", "annos XX" });
+
+    internal static IList<IPart> GetSampleLayerParts()
+    {
+        List<IPart> parts = new();
+
+        // qu[e]
+        TokenTextLayerPart<OrthographyLayerFragment>? oLayer = new();
+        oLayer.Fragments.Add(new OrthographyLayerFragment
+        {
+            Location = "1.1@3"
+        });
+        parts.Add(oLayer);
+
+        // qu[e v]ixit
+        TokenTextLayerPart<LigatureLayerFragment>? lLayer = new();
+        lLayer.Fragments.Add(new LigatureLayerFragment
+        {
+            Location = "1.1@3-1.2@1"
+        });
+        parts.Add(lLayer);
+
+        // [vixit annos]
+        TokenTextLayerPart<CommentLayerFragment>? cLayer = new();
+        cLayer.Fragments.Add(new CommentLayerFragment
+        {
+            Location = "1.2-2.1"
+        });
+        // XX
+        cLayer.Fragments.Add(new CommentLayerFragment
+        {
+            Location = "2.2"
+        });
+        parts.Add(cLayer);
+
+        return parts;
+    }
+
+    private static string RenderTextWithRanges(string text, MergedRangeSet set)
+    {
+        StringBuilder sb = new();
+        IList<MergedRange> ranges;
+
+        for (int i = 0; i < text.Length; i++)
+        {
+            if (text[i] == '\n')
+            {
+                sb.Append("</p>\n<p>");
+                continue;
             }
-            return part;
-        }
 
-        // 123 12345
-        // que vixit
-        // 12345 12
-        // annos XX
-        //    0123456789-1234567
-        // => que vixit|annos XX
-        internal static TokenTextPart GetSampleTextPart()
-            => GetTextPart(new[] { "que vixit", "annos XX" });
-
-        internal static IList<IPart> GetSampleLayerParts()
-        {
-            List<IPart> parts = new();
-
-            // qu[e]
-            TokenTextLayerPart<OrthographyLayerFragment>? oLayer = new();
-            oLayer.Fragments.Add(new OrthographyLayerFragment
+            if (i == 0 || !set.AreEqualAt(i, i - 1))
             {
-                Location = "1.1@3"
-            });
-            parts.Add(oLayer);
+                if (i > 0) sb.Append("</span>");
 
-            // qu[e v]ixit
-            TokenTextLayerPart<LigatureLayerFragment>? lLayer = new();
-            lLayer.Fragments.Add(new LigatureLayerFragment
-            {
-                Location = "1.1@3-1.2@1"
-            });
-            parts.Add(lLayer);
-
-            // [vixit annos]
-            TokenTextLayerPart<CommentLayerFragment>? cLayer = new();
-            cLayer.Fragments.Add(new CommentLayerFragment
-            {
-                Location = "1.2-2.1"
-            });
-            // XX
-            cLayer.Fragments.Add(new CommentLayerFragment
-            {
-                Location = "2.2"
-            });
-            parts.Add(cLayer);
-
-            return parts;
-        }
-
-        private static string RenderTextWithRanges(string text, MergedRangeSet set)
-        {
-            StringBuilder sb = new();
-            IList<MergedRange> ranges;
-
-            for (int i = 0; i < text.Length; i++)
-            {
-                if (text[i] == '\n')
+                ranges = set.GetRangesAt(i);
+                sb.Append("<span");
+                if (ranges.Count > 0)
                 {
-                    sb.Append("</p>\n<p>");
-                    continue;
+                    sb.Append(" class=\"");
+                    sb.AppendJoin(" ", ranges.Select(r => r.Id));
+                    sb.Append('"');
                 }
-
-                if (i == 0 || !set.AreEqualAt(i, i - 1))
-                {
-                    if (i > 0) sb.Append("</span>");
-
-                    ranges = set.GetRangesAt(i);
-                    sb.Append("<span");
-                    if (ranges.Count > 0)
-                    {
-                        sb.Append(" class=\"");
-                        sb.AppendJoin(" ", ranges.Select(r => r.Id));
-                        sb.Append('"');
-                    }
-                    sb.Append('>');
-                }
-                sb.Append(text[i]);
+                sb.Append('>');
             }
-            if (sb.Length > 0) sb.Append("</span>");
-            sb.Insert(0, "<p>");
-            sb.Append("</p>");
-
-            return sb.ToString();
+            sb.Append(text[i]);
         }
+        if (sb.Length > 0) sb.Append("</span>");
+        sb.Insert(0, "<p>");
+        sb.Append("</p>");
 
-        [Fact]
-        public void GetTextRanges_Ok()
-        {
-            TokenTextPartFlattener exporter = new();
-            TokenTextPart textPart = GetSampleTextPart();
-            IList<IPart> layerParts = GetSampleLayerParts();
+        return sb.ToString();
+    }
 
-            var tr = exporter.GetTextRanges(textPart, layerParts);
+    [Fact]
+    public void GetTextRanges_Ok()
+    {
+        TokenTextPartFlattener exporter = new();
+        TokenTextPart textPart = GetSampleTextPart();
+        IList<IPart> layerParts = GetSampleLayerParts();
 
-            // text
-            Assert.Equal("que vixit\nannos XX", tr.Item1);
+        var tr = exporter.GetTextRanges(textPart, layerParts);
 
-            // ranges
-            MergedRangeSet set = tr.Item2;
-            Assert.Equal(4, set.Ranges.Count);
+        // text
+        Assert.Equal("que vixit\nannos XX", tr.Item1);
 
-            // qu[e]
-            MergedRange r = set.Ranges[0];
-            Assert.Equal(2, r.Start);
-            Assert.Equal(2, r.End);
-            Assert.Equal("L0-0", r.Id);
-            Assert.Equal("L0", r.GroupId);
+        // ranges
+        MergedRangeSet set = tr.Item2;
+        Assert.Equal(4, set.Ranges.Count);
 
-            // qu[e b]ixit
-            r = set.Ranges[1];
-            Assert.Equal(2, r.Start);
-            Assert.Equal(4, r.End);
-            Assert.Equal("L1-0", r.Id);
-            Assert.Equal("L1", r.GroupId);
+        // qu[e]
+        MergedRange r = set.Ranges[0];
+        Assert.Equal(2, r.Start);
+        Assert.Equal(2, r.End);
+        Assert.Equal("L0-0", r.Id);
+        Assert.Equal("L0", r.GroupId);
 
-            // [bixit annos]
-            r = set.Ranges[2];
-            Assert.Equal(4, r.Start);
-            Assert.Equal(14, r.End);
-            Assert.Equal("L2-0", r.Id);
-            Assert.Equal("L2", r.GroupId);
+        // qu[e b]ixit
+        r = set.Ranges[1];
+        Assert.Equal(2, r.Start);
+        Assert.Equal(4, r.End);
+        Assert.Equal("L1-0", r.Id);
+        Assert.Equal("L1", r.GroupId);
 
-            // XX
-            r = set.Ranges[3];
-            Assert.Equal(16, r.Start);
-            Assert.Equal(17, r.End);
-            Assert.Equal("L2-1", r.Id);
-            Assert.Equal("L2", r.GroupId);
+        // [bixit annos]
+        r = set.Ranges[2];
+        Assert.Equal(4, r.Start);
+        Assert.Equal(14, r.End);
+        Assert.Equal("L2-0", r.Id);
+        Assert.Equal("L2", r.GroupId);
 
-            string html = RenderTextWithRanges(tr.Item1, set);
-            Assert.Equal("<p>" +
-                "<span>qu</span><span class=\"L0-0 L1-0\">e</span>" +
-                "<span class=\"L1-0\"> </span><span class=\"L1-0 L2-0\">v</span>" +
-                "<span class=\"L2-0\">ixit</p>\n" +
-                "<p>annos</span><span> </span><span class=\"L2-1\">XX</span></p>",
-                html);
-        }
+        // XX
+        r = set.Ranges[3];
+        Assert.Equal(16, r.Start);
+        Assert.Equal(17, r.End);
+        Assert.Equal("L2-1", r.Id);
+        Assert.Equal("L2", r.GroupId);
+
+        string html = RenderTextWithRanges(tr.Item1, set);
+        Assert.Equal("<p>" +
+            "<span>qu</span><span class=\"L0-0 L1-0\">e</span>" +
+            "<span class=\"L1-0\"> </span><span class=\"L1-0 L2-0\">v</span>" +
+            "<span class=\"L2-0\">ixit</p>\n" +
+            "<p>annos</span><span> </span><span class=\"L2-1\">XX</span></p>",
+            html);
     }
 }

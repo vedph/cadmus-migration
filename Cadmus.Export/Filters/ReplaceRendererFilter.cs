@@ -1,111 +1,110 @@
-﻿using Fusi.Tools.Config;
+﻿using Fusi.Tools.Configuration;
 using Fusi.Tools.Text;
 using System;
 using System.Collections.Generic;
 
-namespace Cadmus.Export.Filters
+namespace Cadmus.Export.Filters;
+
+/// <summary>
+/// Generic text replacement renderer filter.
+/// <para>Tag: <c>it.vedph.renderer-filter.replace</c>.</para>
+/// </summary>
+[Tag("it.vedph.renderer-filter.replace")]
+public sealed class ReplaceRendererFilter : IRendererFilter,
+    IConfigurable<ReplaceRendererFilterOptions>
 {
+    private readonly TextReplacer _replacer;
+
     /// <summary>
-    /// Generic text replacement renderer filter.
-    /// <para>Tag: <c>it.vedph.renderer-filter.replace</c>.</para>
+    /// Initializes a new instance of the <see cref="ReplaceRendererFilter"/>
+    /// class.
     /// </summary>
-    [Tag("it.vedph.renderer-filter.replace")]
-    public sealed class ReplaceRendererFilter : IRendererFilter,
-        IConfigurable<ReplaceRendererFilterOptions>
+    public ReplaceRendererFilter()
     {
-        private readonly TextReplacer _replacer;
+        _replacer = new(false);
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ReplaceRendererFilter"/>
-        /// class.
-        /// </summary>
-        public ReplaceRendererFilter()
+    /// <summary>
+    /// Configures the specified options.
+    /// </summary>
+    /// <param name="options">The options.</param>
+    /// <exception cref="ArgumentNullException">options</exception>
+    public void Configure(ReplaceRendererFilterOptions options)
+    {
+        if (options is null) throw new ArgumentNullException(nameof(options));
+
+        _replacer.Clear();
+        if (options.Replacements?.Count > 0)
         {
-            _replacer = new(false);
-        }
-
-        /// <summary>
-        /// Configures the specified options.
-        /// </summary>
-        /// <param name="options">The options.</param>
-        /// <exception cref="ArgumentNullException">options</exception>
-        public void Configure(ReplaceRendererFilterOptions options)
-        {
-            if (options is null) throw new ArgumentNullException(nameof(options));
-
-            _replacer.Clear();
-            if (options.Replacements?.Count > 0)
+            foreach (var o in options.Replacements)
             {
-                foreach (var o in options.Replacements)
-                {
-                    if (o.IsPattern)
-                        _replacer.AddExpression(o.Source!, o.Target!, o.Repetitions);
-                    else
-                        _replacer.AddLiteral(o.Source!, o.Target!, o.Repetitions);
-                }
+                if (o.IsPattern)
+                    _replacer.AddExpression(o.Source!, o.Target!, o.Repetitions);
+                else
+                    _replacer.AddLiteral(o.Source!, o.Target!, o.Repetitions);
             }
         }
-
-        /// <summary>
-        /// Applies this filter to the specified text.
-        /// </summary>
-        /// <param name="text">The text.</param>
-        /// <param name="context">The optional renderer context.</param>
-        /// <returns>The filtered text.</returns>
-        public string Apply(string text, IRendererContext? context = null)
-        {
-            if (string.IsNullOrEmpty(text)) return text;
-            return _replacer.Replace(text)!;
-        }
     }
 
     /// <summary>
-    /// A general purpose set of options for replacing text.
+    /// Applies this filter to the specified text.
     /// </summary>
-    public class ReplaceEntryOptions
+    /// <param name="text">The text.</param>
+    /// <param name="context">The optional renderer context.</param>
+    /// <returns>The filtered text.</returns>
+    public string Apply(string text, IRendererContext? context = null)
     {
-        /// <summary>
-        /// Gets or sets the source text or pattern.
-        /// </summary>
-        public string? Source { get; set; }
-
-        /// <summary>
-        /// Gets or sets the target text.
-        /// </summary>
-        public string? Target { get; set; }
-
-        /// <summary>
-        /// Gets or sets the max repetitions count, or 0 for no limit
-        /// (=keep replacing until no more changes).
-        /// </summary>
-        public int Repetitions { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether <see cref="Source"/> is a
-        /// regular expression pattern.
-        /// </summary>
-        public bool IsPattern { get; set; }
-
-        /// <summary>
-        /// Converts to string.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="string" /> that represents this instance.
-        /// </returns>
-        public override string ToString()
-        {
-            return $"{(IsPattern ? "*" : "")} {Source} => {Target} (×{Repetitions})";
-        }
+        if (string.IsNullOrEmpty(text)) return text;
+        return _replacer.Replace(text)!;
     }
+}
+
+/// <summary>
+/// A general purpose set of options for replacing text.
+/// </summary>
+public class ReplaceEntryOptions
+{
+    /// <summary>
+    /// Gets or sets the source text or pattern.
+    /// </summary>
+    public string? Source { get; set; }
 
     /// <summary>
-    /// Options for <see cref="ReplaceRendererFilter"/>.
+    /// Gets or sets the target text.
     /// </summary>
-    public class ReplaceRendererFilterOptions
+    public string? Target { get; set; }
+
+    /// <summary>
+    /// Gets or sets the max repetitions count, or 0 for no limit
+    /// (=keep replacing until no more changes).
+    /// </summary>
+    public int Repetitions { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether <see cref="Source"/> is a
+    /// regular expression pattern.
+    /// </summary>
+    public bool IsPattern { get; set; }
+
+    /// <summary>
+    /// Converts to string.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="string" /> that represents this instance.
+    /// </returns>
+    public override string ToString()
     {
-        /// <summary>
-        /// Gets or sets the replacements.
-        /// </summary>
-        public IList<ReplaceEntryOptions>? Replacements { get; set; }
+        return $"{(IsPattern ? "*" : "")} {Source} => {Target} (×{Repetitions})";
     }
+}
+
+/// <summary>
+/// Options for <see cref="ReplaceRendererFilter"/>.
+/// </summary>
+public class ReplaceRendererFilterOptions
+{
+    /// <summary>
+    /// Gets or sets the replacements.
+    /// </summary>
+    public IList<ReplaceEntryOptions>? Replacements { get; set; }
 }

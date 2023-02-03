@@ -1,14 +1,13 @@
 ﻿using System.IO;
 using System.Text;
 
-namespace Cadmus.Migration.Cli.Commands
+namespace Cadmus.Migration.Cli.Commands;
+
+internal static class CommandHelper
 {
-    internal static class CommandHelper
+    public static string LoadFileContent(string path)
     {
-        public static string LoadFileContent(string path)
-        {
-            using StreamReader reader = new(path, Encoding.UTF8);
-            return reader.ReadToEnd();
-        }
+        using StreamReader reader = new(path, Encoding.UTF8);
+        return reader.ReadToEnd();
     }
 }

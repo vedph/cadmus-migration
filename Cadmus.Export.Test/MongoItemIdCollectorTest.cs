@@ -5,78 +5,77 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace Cadmus.Export.Test
+namespace Cadmus.Export.Test;
+
+[Collection(nameof(NonParallelResourceCollection))]
+public sealed class MongoItemIdCollectorTest
 {
-    [Collection(nameof(NonParallelResourceCollection))]
-    public sealed class MongoItemIdCollectorTest
+    private const string DB_NAME = "cadmus-test";
+    private readonly MongoClient _client;
+
+    public MongoItemIdCollectorTest()
     {
-        private const string DB_NAME = "cadmus-test";
-        private readonly MongoClient _client;
+        _client = new MongoClient(TestHelper.CS);
+    }
 
-        public MongoItemIdCollectorTest()
+    private void InitDatabase(int count)
+    {
+        // camel case everything:
+        // https://stackoverflow.com/questions/19521626/mongodb-convention-packs/19521784#19521784
+        ConventionPack pack = new()
         {
-            _client = new MongoClient(TestHelper.CS);
-        }
+            new CamelCaseElementNameConvention()
+        };
+        ConventionRegistry.Register("camel case", pack, _ => true);
 
-        private void InitDatabase(int count)
+        _client.DropDatabase(DB_NAME);
+        IMongoDatabase db = _client.GetDatabase(DB_NAME);
+
+        for (int i = 0; i < count; i++)
         {
-            // camel case everything:
-            // https://stackoverflow.com/questions/19521626/mongodb-convention-packs/19521784#19521784
-            ConventionPack pack = new()
+            MongoItem item = new()
             {
-                new CamelCaseElementNameConvention()
+                Title = $"Item {i + 1}",
+                Description = "Description",
+                CreatorId = "zeus",
+                UserId = "zeus",
+                FacetId = "text",
+                SortKey = $"item{i+1:000}"
             };
-            ConventionRegistry.Register("camel case", pack, _ => true);
-
-            _client.DropDatabase(DB_NAME);
-            IMongoDatabase db = _client.GetDatabase(DB_NAME);
-
-            for (int i = 0; i < count; i++)
-            {
-                MongoItem item = new()
-                {
-                    Title = $"Item {i + 1}",
-                    Description = "Description",
-                    CreatorId = "zeus",
-                    UserId = "zeus",
-                    FacetId = "text",
-                    SortKey = $"item{i+1:000}"
-                };
-                db.GetCollection<MongoItem>(MongoItem.COLLECTION).InsertOne(item);
-            }
+            db.GetCollection<MongoItem>(MongoItem.COLLECTION).InsertOne(item);
         }
+    }
 
-        private static MongoItemIdCollector GetCollector()
+    private static MongoItemIdCollector GetCollector()
+    {
+        MongoItemIdCollector collector = new();
+        collector.Configure(new MongoItemIdCollectorOptions
         {
-            MongoItemIdCollector collector = new();
-            collector.Configure(new MongoItemIdCollectorOptions
-            {
-                ConnectionString = TestHelper.CS,
-                FacetId = "text"
-            });
-            return collector;
-        }
+            ConnectionString = TestHelper.CS,
+            FacetId = "text"
+        });
+        return collector;
+    }
 
-        [Fact]
-        public void Collect_Empty_Empty()
-        {
-            InitDatabase(0);
-            MongoItemIdCollector collector = GetCollector();
+    [Fact]
+    public void Collect_Empty_Empty()
+    {
+        InitDatabase(0);
+        MongoItemIdCollector collector = GetCollector();
 
-            IList<string> ids = collector.GetIds().ToList();
+        IList<string> ids = collector.GetIds().ToList();
 
-            Assert.Equal(0, ids.Count);
-        }
+        Assert.Equal(0, ids.Count);
+    }
 
-        [Fact]
-        public void Collect_NotEmpty_Ok()
-        {
-            InitDatabase(3);
-            MongoItemIdCollector collector = GetCollector();
+    [Fact]
+    public void Collect_NotEmpty_Ok()
+    {
+        InitDatabase(3);
+        MongoItemIdCollector collector = GetCollector();
 
-            IList<string> ids = collector.GetIds().ToList();
+        IList<string> ids = collector.GetIds().ToList();
 
-            Assert.Equal(3, ids.Count);
-        }
+        Assert.Equal(3, ids.Count);
     }
 }
