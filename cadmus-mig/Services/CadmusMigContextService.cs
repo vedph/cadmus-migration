@@ -42,13 +42,10 @@ public sealed class CadmusMigCliContextService
     /// </summary>
     /// <param name="tag">The tag.</param>
     /// <returns>Repository</returns>
-    /// <exception cref="ArgumentNullException">tag or connStr</exception>
     /// <exception cref="FileNotFoundException">Repository provider not
     /// found.</exception>
-    public ICadmusRepository GetCadmusRepository(string tag)
+    public ICadmusRepository GetCadmusRepository(string? tag)
     {
-        if (tag is null) throw new ArgumentNullException(nameof(tag));
-
         IRepositoryProvider? provider = PluginFactoryProvider
             .GetFromTag<IRepositoryProvider>(tag);
         if (provider == null)

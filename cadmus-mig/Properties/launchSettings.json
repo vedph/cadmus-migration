@@ -2,7 +2,7 @@
   "profiles": {
     "cadmus-mig": {
       "commandName": "Project",
-      "commandLineArgs": "render-items cadmus-tgr c:\\users\\dfusi\\desktop\\export-tei.json -r repository-provider.tgr"
+      "commandLineArgs": "render-items cadmus-sidon c:\\users\\dfusi\\desktop\\export-tei.json"
     }
   }
 }

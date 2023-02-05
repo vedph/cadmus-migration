@@ -5,9 +5,9 @@
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<IsPackable>false</IsPackable>
-		<Version>2.0.2</Version>
-		<FileVersion>2.0.2</FileVersion>
-		<AssemblyVersion>2.0.2</AssemblyVersion>
+		<Version>2.0.3</Version>
+		<FileVersion>2.0.3</FileVersion>
+		<AssemblyVersion>2.0.3</AssemblyVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -38,7 +38,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Cadmus.Philology.Parts" Version="6.0.0" />
+		<PackageReference Include="Cadmus.Philology.Parts" Version="6.0.1" />
 	</ItemGroup>
 
 	<ItemGroup>
