@@ -16,6 +16,10 @@ Markup related components used to export Cadmus data into some markup language, 
 
 ## History
 
+### 3.0.2
+
+- 2023-06-16: updated packages.
+
 ### 3.0.1
 
 - 2023-06-02: updated packages.
