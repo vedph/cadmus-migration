@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CadmusPreviewBuilder", "Cad
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cadmus.Import", "Cadmus.Import\Cadmus.Import.csproj", "{2F730716-34A2-4FB7-84E0-5BFBCCF2764D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cadmus.Import.Test", "Cadmus.Import.Test\Cadmus.Import.Test.csproj", "{378DA435-4D59-4BC9-917E-B23FA4B27212}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,10 @@ Global
 		{2F730716-34A2-4FB7-84E0-5BFBCCF2764D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2F730716-34A2-4FB7-84E0-5BFBCCF2764D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2F730716-34A2-4FB7-84E0-5BFBCCF2764D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{378DA435-4D59-4BC9-917E-B23FA4B27212}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{378DA435-4D59-4BC9-917E-B23FA4B27212}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{378DA435-4D59-4BC9-917E-B23FA4B27212}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{378DA435-4D59-4BC9-917E-B23FA4B27212}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

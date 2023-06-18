@@ -9,5 +9,8 @@ cd..
 cd .\Cadmus.Export.ML
 dotnet pack -c Debug -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
 cd..
+cd .\Cadmus.Import
+dotnet pack -c Debug -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+cd..
 
 pause

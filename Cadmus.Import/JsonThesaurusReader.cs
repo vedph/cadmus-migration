@@ -4,21 +4,94 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace Cadmus.Import;
 
+/// <summary>
+/// JSON thesaurus reader. This reads a JSON document containing either an
+/// array of thesauri, or a single thesaurus.
+/// </summary>
+/// <seealso cref="IThesaurusReader" />
 public sealed class JsonThesaurusReader : IThesaurusReader
 {
+    private readonly JsonDocument _doc;
+    private readonly JsonSerializerOptions _options;
+    private IList<JsonElement>? _elements;
+    private int _index;
     private bool _disposedValue;
 
-    public JsonThesaurusReader(string json)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="JsonThesaurusReader"/> class.
+    /// </summary>
+    /// <param name="source">The source stream.</param>
+    /// <exception cref="ArgumentNullException">source</exception>
+    public JsonThesaurusReader(Stream source)
     {
+        if (source is null) throw new ArgumentNullException(nameof(source));
+
+        using StreamReader reader = new(source, Encoding.UTF8);
+        string json = reader.ReadToEnd();
+        _doc = JsonDocument.Parse(json);
+        _index = -1;
+        _options = new JsonSerializerOptions
+        {
+            AllowTrailingCommas = true,
+            PropertyNameCaseInsensitive = true
+        };
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="JsonThesaurusReader"/> class.
+    /// </summary>
+    /// <param name="json">The JSON code to read thesauri from.</param>
+    /// <exception cref="ArgumentNullException">json</exception>
+    public JsonThesaurusReader(string json)
+    {
+        if (json is null) throw new ArgumentNullException(nameof(json));
+
+        _doc = JsonDocument.Parse(json);
+        _index = -1;
+        _options = new JsonSerializerOptions
+        {
+            AllowTrailingCommas = true,
+            PropertyNameCaseInsensitive = true
+        };
+    }
+
+    /// <summary>
+    /// Read the next thesaurus entry from source.
+    /// </summary>
+    /// <returns>
+    /// Thesaurus, or null if no more thesauri in source.
+    /// </returns>
     public Thesaurus? Next()
     {
-        throw new NotImplementedException();
+        if (_index == -1)
+        {
+            switch (_doc.RootElement.ValueKind)
+            {
+                case JsonValueKind.Array:
+                    _elements = _doc.RootElement.EnumerateArray().ToList();
+                    if (_elements.Count == 0) return null;
+                    _index = 0;
+                    return _elements[0].Deserialize<Thesaurus>(_options);
+
+                case JsonValueKind.Object:
+                    _index = 0;
+                    _elements = Array.Empty<JsonElement>();
+                    return _doc.RootElement.Deserialize<Thesaurus>();
+
+                default:
+                    return null;
+            }
+        }
+        else
+        {
+            _index++;
+            if (_index >= _elements!.Count) return null;
+            return _elements[_index].Deserialize<Thesaurus>(_options);
+        }
     }
 
     private void Dispose(bool disposing)
@@ -27,18 +100,18 @@ public sealed class JsonThesaurusReader : IThesaurusReader
         {
             if (disposing)
             {
-                // TODO: dispose managed state (managed objects)
+                _doc.Dispose();
             }
-
-            // TODO: free unmanaged resources (unmanaged objects) and override finalizer
-            // TODO: set large fields to null
             _disposedValue = true;
         }
     }
 
+    /// <summary>
+    /// Performs application-defined tasks associated with freeing, releasing,
+    /// or resetting unmanaged resources.
+    /// </summary>
     public void Dispose()
     {
-        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }
