@@ -54,7 +54,7 @@ public sealed class CsvThesaurusReaderTest
             "colors@en,r,red,\r\n" +
             ",g,green,\r\n" +
             ",b,blue,\r\n" +
-            "shapes@en,trg,rectangle,\r\n" +
+            "shapes@en,trg,triangle,\r\n" +
             ",rct,rectangle,\r\n";
         CsvThesaurusReader reader = new(GetStream(text));
 
