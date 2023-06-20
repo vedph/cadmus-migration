@@ -27,7 +27,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cadmus.Import", "Cadmus.Imp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cadmus.Import.Test", "Cadmus.Import.Test\Cadmus.Import.Test.csproj", "{378DA435-4D59-4BC9-917E-B23FA4B27212}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cadmus.Import.Excel", "Cadmus.Import.Excel\Cadmus.Import.Excel.csproj", "{88C72095-2A9D-4A8B-9630-D1467958B338}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cadmus.Import.Excel", "Cadmus.Import.Excel\Cadmus.Import.Excel.csproj", "{88C72095-2A9D-4A8B-9630-D1467958B338}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cadmus.Import.Excel.Test", "Cadmus.Import.Excel.Test\Cadmus.Import.Excel.Test.csproj", "{E2BF072E-EAE3-4E14-A65A-6E6CB3F99541}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,6 +73,10 @@ Global
 		{88C72095-2A9D-4A8B-9630-D1467958B338}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88C72095-2A9D-4A8B-9630-D1467958B338}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88C72095-2A9D-4A8B-9630-D1467958B338}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2BF072E-EAE3-4E14-A65A-6E6CB3F99541}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2BF072E-EAE3-4E14-A65A-6E6CB3F99541}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2BF072E-EAE3-4E14-A65A-6E6CB3F99541}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2BF072E-EAE3-4E14-A65A-6E6CB3F99541}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

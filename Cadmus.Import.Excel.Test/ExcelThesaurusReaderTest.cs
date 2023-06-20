@@ -1,26 +1,24 @@
-﻿using Cadmus.Core.Config;
+using Cadmus.Core.Config;
 using System.IO;
 using System.Linq;
-using System.Text;
+using System.Reflection;
 using Xunit;
 
-namespace Cadmus.Import.Test;
+namespace Cadmus.Import.Excel.Test;
 
-public sealed class CsvThesaurusReaderTest
+public sealed class ExcelThesaurusReaderTest
 {
-    private static Stream GetStream(string text) =>
-        new MemoryStream(Encoding.UTF8.GetBytes(text));
+    private static Stream GetResourceStream(string name)
+    {
+        return Assembly.GetExecutingAssembly().GetManifestResourceStream(
+            "Cadmus.Import.Excel.Test.Assets." + name)!;
+    }
 
     [Fact]
     public void Read_TwoThesauri_Ok()
     {
-        string text = "thesaurusId,id,value,targetId\r\n" +
-            "colors@en,r,red,\r\n" +
-            "colors@en,g,green,\r\n" +
-            "colors@en,b,blue,\r\n" +
-            "shapes@en,trg,triangle,\r\n" +
-            "shapes@en,rct,rectangle,\r\n";
-        CsvThesaurusReader reader = new(GetStream(text));
+        ExcelThesaurusReader reader = new(GetResourceStream("Book1.xlsx"),
+            new ExcelThesaurusReaderOptions { RowOffset = 1 });
 
         // colors thesaurus
         Thesaurus? thesaurus = reader.Next();
@@ -50,13 +48,15 @@ public sealed class CsvThesaurusReaderTest
     [Fact]
     public void Read_TwoThesauriWithImplicitId_Ok()
     {
+        // TODO
         string text = "thesaurusId,id,value,targetId\r\n" +
             "colors@en,r,red,\r\n" +
             ",g,green,\r\n" +
             ",b,blue,\r\n" +
             "shapes@en,trg,rectangle,\r\n" +
             ",rct,rectangle,\r\n";
-        CsvThesaurusReader reader = new(GetStream(text));
+        ExcelThesaurusReader reader = new(GetResourceStream("Book2.xlsx"),
+            new ExcelThesaurusReaderOptions { RowOffset = 1 });
 
         // colors thesaurus
         Thesaurus? thesaurus = reader.Next();
@@ -86,12 +86,14 @@ public sealed class CsvThesaurusReaderTest
     [Fact]
     public void Read_ThesaurusAndAlias_Ok()
     {
+        // TODO
         string text = "thesaurusId,id,value,targetId\r\n" +
             "colors@en,r,red,\r\n" +
             "colors@en,g,green,\r\n" +
             "colors@en,b,blue,\r\n" +
             "colours@en,,,colors\r\n";
-        CsvThesaurusReader reader = new(GetStream(text));
+        ExcelThesaurusReader reader = new(GetResourceStream("Book3.xlsx"),
+            new ExcelThesaurusReaderOptions { RowOffset = 1 });
 
         // colors thesaurus
         Thesaurus? thesaurus = reader.Next();
