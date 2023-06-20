@@ -86,18 +86,17 @@ public sealed class ExcelThesaurusReader : IThesaurusReader
 
             // read entries:
             // 0=thesaurus ID: stop if another thesaurus begins
-            int i = _options.ColumnOffset;
             if (string.IsNullOrEmpty(thesaurusId)) thesaurusId = thesaurus.Id;
             else if (thesaurus.Id != thesaurusId) break;
 
             // 1=id
-            string? id = row.GetCell(i++)?.StringCellValue;
+            string? id = row.GetCell(_options.ColumnOffset + 1)?.StringCellValue;
 
             // 2=value
-            string? val = row.GetCell(i++)?.StringCellValue;
+            string? val = row.GetCell(_options.ColumnOffset + 2)?.StringCellValue;
 
             // 3=target id
-            string? targetId = row.GetCell(i++)?.StringCellValue;
+            string? targetId = row.GetCell(_options.ColumnOffset + 3)?.StringCellValue;
             if (targetId != null)
             {
                 thesaurus.TargetId = targetId;
