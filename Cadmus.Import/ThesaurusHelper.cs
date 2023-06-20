@@ -50,15 +50,13 @@ public static class ThesaurusHelper
         }
 
         // synch mode:
-        // - remove target entries missing in source.
+        // - remove result entries missing in source.
         if (mode == ImportUpdateMode.Synch)
         {
-            foreach (ThesaurusEntry te in
-                from ThesaurusEntry te in result.Entries
-                where source.Entries.All(e => e.Id != te.Id)
-                select te)
+            for (int i = result.Entries.Count - 1; i >= 0; i--)
             {
-                result.Entries.Remove(te);
+                  if (source.Entries.All(e => e.Id != result.Entries[i].Id))
+                    result.Entries.RemoveAt(i);
             }
         }
         return result;
