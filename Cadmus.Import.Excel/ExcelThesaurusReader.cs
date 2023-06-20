@@ -107,7 +107,7 @@ public sealed class ExcelThesaurusReader : IThesaurusReader
                 {
                     throw new InvalidOperationException(
                         $"Expected thesaurus {thesaurus.Id} entry ID " +
-                        $"at {_rowIndex + 1},{i + 1}");
+                        $"at {_rowIndex + 1},{_options.ColumnOffset + 1}");
                 }
                 thesaurus.AddEntry(new ThesaurusEntry
                 {
