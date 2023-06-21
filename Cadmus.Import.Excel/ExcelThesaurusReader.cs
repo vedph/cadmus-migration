@@ -64,18 +64,19 @@ public sealed class ExcelThesaurusReader : IThesaurusReader
             _rowIndex = _options.RowOffset;
 
         Thesaurus? thesaurus = null;
-        string? thesaurusId = null;
 
-        while (_rowIndex < sheet.LastRowNum)
+        while (_rowIndex <= sheet.LastRowNum)
         {
             // read next row
             IRow? row = sheet.GetRow(_rowIndex);
             if (row == null) break;
 
+            // read thesaurus ID
+            string? thesaurusId = row.GetCell(_options.ColumnOffset)?.StringCellValue;
+
             // create thesaurus if this is the first row read
             if (thesaurus == null)
             {
-                thesaurusId = row.GetCell(_options.ColumnOffset)?.StringCellValue;
                 if (thesaurusId == null)
                 {
                     throw new InvalidOperationException("Expected thesaurus ID " +
@@ -83,11 +84,13 @@ public sealed class ExcelThesaurusReader : IThesaurusReader
                 }
                 thesaurus = new Thesaurus(thesaurusId);
             }
-
-            // read entries:
-            // 0=thesaurus ID: stop if another thesaurus begins
-            if (string.IsNullOrEmpty(thesaurusId)) thesaurusId = thesaurus.Id;
-            else if (thesaurus.Id != thesaurusId) break;
+            // else if any thesaurus ID is found (if not, we assume the previous one)
+            // stop if this ID is different from the current thesaurus ID
+            else
+            {
+                if (!string.IsNullOrEmpty(thesaurusId) &&
+                    thesaurus.Id != thesaurusId) break;
+            }
 
             // 1=id
             string? id = row.GetCell(_options.ColumnOffset + 1)?.StringCellValue;
