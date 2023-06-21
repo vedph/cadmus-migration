@@ -33,6 +33,7 @@ public sealed class CsvThesaurusReader : IThesaurusReader
         CsvConfiguration config = new(CultureInfo.InvariantCulture)
         {
             PrepareHeaderForMatch = args => args.Header.ToLower(),
+            TrimOptions = TrimOptions.Trim
         };
         _reader = new CsvReader(new StreamReader(stream, Encoding.UTF8), config);
         if (_reader.Read()) _reader.ReadHeader();

@@ -48,13 +48,6 @@ public sealed class ExcelThesaurusReaderTest
     [Fact]
     public void Read_TwoThesauriWithImplicitId_Ok()
     {
-        // TODO
-        string text = "thesaurusId,id,value,targetId\r\n" +
-            "colors@en,r,red,\r\n" +
-            ",g,green,\r\n" +
-            ",b,blue,\r\n" +
-            "shapes@en,trg,rectangle,\r\n" +
-            ",rct,rectangle,\r\n";
         ExcelThesaurusReader reader = new(GetResourceStream("Book2.xlsx"),
             new ExcelThesaurusReaderOptions { RowOffset = 1 });
 
@@ -86,12 +79,6 @@ public sealed class ExcelThesaurusReaderTest
     [Fact]
     public void Read_ThesaurusAndAlias_Ok()
     {
-        // TODO
-        string text = "thesaurusId,id,value,targetId\r\n" +
-            "colors@en,r,red,\r\n" +
-            "colors@en,g,green,\r\n" +
-            "colors@en,b,blue,\r\n" +
-            "colours@en,,,colors\r\n";
         ExcelThesaurusReader reader = new(GetResourceStream("Book3.xlsx"),
             new ExcelThesaurusReaderOptions { RowOffset = 1 });
 

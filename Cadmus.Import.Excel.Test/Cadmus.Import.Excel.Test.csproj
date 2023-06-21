@@ -10,10 +10,14 @@
 
   <ItemGroup>
     <None Remove="Assets\Book1.xlsx" />
+    <None Remove="Assets\Book2.xlsx" />
+    <None Remove="Assets\Book3.xlsx" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Assets\Book1.xlsx" />
+    <EmbeddedResource Include="Assets\Book2.xlsx" />
+    <EmbeddedResource Include="Assets\Book3.xlsx" />
   </ItemGroup>
 
   <ItemGroup>

@@ -16,6 +16,9 @@ Markup related components used to export Cadmus data into some markup language, 
 
 ## History
 
+### 3.0.3
+
+- 2023-06-21: completed Excel thesaurus reader.
 - 2023-06-20:
   - added CSV thesaurus reader.
   - adding XLS(X) thesaurus reader.
