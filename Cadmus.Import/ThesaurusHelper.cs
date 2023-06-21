@@ -22,7 +22,10 @@ public static class ThesaurusHelper
     public static Thesaurus CopyThesaurus(Thesaurus source, Thesaurus? target,
         ImportUpdateMode mode)
     {
-        Thesaurus result = new();
+        Thesaurus result = new()
+        {
+            Id = source.Id
+        };
 
         // replace mode or source is alias: just copy
         if (mode == ImportUpdateMode.Replace ||

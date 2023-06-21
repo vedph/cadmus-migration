@@ -80,7 +80,7 @@ public sealed class JsonThesaurusReader : IThesaurusReader
                 case JsonValueKind.Object:
                     _index = 0;
                     _elements = Array.Empty<JsonElement>();
-                    return _doc.RootElement.Deserialize<Thesaurus>();
+                    return _doc.RootElement.Deserialize<Thesaurus>(_options);
 
                 default:
                     return null;

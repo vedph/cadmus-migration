@@ -16,6 +16,10 @@ Markup related components used to export Cadmus data into some markup language, 
 
 ## History
 
+### 3.0.5
+
+- 2023-06-21: fixed missing options in JSON thesaurus reader.
+
 ### 3.0.3
 
 - 2023-06-21: completed Excel thesaurus reader.
