@@ -7,7 +7,10 @@ public sealed class ThesaurusHelperTest
 {
     private static Thesaurus GetRgbThesaurus()
     {
-        Thesaurus t = new();
+        Thesaurus t = new()
+        {
+            Id = "colors@en"
+        };
         t.AddEntry(new ThesaurusEntry { Id = "r", Value = "red" });
         t.AddEntry(new ThesaurusEntry { Id = "g", Value = "green" });
         t.AddEntry(new ThesaurusEntry { Id = "b", Value = "blue" });
@@ -18,7 +21,10 @@ public sealed class ThesaurusHelperTest
     [Fact]
     public void CopyThesaurus_Replace_NoAliasVsNoAlias_Replaced()
     {
-        Thesaurus source = new();
+        Thesaurus source = new()
+        {
+            Id = "colors@en"
+        };
         source.AddEntry(new ThesaurusEntry { Id = "r", Value = "rosso" });
         source.AddEntry(new ThesaurusEntry { Id = "g", Value = "verde" });
 
@@ -41,6 +47,7 @@ public sealed class ThesaurusHelperTest
     {
         Thesaurus source = new()
         {
+            Id = "colors@en",
             TargetId = "x@en"
         };
 
@@ -61,6 +68,7 @@ public sealed class ThesaurusHelperTest
 
         Thesaurus target = new()
         {
+            Id = "colors@en",
             TargetId = "x@en"
         };
 
@@ -82,10 +90,12 @@ public sealed class ThesaurusHelperTest
     {
         Thesaurus source = new()
         {
+            Id = "colors@en",
             TargetId = "source@en"
         };
         Thesaurus target = new()
         {
+            Id = "colors@en",
             TargetId = "target@en"
         };
 
@@ -102,7 +112,10 @@ public sealed class ThesaurusHelperTest
     [Fact]
     public void CopyThesaurus_Patch_NoAliasVsNoAlias_Patched()
     {
-        Thesaurus source = new();
+        Thesaurus source = new()
+        {
+            Id = "colors@en"
+        };
         source.AddEntry(new ThesaurusEntry { Id = "r", Value = "rosso" });
         source.AddEntry(new ThesaurusEntry { Id = "g", Value = "verde" });
 
@@ -128,6 +141,7 @@ public sealed class ThesaurusHelperTest
     {
         Thesaurus source = new()
         {
+            Id = "colors@en",
             TargetId = "x@en"
         };
 
@@ -148,6 +162,7 @@ public sealed class ThesaurusHelperTest
 
         Thesaurus target = new()
         {
+            Id = "colors@en",
             TargetId = "x@en"
         };
 
@@ -169,10 +184,12 @@ public sealed class ThesaurusHelperTest
     {
         Thesaurus source = new()
         {
+            Id = "colors@en",
             TargetId = "source@en"
         };
         Thesaurus target = new()
         {
+            Id = "colors@en",
             TargetId = "target@en"
         };
 
@@ -189,7 +206,10 @@ public sealed class ThesaurusHelperTest
     [Fact]
     public void CopyThesaurus_Synch_NoAliasVsNoAlias_Synched()
     {
-        Thesaurus source = new();
+        Thesaurus source = new()
+        {
+            Id = "colors@en"
+        };
         source.AddEntry(new ThesaurusEntry { Id = "r", Value = "rosso" });
         source.AddEntry(new ThesaurusEntry { Id = "g", Value = "verde" });
 
@@ -212,6 +232,7 @@ public sealed class ThesaurusHelperTest
     {
         Thesaurus source = new()
         {
+            Id = "colors@en",
             TargetId = "x@en"
         };
 
@@ -253,10 +274,12 @@ public sealed class ThesaurusHelperTest
     {
         Thesaurus source = new()
         {
+            Id = "colors@en",
             TargetId = "source@en"
         };
         Thesaurus target = new()
         {
+            Id = "colors@en",
             TargetId = "target@en"
         };
 
