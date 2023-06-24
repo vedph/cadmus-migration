@@ -145,7 +145,7 @@ As a sample, say we have this token-based text part, representing the text `que 
 
 The model for this part (apart from the usual metadata) just contains a _citation_, which can use any type of citational scheme for a text, and a _text_, consisting of any number of lines.
 
-When handling it in a `XsltJsonRenderer` configured for a single XSLT-based transformation, first the JSON code is automatically wrapped in a `root` element by the renderer itself, to ensure it is well-formed for XML conversion, whence:
+When handling it in an `XsltJsonRenderer` configured for a single XSLT-based transformation, first the JSON code is automatically wrapped in a `root` element by the renderer itself, to ensure it is well-formed for XML conversion, whence:
 
 ```json
 {
