@@ -6,6 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Microsoft.Extensions.Logging;
 
 namespace Cadmus.Export;
 
@@ -60,6 +61,11 @@ public abstract class ItemComposer
     /// Gets the output handled by this composer, or null if not opened.
     /// </summary>
     public ItemComposition? Output { get; private set; }
+
+    /// <summary>
+    /// Gets or sets the optional logger.
+    /// </summary>
+    public ILogger? Logger { get; set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ItemComposer"/>

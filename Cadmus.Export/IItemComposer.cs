@@ -1,4 +1,5 @@
 ﻿using Cadmus.Core;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.IO;
 
@@ -58,6 +59,11 @@ public interface IItemComposer
     /// Gets the output handled by this composer, or null if not opened.
     /// </summary>
     ItemComposition? Output { get; }
+
+    /// <summary>
+    /// Gets or sets the optional logger.
+    /// </summary>
+    ILogger? Logger { get; set; }
 
     /// <summary>
     /// Opens the composer output.
