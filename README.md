@@ -16,6 +16,10 @@ Markup related components used to export Cadmus data into some markup language, 
 
 ## History
 
+### 3.0.8
+
+- 2023-09-04: updated packages.
+
 ### 3.0.7
 
 - 2023-06-27: added logger to `IItemComposer`.
