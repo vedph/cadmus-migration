@@ -84,5 +84,6 @@ public enum ImportUpdateMode
     /// Synch mode: the imported entry is synched with the existing one, i.e.
     /// all the existing values are kept or updated, all the new ones are added,
     /// all the existing values missing from the new entry are removed.
+    /// </summary>
     Synch
 }

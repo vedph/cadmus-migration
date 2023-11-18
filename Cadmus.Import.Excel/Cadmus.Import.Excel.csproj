@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>3.0.8</Version>
-		<FileVersion>3.0.8</FileVersion>
-		<AssemblyVersion>3.0.8</AssemblyVersion>
+		<Version>4.0.1</Version>
+		<FileVersion>4.0.1</FileVersion>
+		<AssemblyVersion>4.0.1</AssemblyVersion>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<Authors>Daniele Fusi</Authors>
@@ -21,7 +21,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="NPOI" Version="2.6.1" />
+		<PackageReference Include="NPOI" Version="2.6.2" />
 	</ItemGroup>
 
 	<ItemGroup>

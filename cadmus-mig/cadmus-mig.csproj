@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
-    <Version>3.0.8</Version>
-	<FileVersion>3.0.8</FileVersion>
-	<AssemblyVersion>3.0.8</AssemblyVersion>
+    <TargetFramework>net8.0</TargetFramework>
+    <Version>4.0.1</Version>
+	<FileVersion>4.0.1</FileVersion>
+	<AssemblyVersion>4.0.1</AssemblyVersion>
 	<RootNamespace>Cadmus.Migration.Cli</RootNamespace>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -26,13 +26,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cadmus.Cli.Core" Version="8.0.4" />
-    <PackageReference Include="Cadmus.Philology.Parts" Version="7.0.3" />
+    <PackageReference Include="Cadmus.Cli.Core" Version="8.0.8" />
+    <PackageReference Include="Cadmus.Philology.Parts" Version="8.0.1" />
     <PackageReference Include="Fusi.Cli" Version="2.1.1" />
     <PackageReference Include="Fusi.Cli.Commands" Version="2.1.1" />
     <PackageReference Include="McMaster.NETCore.Plugins" Version="1.4.0" />
-    <PackageReference Include="Serilog" Version="3.0.1" />
-    <PackageReference Include="Serilog.Extensions.Logging" Version="7.0.0" />
+    <PackageReference Include="Serilog" Version="3.1.1" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
   </ItemGroup>
 
