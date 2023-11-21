@@ -24,9 +24,9 @@ public static class MarkdownHelper
     public static string ConvertRegions(string source, string open,
         string close, bool plain)
     {
-        if (source is null) throw new ArgumentNullException(nameof(source));
-        if (open is null) throw new ArgumentNullException(nameof(open));
-        if (close is null) throw new ArgumentNullException(nameof(close));
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(open);
+        ArgumentNullException.ThrowIfNull(close);
 
         StringBuilder sb = new();
         int start = 0, i = source.IndexOf(open);

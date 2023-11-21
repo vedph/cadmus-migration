@@ -16,6 +16,10 @@ Markup related components used to export Cadmus data into some markup language, 
 
 ## History
 
+### 4.0.2
+
+- 2023-11-21: updated packages.
+
 ### 4.0.1
 
 - 2023-11-18: ⚠️ Upgraded to .NET 8.

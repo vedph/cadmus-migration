@@ -29,7 +29,7 @@ public sealed class CsvThesaurusReader : IThesaurusReader
     /// <exception cref="ArgumentNullException">stream</exception>
     public CsvThesaurusReader(Stream stream)
     {
-        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        ArgumentNullException.ThrowIfNull(stream);
         CsvConfiguration config = new(CultureInfo.InvariantCulture)
         {
             PrepareHeaderForMatch = args => args.Header.ToLower(),

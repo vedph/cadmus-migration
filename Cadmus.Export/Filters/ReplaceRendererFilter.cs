@@ -31,7 +31,7 @@ public sealed class ReplaceRendererFilter : IRendererFilter,
     /// <exception cref="ArgumentNullException">options</exception>
     public void Configure(ReplaceRendererFilterOptions options)
     {
-        if (options is null) throw new ArgumentNullException(nameof(options));
+        ArgumentNullException.ThrowIfNull(options);
 
         _replacer.Clear();
         if (options.Replacements?.Count > 0)

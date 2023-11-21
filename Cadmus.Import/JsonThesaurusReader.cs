@@ -28,7 +28,7 @@ public sealed class JsonThesaurusReader : IThesaurusReader
     /// <exception cref="ArgumentNullException">source</exception>
     public JsonThesaurusReader(Stream source)
     {
-        if (source is null) throw new ArgumentNullException(nameof(source));
+        ArgumentNullException.ThrowIfNull(source);
 
         using StreamReader reader = new(source, Encoding.UTF8);
         string json = reader.ReadToEnd();
@@ -48,7 +48,7 @@ public sealed class JsonThesaurusReader : IThesaurusReader
     /// <exception cref="ArgumentNullException">json</exception>
     public JsonThesaurusReader(string json)
     {
-        if (json is null) throw new ArgumentNullException(nameof(json));
+        ArgumentNullException.ThrowIfNull(json);
 
         _doc = JsonDocument.Parse(json);
         _index = -1;

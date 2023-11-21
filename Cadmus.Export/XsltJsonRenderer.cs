@@ -48,8 +48,7 @@ public sealed class XsltJsonRenderer : JsonRenderer, IJsonRenderer,
     /// <exception cref="ArgumentNullException">options</exception>
     public void Configure(XsltJsonRendererOptions options)
     {
-        if (options is null)
-            throw new ArgumentNullException(nameof(options));
+        ArgumentNullException.ThrowIfNull(options);
 
         _options = options;
 
@@ -88,8 +87,8 @@ public sealed class XsltJsonRenderer : JsonRenderer, IJsonRenderer,
     public static void WrapXmlArrays(XDocument doc,
         IDictionary<XName, XName> map)
     {
-        if (doc is null) throw new ArgumentNullException(nameof(doc));
-        if (map is null) throw new ArgumentNullException(nameof(map));
+        ArgumentNullException.ThrowIfNull(doc);
+        ArgumentNullException.ThrowIfNull(map);
 
         foreach (XName name in map.Keys)
         {
@@ -127,7 +126,7 @@ public sealed class XsltJsonRenderer : JsonRenderer, IJsonRenderer,
     {
         if (_options == null) return json;
 
-        if (json is null) throw new ArgumentNullException(nameof(json));
+        ArgumentNullException.ThrowIfNull(json);
         if (!_options.FrDecoration &&
             _transformer == null &&
             _options.JsonExpressions?.Count == 0)

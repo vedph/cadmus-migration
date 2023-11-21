@@ -32,7 +32,7 @@ public class CadmusMigCliAppContext : CliAppContext
     /// <exception cref="ArgumentNullException">dbName</exception>
     public virtual CadmusMigCliContextService GetContextService(string dbName)
     {
-        if (dbName is null) throw new ArgumentNullException(nameof(dbName));
+        ArgumentNullException.ThrowIfNull(dbName);
 
         return new CadmusMigCliContextService(
             new CadmusMigCliContextServiceConfig

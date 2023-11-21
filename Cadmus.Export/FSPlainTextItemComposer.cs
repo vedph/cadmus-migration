@@ -49,7 +49,7 @@ public sealed class FSPlainTextItemComposer : ItemComposer, IItemComposer,
     /// <exception cref="ArgumentNullException">key</exception>
     protected override void EnsureWriter(string key)
     {
-        if (key is null) throw new ArgumentNullException(nameof(key));
+        ArgumentNullException.ThrowIfNull(key);
 
         if (Output?.Writers.ContainsKey(key) != false) return;
 

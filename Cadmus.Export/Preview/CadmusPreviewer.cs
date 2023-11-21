@@ -116,7 +116,7 @@ public sealed class CadmusPreviewer
     /// <exception cref="ArgumentNullException">json</exception>
     public string RenderPartJson(string json, IRendererContext? context = null)
     {
-        if (json is null) throw new ArgumentNullException(nameof(json));
+        ArgumentNullException.ThrowIfNull(json);
 
         // get part type ID
         JsonDocument doc = JsonDocument.Parse(json);
@@ -146,8 +146,8 @@ public sealed class CadmusPreviewer
     /// <exception cref="ArgumentNullException">itemId or partId</exception>
     public string RenderPart(string itemId, string partId)
     {
-        if (itemId is null) throw new ArgumentNullException(nameof(itemId));
-        if (partId is null) throw new ArgumentNullException(nameof(partId));
+        ArgumentNullException.ThrowIfNull(itemId);
+        ArgumentNullException.ThrowIfNull(partId);
 
         IItem? item = _repository?.GetItem(itemId, false);
         IRendererContext? context = BuildContext(item);
@@ -184,7 +184,7 @@ public sealed class CadmusPreviewer
     public string RenderFragmentJson(string json, int frIndex,
         IRendererContext? context = null)
     {
-        if (json is null) throw new ArgumentNullException(nameof(json));
+        ArgumentNullException.ThrowIfNull(json);
 
         // get the part type ID and role ID (=fragment type)
         JsonDocument doc = JsonDocument.Parse(json);
@@ -245,8 +245,8 @@ public sealed class CadmusPreviewer
     /// </exception>
     public string RenderFragment(string itemId, string partId, int frIndex)
     {
-        if (itemId is null) throw new ArgumentNullException(nameof(itemId));
-        if (partId is null) throw new ArgumentNullException(nameof(partId));
+        ArgumentNullException.ThrowIfNull(itemId);
+        ArgumentNullException.ThrowIfNull(partId);
         if (frIndex < 0) throw new ArgumentOutOfRangeException(nameof(frIndex));
 
         string? json = _repository?.GetPartContent(partId);
@@ -276,8 +276,8 @@ public sealed class CadmusPreviewer
     public IList<TextBlockRow> BuildTextBlocks(string id,
         IList<string> layerPartIds, IList<string?>? layerIds = null)
     {
-        if (id is null) throw new ArgumentNullException(nameof(id));
-        if (layerPartIds is null) throw new ArgumentNullException(nameof(layerPartIds));
+        ArgumentNullException.ThrowIfNull(id);
+        ArgumentNullException.ThrowIfNull(layerPartIds);
 
         if (_repository == null) return Array.Empty<TextBlockRow>();
 

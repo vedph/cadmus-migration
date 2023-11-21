@@ -51,8 +51,7 @@ public sealed class SentenceSplitRendererFilter : IRendererFilter,
     /// <exception cref="ArgumentNullException">options</exception>
     public void Configure(SentenceSplitRendererFilterOptions options)
     {
-        if (options == null)
-            throw new ArgumentNullException(nameof(options));
+        ArgumentNullException.ThrowIfNull(options);
 
         if (!string.IsNullOrEmpty(options.EndMarkers))
         {

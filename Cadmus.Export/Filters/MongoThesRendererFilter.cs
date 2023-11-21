@@ -39,7 +39,7 @@ public sealed class MongoThesRendererFilter : IRendererFilter,
     /// <exception cref="ArgumentNullException">options</exception>
     public void Configure(MongoThesRendererFilterOptions options)
     {
-        if (options == null) throw new ArgumentNullException(nameof(options));
+        ArgumentNullException.ThrowIfNull(options);
         _idRegex = new Regex(options.Pattern, RegexOptions.Compiled);
     }
 

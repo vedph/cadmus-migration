@@ -24,7 +24,7 @@ public sealed class ExcelThesaurusReader : IThesaurusReader
     /// <exception cref="ArgumentNullException">stream</exception>
     public ExcelThesaurusReader(Stream stream)
     {
-        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        ArgumentNullException.ThrowIfNull(stream);
 
         _workbook = WorkbookFactory.Create(stream, true);
         _options = new();
@@ -41,7 +41,7 @@ public sealed class ExcelThesaurusReader : IThesaurusReader
     public ExcelThesaurusReader(Stream stream,
         ExcelThesaurusReaderOptions options)
     {
-        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        ArgumentNullException.ThrowIfNull(stream);
 
         _workbook = WorkbookFactory.Create(stream, true);
         _options = options ?? throw new ArgumentNullException(nameof(options));

@@ -57,8 +57,7 @@ public sealed class TeiStandoffTextBlockRenderer : TextBlockRenderer,
     /// <exception cref="ArgumentNullException">options</exception>
     public void Configure(TeiStandoffTextBlockRendererOptions options)
     {
-        if (options is null)
-            throw new ArgumentNullException(nameof(options));
+        ArgumentNullException.ThrowIfNull(options);
 
         _options = options;
     }
@@ -152,7 +151,7 @@ public sealed class TeiStandoffTextBlockRenderer : TextBlockRenderer,
     protected override string DoRender(IEnumerable<TextBlockRow> rows,
         IRendererContext? context = null)
     {
-        if (rows is null) throw new ArgumentNullException(nameof(rows));
+        ArgumentNullException.ThrowIfNull(rows);
 
         // render each row of blocks
         StringBuilder text = new();

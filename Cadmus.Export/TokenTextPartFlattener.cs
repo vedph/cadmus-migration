@@ -39,7 +39,7 @@ public sealed class TokenTextPartFlattener : ITextPartFlattener,
     /// <exception cref="ArgumentNullException">options</exception>
     public void Configure(TokenTextPartFlattenerOptions options)
     {
-        if (options is null) throw new ArgumentNullException(nameof(options));
+        ArgumentNullException.ThrowIfNull(options);
 
         _lineSeparator = options.LineSeparator;
     }
@@ -149,8 +149,7 @@ public sealed class TokenTextPartFlattener : ITextPartFlattener,
     {
         TokenTextPart? txt = textPart as TokenTextPart;
         if (txt == null) throw new ArgumentNullException(nameof(textPart));
-        if (layerParts is null)
-            throw new ArgumentNullException(nameof(layerParts));
+        ArgumentNullException.ThrowIfNull(layerParts);
 
         string text = string.Join(_lineSeparator,
             txt.Lines.Select(l => l.Text));

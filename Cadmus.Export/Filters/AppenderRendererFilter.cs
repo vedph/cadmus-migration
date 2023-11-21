@@ -20,8 +20,7 @@ public sealed class AppenderRendererFilter : IRendererFilter,
     /// <exception cref="ArgumentNullException">options</exception>
     public void Configure(AppenderRendererFilterOptions options)
     {
-        if (options is null)
-            throw new ArgumentNullException(nameof(options));
+        ArgumentNullException.ThrowIfNull(options);
         _text = options.Text;
     }
 

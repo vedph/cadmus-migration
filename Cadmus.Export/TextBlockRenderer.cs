@@ -41,8 +41,7 @@ public abstract class TextBlockRenderer
     public string Render(IEnumerable<TextBlockRow> rows,
         IRendererContext? context = null)
     {
-        if (rows is null)
-            throw new ArgumentNullException(nameof(rows));
+        ArgumentNullException.ThrowIfNull(rows);
 
         string result = DoRender(rows, context);
 

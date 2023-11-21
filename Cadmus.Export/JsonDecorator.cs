@@ -29,9 +29,8 @@ public static class JsonDecorator
     public static string DecorateLayerPartFrr(string json,
         string keyPropName = "_key")
     {
-        if (json is null) throw new ArgumentNullException(nameof(json));
-        if (keyPropName is null)
-            throw new ArgumentNullException(nameof(keyPropName));
+        ArgumentNullException.ThrowIfNull(json);
+        ArgumentNullException.ThrowIfNull(keyPropName);
 
         JsonNode? doc = JsonNode.Parse(json);
         JsonObject? root = doc?["root"]?.AsObject();

@@ -215,7 +215,7 @@ public abstract class ItemComposer
     /// <exception cref="ArgumentNullException">item</exception>
     public void Compose(IItem item)
     {
-        if (item is null) throw new ArgumentNullException(nameof(item));
+        ArgumentNullException.ThrowIfNull(item);
 
         Context.Data[M_ITEM_NR] = ++ItemNumber;
         Context.Data[M_ITEM_ID] = item.Id;

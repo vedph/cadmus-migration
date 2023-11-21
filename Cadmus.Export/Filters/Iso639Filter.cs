@@ -44,7 +44,7 @@ public sealed class Iso639Filter : IRendererFilter,
     /// <exception cref="ArgumentNullException">options</exception>
     public void Configure(Iso639FilterOptions options)
     {
-        if (options is null) throw new ArgumentNullException(nameof(options));
+        ArgumentNullException.ThrowIfNull(options);
 
         _twoLetters = options.TwoLetters;
         _isoRegex = new Regex(options.Pattern, RegexOptions.Compiled);

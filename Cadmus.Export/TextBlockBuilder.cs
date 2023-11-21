@@ -49,8 +49,8 @@ public class TextBlockBuilder
     public IEnumerable<TextBlockRow> Build(string text,
         MergedRangeSet set)
     {
-        if (text == null) throw new ArgumentNullException(nameof(text));
-        if (set is null) throw new ArgumentNullException(nameof(set));
+        ArgumentNullException.ThrowIfNull(text);
+        ArgumentNullException.ThrowIfNull(set);
 
         int i = 1, n = 0, start = 0;
         TextBlockRow row = new();

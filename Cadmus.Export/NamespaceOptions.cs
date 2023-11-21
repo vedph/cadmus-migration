@@ -117,10 +117,8 @@ public class NamespaceOptions
         IXmlNamespaceResolver resolver,
         string? defaultNsPrefix = null)
     {
-        if (name is null)
-            throw new ArgumentNullException(nameof(name));
-        if (resolver is null)
-            throw new ArgumentNullException(nameof(resolver));
+        ArgumentNullException.ThrowIfNull(name);
+        ArgumentNullException.ThrowIfNull(resolver);
 
         string? ns;
         int i = name.IndexOf(':');
