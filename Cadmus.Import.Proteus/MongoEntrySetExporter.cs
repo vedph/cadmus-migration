@@ -16,7 +16,6 @@ namespace Cadmus.Import.Proteus;
 /// Mongo-based Cadmus entry set exporter.
 /// <para>Tag: <c>entry-set-exporter.cadmus.mongo</c>.</para>
 /// </summary>
-/// <seealso cref="Proteus.Core.Regions.IEntrySetExporter" />
 [Tag("entry-set-exporter.cadmus.mongo")]
 public sealed class MongoEntrySetExporter : MongoConsumerBase, IEntrySetExporter,
     IConfigurable<MongoEntrySetExporterOptions>
@@ -27,7 +26,7 @@ public sealed class MongoEntrySetExporter : MongoConsumerBase, IEntrySetExporter
         "timeCreated", "creatorId", "timeModified", "userId"
     ];
 
-private MongoEntrySetExporterOptions? _options;
+    private MongoEntrySetExporterOptions? _options;
     private MongoCadmusRepository? _repository;
 
     /// <summary>
