@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
@@ -12,20 +12,19 @@
 		<Authors>Daniele Fusi</Authors>
 		<Company>Fusi</Company>
 		<Product>Cadmus</Product>
-		<Description>Cadmus import Excel components.</Description>
-		<Copyright>by Daniele Fusi 2023</Copyright>
+		<Description>Cadmus Proteus-based import components.</Description>
+		<Copyright>by Daniele Fusi 2024</Copyright>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
 		<PackageTags>Cadmus</PackageTags>
-		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>		
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="NPOI" Version="2.6.2" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\Cadmus.Import\Cadmus.Import.csproj" />
+		<PackageReference Include="Cadmus.Core" Version="7.0.1" />
+		<PackageReference Include="Cadmus.Mongo" Version="7.0.1" />
+		<PackageReference Include="MongoDB.Driver" Version="2.23.1" />
+		<PackageReference Include="Proteus.Core" Version="5.0.2" />
 	</ItemGroup>
 
 </Project>

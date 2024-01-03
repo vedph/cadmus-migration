@@ -59,7 +59,10 @@ public sealed class CsvThesaurusReader : IThesaurusReader
             entry = _pendingEntry;
             _pendingEntry = null;
         }
-        else if (!_reader.Read()) return null;
+        else if (!_reader.Read())
+        {
+            return null;
+        }
         else
         {
             entry = _reader.GetRecord<CsvThesaurusEntry>();

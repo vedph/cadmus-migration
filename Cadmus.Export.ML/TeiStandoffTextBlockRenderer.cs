@@ -46,7 +46,7 @@ public sealed class TeiStandoffTextBlockRenderer : TextBlockRenderer,
     /// </summary>
     public TeiStandoffTextBlockRenderer()
     {
-        _nullCtxData = new Dictionary<string, object>();
+        _nullCtxData = [];
         _options = new TeiStandoffTextBlockRendererOptions();
     }
 

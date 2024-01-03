@@ -6,7 +6,6 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Xml.Linq;
 using System.Linq;
-using System.Net.Mime;
 
 namespace Cadmus.Export.ML;
 
@@ -108,16 +107,16 @@ public sealed class TeiStandoffApparatusJsonRenderer : JsonRenderer,
         return sb.ToString();
     }
 
-    private static string RenderAnnotatedValue(AnnotatedValue av)
-    {
-        StringBuilder sb = new(av.Value);
-        if (!string.IsNullOrEmpty(av.Note))
-        {
-            if (sb.Length > 0) sb.Append(' ');
-            sb.Append(av.Note);
-        }
-        return sb.ToString();
-    }
+    //private static string RenderAnnotatedValue(AnnotatedValue av)
+    //{
+    //    StringBuilder sb = new(av.Value);
+    //    if (!string.IsNullOrEmpty(av.Note))
+    //    {
+    //        if (sb.Length > 0) sb.Append(' ');
+    //        sb.Append(av.Note);
+    //    }
+    //    return sb.ToString();
+    //}
 
     /// <summary>
     /// Configures the object with the specified options.

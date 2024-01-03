@@ -62,9 +62,9 @@ public sealed class FrLinkRendererFilter : IRendererFilter,
             if (i == -1) i = text.Length;
 
             // extract and resolve key if possible
-            string key = text.Substring(j, i - j);
-            if (context.FragmentIds.ContainsKey(key))
-                sb.Append(context.FragmentIds[key]);
+            string key = text[j..i];
+            if (context.FragmentIds.TryGetValue(key, out string? value))
+                sb.Append(value);
             else
                 sb.Append(key);
 

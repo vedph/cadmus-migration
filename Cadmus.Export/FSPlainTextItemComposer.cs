@@ -92,13 +92,10 @@ public sealed class FSPlainTextItemComposer : ItemComposer, IItemComposer,
         if (Output == null) return;
 
         // first time we must build the filename
-        if (_fileName == null)
-        {
-            _fileName = SanitizeFileName(
+        _fileName ??= SanitizeFileName(
                 _options!.ItemGrouping && !string.IsNullOrEmpty(item.GroupId)
                 ? item.GroupId
                 : item.Title);
-        }
 
         // item head if any
         if (!string.IsNullOrEmpty(_options!.ItemHead))

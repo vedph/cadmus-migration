@@ -195,7 +195,10 @@ public abstract class ItemComposer
     /// </param>
     protected void ClearContextData(string? excludedPrefix = null)
     {
-        if (string.IsNullOrEmpty(excludedPrefix)) Context.Data.Clear();
+        if (string.IsNullOrEmpty(excludedPrefix))
+        {
+            Context.Data.Clear();
+        }
         else
         {
             foreach (string key in Context.Data.Keys

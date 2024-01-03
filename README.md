@@ -16,6 +16,12 @@ Markup related components used to export Cadmus data into some markup language, 
 
 ## History
 
+### 4.0.3
+
+- 2024-01-03:
+  - updated packages.
+  - added `Cadmus.Import.Proteus` project for Proteus-based import. This provides a generic Cadmus entry set context to collect items with their parts, without requiring any part-specific dependencies as parts are represented as JSON objects. Also, a `MongoEntrySetExporter` is provided to export the context to a MongoDB Cadmus database.
+
 ### 4.0.2
 
 - 2023-11-21: updated packages.
