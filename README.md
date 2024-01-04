@@ -14,6 +14,18 @@ General purpose components used to export Cadmus data.
 
 Markup related components used to export Cadmus data into some markup language, typically XML.
 
+## Cadmus.Import
+
+Core components for thesauri import.
+
+## Cadmus.Import.Excel
+
+Excel (XLSX or XLS) thesauri importers.
+
+## Cadmus.Import.Proteus
+
+Proteus-based components for importing Cadmus items and parts from sources handled with Proteus readers.
+
 ## History
 
 ### 4.0.3
