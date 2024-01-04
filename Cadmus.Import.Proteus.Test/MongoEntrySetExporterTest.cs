@@ -8,14 +8,22 @@ using Cadmus.General.Parts;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Proteus.Core.Regions;
+using MongoDB.Driver;
 
 namespace Cadmus.Import.Proteus.Test;
 
 // this test requires MongoDB
 
+[Collection(nameof(NonParallelResourceCollection))]
 public sealed class MongoEntrySetExporterTest
 {
     private const string CONNECTION_STRING = "mongodb://localhost:27017/cadmus-test";
+
+    private static void ClearDatabase()
+    {
+        MongoClient client = new(CONNECTION_STRING);
+        client.DropDatabase("cadmus-test");
+    }
 
     private MongoCadmusRepository CreateRepository()
     {
@@ -36,6 +44,8 @@ public sealed class MongoEntrySetExporterTest
     [Fact]
     public async Task ExportAsync_Ok()
     {
+        ClearDatabase();
+
         // build data context
         CadmusEntrySetContext context = new();
         string[] guids = [ "061054da-3c43-41d5-806c-2bd0e4957eff",
@@ -50,7 +60,6 @@ public sealed class MongoEntrySetExporterTest
                 Title = $"Item {n}",
                 Description = $"Item nr.{n}",
                 FacetId = "default",
-                SortKey = $"{n:000}",
                 TimeCreated = DateTime.Now,
                 CreatorId = "zeus",
                 UserId = "zeus",
@@ -92,12 +101,12 @@ public sealed class MongoEntrySetExporterTest
         MongoCadmusRepository repository = CreateRepository();
         for (int n = 1; n <= 2; n++)
         {
-            IItem? item = repository.GetItem(guids[0], true);
+            IItem? item = repository.GetItem(guids[n - 1], true);
             Assert.NotNull(item);
             Assert.Equal($"Item {n}", item!.Title);
             Assert.Equal($"Item nr.{n}", item.Description);
             Assert.Equal("default", item.FacetId);
-            Assert.Equal($"{n:000}", item.SortKey);
+            Assert.Equal($"item {n}", item.SortKey);
             Assert.Equal("zeus", item.CreatorId);
             Assert.Equal("zeus", item.UserId);
             Assert.Single(item.Parts);
