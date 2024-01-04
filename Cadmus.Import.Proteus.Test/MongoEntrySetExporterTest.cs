@@ -65,7 +65,11 @@ public sealed class MongoEntrySetExporterTest
                 CreatorId = "zeus",
                 UserId = "zeus",
             };
-            string json = JsonSerializer.Serialize(part, part.GetType());
+            string json = JsonSerializer.Serialize(part, part.GetType(),
+                new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                });
             JsonNode node = JsonNode.Parse(json)!;
             item.Parts.Add(node);
 
@@ -80,7 +84,9 @@ public sealed class MongoEntrySetExporterTest
         });
 
         // export
+        await exporter.OpenAsync();
         await exporter.ExportAsync(new EntrySet(context), new EntryRegionSet());
+        await exporter.CloseAsync();
 
         // check
         MongoCadmusRepository repository = CreateRepository();

@@ -22,7 +22,7 @@ public sealed class MongoEntrySetExporter : MongoConsumerBase, IEntrySetExporter
 {
     private readonly HashSet<string> _partProps =
     [
-        "id", "itemId", "typeId", "roleId", "thesaurusScope",
+        "itemId", "typeId", "roleId", "thesaurusScope",
         "timeCreated", "creatorId", "timeModified", "userId"
     ];
 
@@ -76,13 +76,17 @@ public sealed class MongoEntrySetExporter : MongoConsumerBase, IEntrySetExporter
 
     private JsonNode GetPartNode(JsonNode content)
     {
-        JsonNode part = new JsonObject();
+        JsonNode part = new JsonObject
+        {
+            ["_id"] = content["id"]!.DeepClone()
+        };
 
         foreach (string pn in _partProps)
         {
-            if (content.AsObject().TryGetPropertyValue(pn, out JsonNode? pv))
+            if (content.AsObject().TryGetPropertyValue(pn, out JsonNode? pv)
+                && pv != null)
             {
-                part[pn] = pv;
+                part[pn] = pv.DeepClone();
             }
         }
 
@@ -113,19 +117,15 @@ public sealed class MongoEntrySetExporter : MongoConsumerBase, IEntrySetExporter
             throw new InvalidOperationException("No connection string for "
                 + nameof(MongoEntrySetExporter));
         }
-        if (Client == null)
-        {
-            throw new InvalidOperationException(
-                $"Mongo database {GetDatabaseName(_options.ConnectionString)} not open");
-        }
 
         // get context
         CadmusEntrySetContext context = (CadmusEntrySetContext)entrySet.Context;
         if (context.Items.Count == 0) return Task.CompletedTask;
 
         // write items
-        IMongoDatabase db = Client.GetDatabase(GetDatabaseName(
+        IMongoDatabase db = Client!.GetDatabase(GetDatabaseName(
             _options.ConnectionString));
+
         foreach (ImportedItem item in context.Items)
         {
             // write item without parts
@@ -144,10 +144,13 @@ public sealed class MongoEntrySetExporter : MongoConsumerBase, IEntrySetExporter
                 // history if required
                 if (!_options.NoHistory)
                 {
-                    part["referenceId"] = part["id"];
+                    part["referenceId"] = part["_id"]!.DeepClone();
                     part["status"] = 0;
-                    part["id"] = Guid.NewGuid().ToString();
+                    part["_id"] = Guid.NewGuid().ToString();
                     document = BsonDocument.Parse(part.ToJsonString());
+
+                    parts = db.GetCollection<BsonDocument>(
+                        MongoHistoryPart.COLLECTION);
                     parts.InsertOne(document);
                 }
             }
