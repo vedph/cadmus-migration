@@ -28,6 +28,8 @@ Proteus-based components for importing Cadmus items and parts from sources handl
 
 ## History
 
+- 2024-01-05: added `MdDumpEntrySetExporter`.
+
 ### 4.0.3
 
 - 2024-01-03:
