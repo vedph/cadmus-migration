@@ -193,12 +193,18 @@ public sealed class MdDumpEntrySetExporter : IEntrySetExporter,
 /// </summary>
 public class MdDumpEntrySetExporterOptions : DecodedEntryDataWriterOptions
 {
+    private string _outputDir = "";
+
     /// <summary>
     /// Gets or sets the output directory. This can include environment
     /// variables in double braces (e.g.
     /// <c>{{HOMEDRIVE}}{{HOMEPATH}}\Desktop\out\</c>).
     /// </summary>
-    public string OutputDirectory { get; set; } = "";
+    public string OutputDirectory
+    {
+        get => _outputDir;
+        set => _outputDir = EnvarResolver.ResolveTemplate(value) ?? "";
+    }
 
     /// <summary>
     /// Gets or sets the maximum number of sets per file.

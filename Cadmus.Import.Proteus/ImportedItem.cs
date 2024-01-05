@@ -6,7 +6,9 @@ using System.Text.Json.Nodes;
 namespace Cadmus.Import.Proteus;
 
 /// <summary>
-/// An imported item used in <see cref="CadmusEntrySetContext"/>.
+/// An imported item used in <see cref="CadmusEntrySetContext"/>. This has the
+/// same metadata as a Cadmus <see cref="Item"/>, plus a list of parts as
+/// JSON nodes.
 /// </summary>
 /// <seealso cref="IHasVersion" />
 /// <seealso cref="IHasFlags" />
