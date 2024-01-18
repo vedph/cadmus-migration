@@ -86,10 +86,10 @@ public sealed class ExcelThesaurusReader : IThesaurusReader
             }
             // else if any thesaurus ID is found (if not, we assume the previous one)
             // stop if this ID is different from the current thesaurus ID
-            else
+            else if (!string.IsNullOrEmpty(thesaurusId) &&
+                     thesaurus.Id != thesaurusId)
             {
-                if (!string.IsNullOrEmpty(thesaurusId) &&
-                    thesaurus.Id != thesaurusId) break;
+                break;
             }
 
             // 1=id
@@ -167,4 +167,3 @@ public class ExcelThesaurusReaderOptions
     /// </summary>
     public int ColumnOffset { get; set; }
 }
-
