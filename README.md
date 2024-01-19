@@ -28,6 +28,10 @@ Proteus-based components for importing Cadmus items and parts from sources handl
 
 ## History
 
+### 4.0.7
+
+- 2024-01-19: refactored exporter to use true items.
+
 ### 4.0.6
 
 - 2024-01-19: updated packages.

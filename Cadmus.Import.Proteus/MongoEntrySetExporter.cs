@@ -4,10 +4,7 @@ using Cadmus.Mongo;
 using Fusi.Tools.Configuration;
 using MongoDB.Driver;
 using Proteus.Core.Regions;
-using System.Text.Json.Nodes;
-using MongoDB.Bson;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Cadmus.Import.Proteus;
@@ -20,12 +17,6 @@ namespace Cadmus.Import.Proteus;
 public sealed class MongoEntrySetExporter : MongoConsumerBase, IEntrySetExporter,
     IConfigurable<MongoEntrySetExporterOptions>
 {
-    private readonly HashSet<string> _partProps =
-    [
-        "itemId", "typeId", "roleId", "thesaurusScope",
-        "timeCreated", "creatorId", "timeModified", "userId"
-    ];
-
     private MongoEntrySetExporterOptions? _options;
     private MongoCadmusRepository? _repository;
 
@@ -54,7 +45,7 @@ public sealed class MongoEntrySetExporter : MongoConsumerBase, IEntrySetExporter
         }
         EnsureClientCreated(_options.ConnectionString);
 
-        // we do not need to configure part types as we are using JSON for them
+        // we do not need to configure part types as we are just saving
         _repository = new(new StandardPartTypeProvider(new TagAttributeToTypeMap()),
             new StandardItemSortKeyBuilder());
         _repository.Configure(new MongoCadmusRepositoryOptions
@@ -72,29 +63,6 @@ public sealed class MongoEntrySetExporter : MongoConsumerBase, IEntrySetExporter
     public Task CloseAsync()
     {
         return Task.CompletedTask;
-    }
-
-    private JsonNode GetPartNode(JsonNode content)
-    {
-        JsonNode part = new JsonObject
-        {
-            ["_id"] = content["id"]!.DeepClone()
-        };
-
-        foreach (string pn in _partProps)
-        {
-            if (content.AsObject().TryGetPropertyValue(pn, out JsonNode? pv)
-                && pv != null)
-            {
-                part[pn] = pv.DeepClone();
-            }
-        }
-
-        // add a new property 'content' to the new node, which is equal
-        // to the original node
-        part["content"] = content;
-
-        return part;
     }
 
     /// <summary>
@@ -122,38 +90,14 @@ public sealed class MongoEntrySetExporter : MongoConsumerBase, IEntrySetExporter
         CadmusEntrySetContext context = (CadmusEntrySetContext)entrySet.Context;
         if (context.Items.Count == 0) return Task.CompletedTask;
 
-        // write items
-        IMongoDatabase db = Client!.GetDatabase(GetDatabaseName(
-            _options.ConnectionString));
-
-        foreach (ImportedItem item in context.Items)
+        foreach (IItem item in context.Items)
         {
             // write item without parts
-            _repository!.AddItem(item.ToItem(), !_options.NoHistory);
+            _repository!.AddItem(item, !_options.NoHistory);
 
             // write parts
-            foreach (JsonNode partContent in item.Parts)
-            {
-                IMongoCollection<BsonDocument> parts =
-                    db.GetCollection<BsonDocument>(MongoPart.COLLECTION);
-
-                JsonNode part = GetPartNode(partContent);
-                BsonDocument document = BsonDocument.Parse(part.ToJsonString());
-                parts.InsertOne(document);
-
-                // history if required
-                if (!_options.NoHistory)
-                {
-                    part["referenceId"] = part["_id"]!.DeepClone();
-                    part["status"] = 0;
-                    part["_id"] = Guid.NewGuid().ToString();
-                    document = BsonDocument.Parse(part.ToJsonString());
-
-                    parts = db.GetCollection<BsonDocument>(
-                        MongoHistoryPart.COLLECTION);
-                    parts.InsertOne(document);
-                }
-            }
+            foreach (IPart part in item.Parts)
+                _repository.AddPart(part, !_options.NoHistory);
         }
 
         return Task.CompletedTask;

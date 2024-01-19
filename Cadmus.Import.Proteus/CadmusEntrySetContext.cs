@@ -1,4 +1,5 @@
-﻿using Fusi.Tools.Configuration;
+﻿using Cadmus.Core;
+using Fusi.Tools.Configuration;
 using Proteus.Core.Regions;
 using System.Collections.Generic;
 
@@ -16,7 +17,7 @@ public class CadmusEntrySetContext : EntrySetContext
     /// <summary>
     /// Gets the items.
     /// </summary>
-    public List<ImportedItem> Items { get; } = [];
+    public List<IItem> Items { get; } = [];
 
     /// <summary>
     /// Clones this instance.

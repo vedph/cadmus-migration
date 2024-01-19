@@ -1,4 +1,5 @@
-﻿using Fusi.Tools.Configuration;
+﻿using Cadmus.Core;
+using Fusi.Tools.Configuration;
 using Proteus.Core;
 using Proteus.Core.Entries;
 using Proteus.Core.Regions;
@@ -6,8 +7,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
 namespace Cadmus.Import.Proteus;
@@ -21,7 +20,6 @@ namespace Cadmus.Import.Proteus;
 public sealed class MdDumpEntrySetExporter : IEntrySetExporter,
     IConfigurable<MdDumpEntrySetExporterOptions>
 {
-    private readonly JsonSerializerOptions _jsonOptions;
     private int _fileNr;
     private int _setCount;
     private MdDumpEntrySetExporterOptions _options;
@@ -34,11 +32,6 @@ public sealed class MdDumpEntrySetExporter : IEntrySetExporter,
     /// </summary>
     public MdDumpEntrySetExporter()
     {
-        _jsonOptions = new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            WriteIndented = true
-        };
         _options = new();
     }
 
@@ -95,7 +88,7 @@ public sealed class MdDumpEntrySetExporter : IEntrySetExporter,
 
         _writer!.WriteLine($"### {context.Number} - Items");
         int n = 0;
-        foreach (ImportedItem item in context.Items)
+        foreach (IItem item in context.Items)
         {
             _writer.WriteLine();
             _writer.WriteLine($"#### {++n}: {item.Title}");
@@ -118,14 +111,9 @@ public sealed class MdDumpEntrySetExporter : IEntrySetExporter,
                 _writer.WriteLine();
 
                 int pn = 0;
-                foreach (JsonNode node in item.Parts)
+                foreach (IPart part in item.Parts)
                 {
-                    _writer.WriteLine($"- part __{++pn}__ / {item.Parts.Count}:");
-                    _writer.WriteLine();
-                    _writer.WriteLine("```json");
-                    _writer.WriteLine(node.ToJsonString(_jsonOptions));
-                    _writer.WriteLine("```");
-                    _writer.WriteLine();
+                    _writer.WriteLine($"- part __{++pn}__ / {item.Parts.Count}: {part}");
                 }
             }
         }

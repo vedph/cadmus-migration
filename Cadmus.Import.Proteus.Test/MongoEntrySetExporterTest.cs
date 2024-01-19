@@ -5,8 +5,6 @@ using System;
 using System.Threading.Tasks;
 using Xunit;
 using Cadmus.General.Parts;
-using System.Text.Json;
-using System.Text.Json.Nodes;
 using Proteus.Core.Regions;
 using MongoDB.Driver;
 
@@ -54,7 +52,7 @@ public sealed class MongoEntrySetExporterTest
         for (int n = 1; n <= 2; n++)
         {
             // item
-            ImportedItem item = new()
+            Item item = new()
             {
                 Id = guids[n - 1],
                 Title = $"Item {n}",
@@ -74,13 +72,7 @@ public sealed class MongoEntrySetExporterTest
                 CreatorId = "zeus",
                 UserId = "zeus",
             };
-            string json = JsonSerializer.Serialize(part, part.GetType(),
-                new JsonSerializerOptions
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-                });
-            JsonNode node = JsonNode.Parse(json)!;
-            item.Parts.Add(node);
+            item.Parts.Add(part);
 
             context.Items.Add(item);
         }
