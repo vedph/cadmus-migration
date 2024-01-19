@@ -2,6 +2,9 @@
 echo BUILD Packages
 del .\Cadmus.Export\bin\Debug\*.*nupkg
 del .\Cadmus.Export.ML\bin\Debug\*.*nupkg
+del .\Cadmus.Import\bin\Debug\*.*nupkg
+del .\Cadmus.Import.Proteus\bin\Debug\*.*nupkg
+del .\Cadmus.Import.Excel\bin\Debug\*.*nupkg
 
 cd .\Cadmus.Export
 dotnet pack -c Debug -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
