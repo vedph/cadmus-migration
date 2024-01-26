@@ -17,6 +17,11 @@ namespace Cadmus.Import.Proteus;
 public class CadmusEntrySetContext : EntrySetContext
 {
     /// <summary>
+    /// Gets or sets the optional thesaurus entry map.
+    /// </summary>
+    public ThesaurusEntryMap? ThesaurusEntryMap { get; set; }
+
+    /// <summary>
     /// Gets the items.
     /// </summary>
     public List<IItem> Items { get; } = [];

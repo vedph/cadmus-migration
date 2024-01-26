@@ -28,9 +28,11 @@ Proteus-based components for importing Cadmus items and parts from sources handl
 
 ## History
 
-### 4.0.12
+### 4.0.13
 
-- 2024-01-26: added `CadmusEntrySetContextPatcher`.
+- 2024-01-26:
+  - added `CadmusEntrySetContextPatcher`.
+  - added `ThesaurusEntryMap`.
 
 ### 4.0.10
 

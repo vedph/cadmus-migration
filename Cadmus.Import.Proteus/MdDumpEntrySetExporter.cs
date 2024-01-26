@@ -134,7 +134,10 @@ public sealed class MdDumpEntrySetExporter : IEntrySetExporter,
                         _writer.WriteLine();
                     }
                 }
-                if (!_options.JsonParts) _writer.WriteLine();
+            }
+            else
+            {
+                _writer.WriteLine();
             }
         }
     }
