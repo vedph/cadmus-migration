@@ -28,6 +28,12 @@ Proteus-based components for importing Cadmus items and parts from sources handl
 
 ## History
 
+### 4.0.9
+
+- 2024-01-26:
+  - more functions for `CadmusEntrySetContext`.
+  - updated packages.
+
 ### 4.0.7
 
 - 2024-01-19: refactored exporter to use true items.
