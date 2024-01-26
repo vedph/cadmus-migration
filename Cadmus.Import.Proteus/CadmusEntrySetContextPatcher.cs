@@ -39,12 +39,20 @@ public class CadmusEntrySetContextPatcher : IEntrySetContextPatcher
         CadmusEntrySetContext ctx = (CadmusEntrySetContext)context;
         foreach (IItem item in ctx.Items)
         {
-            item.FacetId ??= "default";
-            item.Title ??= item.Id;
+            if (string.IsNullOrEmpty(item.FacetId)) item.FacetId = "default";
+
+            if (string.IsNullOrEmpty(item.Title)) item.Title = item.Id;
+
             item.Description ??= "";
-            item.SortKey ??= _sortKeyBuilder.BuildKey(item, null);
-            item.CreatorId ??= "zeus";
-            item.UserId ??= "zeus";
+
+            if (string.IsNullOrEmpty(item.SortKey))
+                item.SortKey = _sortKeyBuilder.BuildKey(item, null);
+
+            if (string.IsNullOrEmpty(item.CreatorId))
+                item.CreatorId = "zeus";
+
+            if (string.IsNullOrEmpty(item.UserId))
+                item.UserId = "zeus";
         }
         return Task.CompletedTask;
     }

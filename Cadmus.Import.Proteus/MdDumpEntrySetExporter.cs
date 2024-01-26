@@ -1,5 +1,7 @@
 ﻿using Cadmus.Core;
 using Fusi.Tools.Configuration;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Proteus.Core;
 using Proteus.Core.Entries;
 using Proteus.Core.Regions;
@@ -7,8 +9,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Cadmus.Import.Proteus;
@@ -27,7 +27,8 @@ public sealed class MdDumpEntrySetExporter : IEntrySetExporter,
     private MdDumpEntrySetExporterOptions _options;
     private TextWriter? _writer;
     private DecodedEntryDumper? _dumper;
-    private readonly JsonSerializerOptions _jsonOptions;
+    // private readonly JsonSerializerOptions _jsonOptions;
+    private readonly JsonSerializerSettings _jsonSettings;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MdDumpEntrySetExporter"/>
@@ -36,11 +37,17 @@ public sealed class MdDumpEntrySetExporter : IEntrySetExporter,
     public MdDumpEntrySetExporter()
     {
         _options = new();
-        _jsonOptions = new JsonSerializerOptions
+        //_jsonOptions = new JsonSerializerOptions
+        //{
+        //    WriteIndented = true,
+        //    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+        //    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        //};
+        _jsonSettings = new JsonSerializerSettings
         {
-            WriteIndented = true,
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            Formatting = Formatting.Indented,
+            NullValueHandling = NullValueHandling.Ignore,
+            ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
     }
 
@@ -125,8 +132,9 @@ public sealed class MdDumpEntrySetExporter : IEntrySetExporter,
 
                     if (_options.JsonParts)
                     {
-                        string json = JsonSerializer.Serialize((object)part,
-                            _jsonOptions);
+                        //string json = JsonSerializer.Serialize((object)part,
+                        //    _jsonOptions);
+                        string json = JsonConvert.SerializeObject(part);
                         _writer.WriteLine();
                         _writer.WriteLine("```json");
                         _writer.WriteLine(json);
