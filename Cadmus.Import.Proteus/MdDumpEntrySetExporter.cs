@@ -125,7 +125,8 @@ public sealed class MdDumpEntrySetExporter : IEntrySetExporter,
 
                     if (_options.JsonParts)
                     {
-                        string json = JsonSerializer.Serialize(part, _jsonOptions);
+                        string json = JsonSerializer.Serialize((object)part,
+                            _jsonOptions);
                         _writer.WriteLine();
                         _writer.WriteLine("```json");
                         _writer.WriteLine(json);
