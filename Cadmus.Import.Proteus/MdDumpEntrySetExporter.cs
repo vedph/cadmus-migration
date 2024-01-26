@@ -7,6 +7,8 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Cadmus.Import.Proteus;
@@ -25,6 +27,7 @@ public sealed class MdDumpEntrySetExporter : IEntrySetExporter,
     private MdDumpEntrySetExporterOptions _options;
     private TextWriter? _writer;
     private DecodedEntryDumper? _dumper;
+    private readonly JsonSerializerOptions _jsonOptions;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MdDumpEntrySetExporter"/>
@@ -33,6 +36,12 @@ public sealed class MdDumpEntrySetExporter : IEntrySetExporter,
     public MdDumpEntrySetExporter()
     {
         _options = new();
+        _jsonOptions = new JsonSerializerOptions
+        {
+            WriteIndented = true,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
     }
 
     /// <summary>
@@ -43,8 +52,6 @@ public sealed class MdDumpEntrySetExporter : IEntrySetExporter,
     public void Configure(MdDumpEntrySetExporterOptions options)
     {
         _options = options ?? throw new ArgumentNullException(nameof(options));
-        _options.OutputDirectory = EnvarResolver.ResolveTemplate(
-            _options.OutputDirectory ?? "")!;
     }
 
     /// <summary>
@@ -113,8 +120,20 @@ public sealed class MdDumpEntrySetExporter : IEntrySetExporter,
                 int pn = 0;
                 foreach (IPart part in item.Parts)
                 {
-                    _writer.WriteLine($"- part __{++pn}__ / {item.Parts.Count}: {part}");
+                    _writer.WriteLine(
+                        $"- part __{++pn}__ / {item.Parts.Count}: {part}");
+
+                    if (_options.JsonParts)
+                    {
+                        string json = JsonSerializer.Serialize(part, _jsonOptions);
+                        _writer.WriteLine();
+                        _writer.WriteLine("```json");
+                        _writer.WriteLine(json);
+                        _writer.WriteLine("```");
+                        _writer.WriteLine();
+                    }
                 }
+                if (!_options.JsonParts) _writer.WriteLine();
             }
         }
     }
@@ -166,11 +185,14 @@ public sealed class MdDumpEntrySetExporter : IEntrySetExporter,
         DumpItems(context);
 
         // entries
-        _writer.WriteLine($"### {context.Number} - Entries");
-        _writer.WriteLine();
-        _writer.WriteLine("```tsv");
-        _dumper!.Dump(context.Number, entrySet.Entries, regionSet.Regions);
-        _writer.WriteLine("```");
+        if (!_options.NoEntries)
+        {
+            _writer.WriteLine($"### {context.Number} - Entries");
+            _writer.WriteLine();
+            _writer.WriteLine("```tsv");
+            _dumper!.Dump(context.Number, entrySet.Entries, regionSet.Regions);
+            _writer.WriteLine("```");
+        }
 
         _writer.WriteLine();
     }
@@ -198,4 +220,15 @@ public class MdDumpEntrySetExporterOptions : DecodedEntryDataWriterOptions
     /// Gets or sets the maximum number of sets per file.
     /// </summary>
     public int MaxEntriesPerDumpFile { get; set; } = 100;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to exclude entries from dump.
+    /// </summary>
+    public bool NoEntries { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to dump JSON code for each part
+    /// being dumped.
+    /// </summary>
+    public bool JsonParts { get; set; }
 }

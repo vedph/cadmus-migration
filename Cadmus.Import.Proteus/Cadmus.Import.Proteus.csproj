@@ -4,9 +4,9 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>4.0.9</Version>
-		<FileVersion>4.0.9</FileVersion>
-		<AssemblyVersion>4.0.9</AssemblyVersion>
+		<Version>4.0.11</Version>
+		<FileVersion>4.0.11</FileVersion>
+		<AssemblyVersion>4.0.11</AssemblyVersion>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<Authors>Daniele Fusi</Authors>
@@ -25,6 +25,7 @@
 		<PackageReference Include="Cadmus.Mongo" Version="7.0.1" />
 		<PackageReference Include="MongoDB.Driver" Version="2.23.1" />
 		<PackageReference Include="Proteus.Core" Version="5.0.7" />
+		<PackageReference Include="Proteus.Entries" Version="5.0.7" />
 	</ItemGroup>
 
 </Project>

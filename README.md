@@ -28,6 +28,14 @@ Proteus-based components for importing Cadmus items and parts from sources handl
 
 ## History
 
+### 4.0.11
+
+- 2024-01-26: added `CadmusEntrySetContextPatcher`.
+
+### 4.0.10
+
+- 2024-01-26: added more options to `MdDumpEntrySetExporter`.
+
 ### 4.0.9
 
 - 2024-01-26:
