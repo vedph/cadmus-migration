@@ -5,13 +5,13 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
-    <Version>4.0.3</Version>
-    <FileVersion>4.0.3</FileVersion>
-    <AssemblyVersion>4.0.3</AssemblyVersion>
+    <Version>4.0.15</Version>
+    <FileVersion>4.0.15</FileVersion>
+    <AssemblyVersion>4.0.15</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cadmus.Philology.Parts" Version="8.0.2" />
+    <PackageReference Include="Cadmus.Philology.Parts" Version="8.1.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageReference Include="xunit" Version="2.6.6" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.6">

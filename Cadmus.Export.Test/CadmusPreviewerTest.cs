@@ -274,14 +274,14 @@ public sealed class CadmusPreviewerTest
         Assert.Equal(5, row.Blocks.Count);
         // qu: -
         Assert.Equal("qu", row.Blocks[0].Text);
-        Assert.Equal(0, row.Blocks[0].LayerIds.Count);
+        Assert.Empty(row.Blocks[0].LayerIds);
         // e: AB
         Assert.Equal("e", row.Blocks[1].Text);
-        Assert.Equal(1, row.Blocks[1].LayerIds.Count);
+        Assert.Single(row.Blocks[1].LayerIds);
         Assert.Equal("L0-0", row.Blocks[1].LayerIds[0]);
         // _: -
         Assert.Equal(" ", row.Blocks[2].Text);
-        Assert.Equal(0, row.Blocks[2].LayerIds.Count);
+        Assert.Empty(row.Blocks[2].LayerIds);
         // b: OC
         Assert.Equal("b", row.Blocks[3].Text);
         Assert.Equal(2, row.Blocks[3].LayerIds.Count);
@@ -289,7 +289,7 @@ public sealed class CadmusPreviewerTest
         Assert.Equal("L1-0", row.Blocks[3].LayerIds[1]);
         // ixit: C
         Assert.Equal("ixit", row.Blocks[4].Text);
-        Assert.Equal(1, row.Blocks[4].LayerIds.Count);
+        Assert.Single(row.Blocks[4].LayerIds);
         Assert.Equal("L1-0", row.Blocks[4].LayerIds[0]);
 
         // row 1
@@ -297,14 +297,14 @@ public sealed class CadmusPreviewerTest
         Assert.Equal(3, row.Blocks.Count);
         // annos: C
         Assert.Equal("annos", row.Blocks[0].Text);
-        Assert.Equal(1, row.Blocks[0].LayerIds.Count);
+        Assert.Single(row.Blocks[0].LayerIds);
         Assert.Equal("L1-0", row.Blocks[0].LayerIds[0]);
         // _: -
         Assert.Equal(" ", row.Blocks[1].Text);
-        Assert.Equal(0, row.Blocks[1].LayerIds.Count);
+        Assert.Empty(row.Blocks[1].LayerIds);
         // XX: D
         Assert.Equal("XX", row.Blocks[2].Text);
-        Assert.Equal(1, row.Blocks[2].LayerIds.Count);
+        Assert.Single(row.Blocks[2].LayerIds);
         Assert.Equal("L1-1", row.Blocks[2].LayerIds[0]);
     }
 }

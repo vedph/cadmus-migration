@@ -47,7 +47,7 @@ public sealed class MdDumpEntrySetExporter : IEntrySetExporter,
         {
             Formatting = Formatting.Indented,
             NullValueHandling = NullValueHandling.Ignore,
-            ContractResolver = new CamelCasePropertyNamesContractResolver()
+            ContractResolver = new CamelCasePropertyNamesContractResolver(),
         };
     }
 
@@ -134,7 +134,8 @@ public sealed class MdDumpEntrySetExporter : IEntrySetExporter,
                     {
                         //string json = JsonSerializer.Serialize((object)part,
                         //    _jsonOptions);
-                        string json = JsonConvert.SerializeObject(part);
+                        string json = JsonConvert.SerializeObject(part,
+                            _jsonSettings);
                         _writer.WriteLine();
                         _writer.WriteLine("```json");
                         _writer.WriteLine(json);

@@ -33,31 +33,31 @@ public sealed class TextBlockBuilderTest
         Assert.Equal(5, row.Blocks.Count);
         // qu: -
         Assert.Equal("qu", row.Blocks[0].Text);
-        Assert.Equal(0, row.Blocks[0].LayerIds.Count);
+        Assert.Empty(row.Blocks[0].LayerIds);
         // e: AB
         Assert.Equal("e", row.Blocks[1].Text);
         Assert.Equal(2, row.Blocks[1].LayerIds.Count);
         // _: B
         Assert.Equal(" ", row.Blocks[2].Text);
-        Assert.Equal(1, row.Blocks[2].LayerIds.Count);
+        Assert.Single(row.Blocks[2].LayerIds);
         // v: BC
         Assert.Equal("v", row.Blocks[3].Text);
         Assert.Equal(2, row.Blocks[3].LayerIds.Count);
         // ixit: C
         Assert.Equal("ixit", row.Blocks[4].Text);
-        Assert.Equal(1, row.Blocks[4].LayerIds.Count);
+        Assert.Single(row.Blocks[4].LayerIds);
 
         // row 1
         row = rows[1];
         Assert.Equal(3, row.Blocks.Count);
         // annos: C
         Assert.Equal("annos", row.Blocks[0].Text);
-        Assert.Equal(1, row.Blocks[0].LayerIds.Count);
+        Assert.Single(row.Blocks[0].LayerIds);
         // _: -
         Assert.Equal(" ", row.Blocks[1].Text);
-        Assert.Equal(0, row.Blocks[1].LayerIds.Count);
+        Assert.Empty(row.Blocks[1].LayerIds);
         // XX: D
         Assert.Equal("XX", row.Blocks[2].Text);
-        Assert.Equal(1, row.Blocks[2].LayerIds.Count);
+        Assert.Single(row.Blocks[2].LayerIds);
     }
 }

@@ -48,8 +48,8 @@ public sealed class TokenTextPartFlattenerTest
         parts.Add(oLayer);
 
         // qu[e v]ixit
-        TokenTextLayerPart<LigatureLayerFragment>? lLayer = new();
-        lLayer.Fragments.Add(new LigatureLayerFragment
+        TokenTextLayerPart<ApparatusLayerFragment>? lLayer = new();
+        lLayer.Fragments.Add(new ApparatusLayerFragment
         {
             Location = "1.1@3-1.2@1"
         });
