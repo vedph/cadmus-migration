@@ -57,7 +57,7 @@ public sealed class ThesaurusHelperTest
             ImportUpdateMode.Replace);
 
         Assert.NotNull(result);
-        Assert.Equal(0, result.Entries.Count);
+        Assert.Empty(result.Entries);
         Assert.Equal("x@en", result.TargetId);
     }
 
@@ -151,7 +151,7 @@ public sealed class ThesaurusHelperTest
             ImportUpdateMode.Patch);
 
         Assert.NotNull(result);
-        Assert.Equal(0, result.Entries.Count);
+        Assert.Empty(result.Entries);
         Assert.Equal("x@en", result.TargetId);
     }
 
@@ -242,7 +242,7 @@ public sealed class ThesaurusHelperTest
             ImportUpdateMode.Synch);
 
         Assert.NotNull(result);
-        Assert.Equal(0, result.Entries.Count);
+        Assert.Empty(result.Entries);
         Assert.Equal("x@en", result.TargetId);
     }
 

@@ -65,7 +65,7 @@ public sealed class MongoItemIdCollectorTest
 
         IList<string> ids = collector.GetIds().ToList();
 
-        Assert.Equal(0, ids.Count);
+        Assert.Empty(ids);
     }
 
     [Fact]
