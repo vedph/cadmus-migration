@@ -5,9 +5,9 @@
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<IsPackable>false</IsPackable>
-		<Version>4.0.16</Version>
-		<FileVersion>4.0.16</FileVersion>
-		<AssemblyVersion>4.0.16</AssemblyVersion>
+		<Version>4.0.17</Version>
+		<FileVersion>4.0.17</FileVersion>
+		<AssemblyVersion>4.0.17</AssemblyVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -25,7 +25,7 @@
 	<ItemGroup>
 		<PackageReference Include="Cadmus.Mongo" Version="7.0.2" />
 		<PackageReference Include="Fusi.Microsoft.Extensions.Configuration.InMemoryJson" Version="3.0.0" />
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
 		<PackageReference Include="xunit" Version="2.6.6" />
 		<PackageReference Include="xunit.runner.visualstudio" Version="2.5.6">
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -38,7 +38,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Cadmus.Philology.Parts" Version="8.1.1" />
+		<PackageReference Include="Cadmus.Philology.Parts" Version="8.2.0" />
 	</ItemGroup>
 
 	<ItemGroup>

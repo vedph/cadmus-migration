@@ -28,6 +28,10 @@ Proteus-based components for importing Cadmus items and parts from sources handl
 
 ## History
 
+### 4.0.17
+
+- 2023-02-10: updated packages.
+
 ### 4.0.16
 
 - 2023-01-31: updated packages.
