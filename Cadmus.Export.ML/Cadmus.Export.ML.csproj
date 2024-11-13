@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net9.0</TargetFramework>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>4.0.17</Version>
-		<FileVersion>4.0.17</FileVersion>
-		<AssemblyVersion>4.0.17</AssemblyVersion>
+		<Version>5.0.0</Version>
+		<FileVersion>5.0.0</FileVersion>
+		<AssemblyVersion>5.0.0</AssemblyVersion>
 		<Authors>Daniele Fusi</Authors>
 		<Company>Fusi</Company>
 		<Product>Cadmus</Product>
@@ -19,10 +19,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Cadmus.Core" Version="7.0.2" />
-		<PackageReference Include="Cadmus.General.Parts" Version="6.1.0" />
-		<PackageReference Include="Cadmus.Philology.Parts" Version="8.2.0" />
-		<PackageReference Include="Fusi.Xml.Extras" Version="4.0.0" />
+		<PackageReference Include="Cadmus.Core" Version="8.0.0" />
+		<PackageReference Include="Cadmus.General.Parts" Version="7.0.0" />
+		<PackageReference Include="Cadmus.Philology.Parts" Version="9.0.0" />
+		<PackageReference Include="Fusi.Xml.Extras" Version="5.0.0" />
 		<PackageReference Include="JmesPath.Net" Version="1.0.330" />
 	</ItemGroup>
 

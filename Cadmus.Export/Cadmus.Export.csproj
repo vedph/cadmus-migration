@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net9.0</TargetFramework>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>4.0.17</Version>
-		<FileVersion>4.0.17</FileVersion>
-		<AssemblyVersion>4.0.17</AssemblyVersion>
+		<Version>5.0.0</Version>
+		<FileVersion>5.0.0</FileVersion>
+		<AssemblyVersion>5.0.0</AssemblyVersion>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<Authors>Daniele Fusi</Authors>
@@ -29,15 +29,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Cadmus.Core" Version="7.0.2" />
-		<PackageReference Include="Cadmus.General.Parts" Version="6.1.0" />
-		<PackageReference Include="Cadmus.Mongo" Version="7.0.2" />
-		<PackageReference Include="Fusi.Microsoft.Extensions.Configuration.InMemoryJson" Version="3.0.0" />
-		<PackageReference Include="Fusi.Tools.Configuration" Version="4.0.0" />
-		<PackageReference Include="Fusi.Xml" Version="4.0.0" />
-		<PackageReference Include="Fusi.Xml.Extras" Version="4.0.0" />
+		<PackageReference Include="Cadmus.Core" Version="8.0.0" />
+		<PackageReference Include="Cadmus.General.Parts" Version="7.0.0" />
+		<PackageReference Include="Cadmus.Mongo" Version="8.0.0" />
+		<PackageReference Include="Fusi.Microsoft.Extensions.Configuration.InMemoryJson" Version="4.0.0" />
+		<PackageReference Include="Fusi.Tools.Configuration" Version="6.0.0" />
+		<PackageReference Include="Fusi.Xml" Version="5.0.0" />
+		<PackageReference Include="Fusi.Xml.Extras" Version="5.0.0" />
 		<PackageReference Include="JmesPath.Net" Version="1.0.330" />
-		<PackageReference Include="Markdig" Version="0.34.0" />
+		<PackageReference Include="Markdig" Version="0.38.0" />
 	</ItemGroup>
 
 </Project>
