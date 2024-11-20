@@ -28,6 +28,8 @@ Proteus-based components for importing Cadmus items and parts from sources handl
 
 ## History
 
+- 2024-11-20: updated test packages.
+
 ### 5.0.0
 
 - 2024-11-13: ⚠️ upgraded to .NET 9.
