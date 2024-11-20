@@ -176,22 +176,22 @@ public sealed class MdDumpEntrySetExporter : IEntrySetExporter,
 
         // dump the set
         CadmusEntrySetContext context = (CadmusEntrySetContext)entrySet.Context;
-        _writer!.WriteLine(new string('-', 60));
-        _writer.WriteLine("## {0}", context.Number);
-        _writer.WriteLine();
+        await _writer!.WriteLineAsync(new string('-', 60));
+        await _writer.WriteLineAsync($"## {context.Number}");
+        await _writer.WriteLineAsync();
 
         // data
         if (context.Data.Count > 0)
         {
-            _writer.WriteLine($"### {context.Number} - Data");
-            _writer.WriteLine();
-            foreach (string key in context.Data.Keys.OrderBy(s => s))
+            await _writer.WriteLineAsync($"### {context.Number} - Data");
+            await _writer.WriteLineAsync();
+            foreach (string key in context.Data.Keys.Order())
             {
-                _writer.Write(key[0] == '*' ? "- \\" : "- ");
-                _writer.WriteLine($"{key}=`{context.Data[key]}`");
+                await _writer.WriteAsync(key[0] == '*' ? "- \\" : "- ");
+                await _writer.WriteLineAsync($"{key}=`{context.Data[key]}`");
             }
 
-            _writer.WriteLine();
+            await _writer.WriteLineAsync();
         }
 
         // items with their parts
@@ -200,14 +200,14 @@ public sealed class MdDumpEntrySetExporter : IEntrySetExporter,
         // entries
         if (!_options.NoEntries)
         {
-            _writer.WriteLine($"### {context.Number} - Entries");
-            _writer.WriteLine();
-            _writer.WriteLine("```tsv");
+            await _writer.WriteLineAsync($"### {context.Number} - Entries");
+            await _writer.WriteLineAsync();
+            await _writer.WriteLineAsync("```tsv");
             _dumper!.Dump(context.Number, entrySet.Entries, regionSet.Regions);
-            _writer.WriteLine("```");
+            await _writer.WriteLineAsync("```");
         }
 
-        _writer.WriteLine();
+        await _writer.WriteLineAsync();
     }
 }
 
