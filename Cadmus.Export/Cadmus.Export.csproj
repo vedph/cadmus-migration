@@ -4,9 +4,9 @@
 		<TargetFramework>net9.0</TargetFramework>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>5.0.3</Version>
-		<FileVersion>5.0.3</FileVersion>
-		<AssemblyVersion>5.0.3</AssemblyVersion>
+		<Version>5.0.4</Version>
+		<FileVersion>5.0.4</FileVersion>
+		<AssemblyVersion>5.0.4</AssemblyVersion>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<Authors>Daniele Fusi</Authors>
@@ -29,9 +29,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Cadmus.Core" Version="8.0.4" />
-		<PackageReference Include="Cadmus.General.Parts" Version="7.0.2" />
-		<PackageReference Include="Cadmus.Mongo" Version="8.0.4" />
+		<PackageReference Include="Cadmus.Core" Version="8.0.6" />
+		<PackageReference Include="Cadmus.General.Parts" Version="7.0.3" />
+		<PackageReference Include="Cadmus.Mongo" Version="8.0.6" />
 		<PackageReference Include="Fusi.Microsoft.Extensions.Configuration.InMemoryJson" Version="4.0.0" />
 		<PackageReference Include="Fusi.Tools.Configuration" Version="6.0.0" />
 		<PackageReference Include="Fusi.Xml" Version="5.0.0" />
